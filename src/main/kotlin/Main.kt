@@ -1,7 +1,20 @@
+import java.awt.Color.*
+
 fun main(args: Array<String>) {
-	uppg2a();
+	uppg2b();
 }
 
+fun uppg2b() {
+	val lines = getLinesFromFile("Input2.txt")
+
+	var sum = 0
+	lines.forEach { line ->
+		println(line)
+		println(parseGame(line))
+		sum += calculatePower(calculateMinimumCubes(parseGame(line)))
+	}
+	println("Sum: $sum")
+}
 fun uppg2a() {
 //	which games would have been possible if the bag contained only 12 red cubes, 13 green cubes, and 14 blue cubes?
 	val red = 12
@@ -17,6 +30,24 @@ fun uppg2a() {
 		sum += checkGame(parseGame(line), red, green, blue)
 	}
 	println("Sum: $sum")
+}
+
+fun calculateMinimumCubes(game: Game): Triple<Int, Int, Int> {
+	var maxRed = 0
+	var maxGreen = 0
+	var maxBlue = 0
+
+	game.turns.forEach { turn ->
+		maxRed = maxOf(maxRed, turn.red)
+		maxGreen = maxOf(maxGreen, turn.green)
+		maxBlue = maxOf(maxBlue, turn.blue)
+	}
+
+	return Triple(maxRed, maxGreen, maxBlue)
+}
+
+fun calculatePower(cubeSet: Triple<Int, Int, Int>): Int {
+	return cubeSet.first * cubeSet.second * cubeSet.third
 }
 
 fun checkGame(game: Game, redLimit: Int, greenLimit: Int, blueLimit: Int): Int {
