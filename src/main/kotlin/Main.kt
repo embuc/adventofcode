@@ -1,12 +1,98 @@
 import java.awt.Color.*
 
 fun main(args: Array<String>) {
-	uppg2b();
+	uppg3a();
 }
+
+fun uppg3a() {
+	val lines = getLinesFromFile("Input3.txt")
+	val matrix = lines.map { it.toCharArray().toTypedArray() }.toTypedArray()
+
+	val validNumbers = findValidNumbers(matrix)
+
+	println("Valid Numbers: $validNumbers")
+	val sum = validNumbers.sumOf { it.toInt() }
+	println("Sum: $sum")
+}
+
+fun extractNumber(matrix: Array<Array<Char>>, row: Int, col: Int): Pair<String, Int> {
+	val sb = StringBuilder()
+	var currentCol = col
+	// Extract the entire number
+	while (currentCol < matrix[row].size && matrix[row][currentCol].isDigit()) {
+		sb.append(matrix[row][currentCol])
+		currentCol++
+	}
+
+	return sb.toString() to currentCol // Return the number and the column index after the last digit
+}
+
+//fun extractNumber(matrix: Array<Array<Char>>, row: Int, col: Int): Pair<String, Int> {
+//	if (col > 0 && matrix[row][col - 1].isDigit()) {
+//		return "" to col // Already part of a processed number, skip
+//	}
+//	val sb = StringBuilder()
+//	var currentCol = col
+//	while (currentCol < matrix[row].size && matrix[row][currentCol].isDigit()) {
+//		sb.append(matrix[row][currentCol])
+//		currentCol++
+//	}
+//	return sb.toString() to currentCol // Return the number and the ending column index
+//}
+
+fun findValidNumbers(matrix: Array<Array<Char>>): List<String> {
+	val validNumbers = mutableListOf<String>()
+
+	for (row in matrix.indices) {
+		var col = 0
+		while (col < matrix[row].size) {
+			if (matrix[row][col].isDigit()) {
+				val (number, nextCol) = extractNumber(matrix, row, col)
+				if (number.isNotBlank() && isNumberValid(matrix, row, col, nextCol)) {
+					validNumbers.add(number)
+				}
+				col = nextCol
+			} else {
+				col++
+			}
+		}
+	}
+	return validNumbers
+}
+
+fun isNumberValid(matrix: Array<Array<Char>>, row: Int, startCol: Int, endCol: Int): Boolean {
+	for (col in startCol until endCol) {
+		if (isAdjacentToSymbol(matrix, row, col)) {
+			return true
+		}
+	}
+	return false
+}
+
+fun isAdjacentToSymbol(matrix: Array<Array<Char>>, row: Int, col: Int): Boolean {
+	val directions = arrayOf(
+		-1 to 0, 1 to 0, 0 to -1, 0 to 1,  // Up, Down, Left, Right
+		-1 to -1, -1 to 1, 1 to -1, 1 to 1 // Diagonals
+	)
+	val validChars = charArrayOf('.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '\n').toList()
+
+	for ((dr, dc) in directions) {
+		val newRow = row + dr
+		val newCol = col + dc
+		if (newRow in matrix.indices && newCol in matrix[0].indices) {
+			val adjacentChar = matrix[newRow][newCol]
+			if (adjacentChar !in validChars) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+
 
 fun uppg2b() {
 	val lines = getLinesFromFile("Input2.txt")
-
 	var sum = 0
 	lines.forEach { line ->
 		println(line)

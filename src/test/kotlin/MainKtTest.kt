@@ -8,6 +8,7 @@ import java.util.stream.Stream
 
 class MainKtTest {
 
+
 	companion object {
 		@JvmStatic
 		fun gameData(): Stream<Arguments> {
