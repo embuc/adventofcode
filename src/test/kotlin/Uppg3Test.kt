@@ -64,7 +64,7 @@ class Uppg3Test {
 		testInput.forEach { println(it) }
 		val matrix = testInput.map { it.toCharArray().toTypedArray() }.toTypedArray()
 
-		val expected = listOf("21012", "62860", "41538", "161280")
+		val expected: List<Long> = listOf("21012", "62860", "41538", "161280").map{ it.toLong()}
 		val actual = findProducts(matrix)
 		assertEquals(expected, actual)
 	}
