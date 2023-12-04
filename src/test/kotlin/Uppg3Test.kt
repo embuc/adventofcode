@@ -54,4 +54,19 @@ class Uppg3Test {
 		assertEquals(expected, actual)
 	}
 
+	@Test
+	fun testValidNumbers3() {
+		val testInput = """
+    ..........................................389.314.................206......................449.523..................138..................512
+    .........+.....954......723..........................................*.............687.....*..........692..........*.......................*
+    121......992...............*.......%585....814............936.......102..#353.........*.....140.........*..434..301..................%..315.
+""".trimIndent().split("\n").toTypedArray()
+		testInput.forEach { println(it) }
+		val matrix = testInput.map { it.toCharArray().toTypedArray() }.toTypedArray()
+
+		val expected = listOf("21012", "62860", "41538", "161280")
+		val actual = findProducts(matrix)
+		assertEquals(expected, actual)
+	}
+
 }
