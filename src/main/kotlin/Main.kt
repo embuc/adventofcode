@@ -1,7 +1,54 @@
 import java.awt.Color.*
 
 fun main(args: Array<String>) {
-	uppg3b();
+	uppg4a();
+}
+
+fun uppg4a() {
+	val lines = getLinesFromFile("Input4.txt")
+	val cards = lines.map { parseCardString(it) }
+	var sum = 0
+	for (card in cards) {
+		println(card)
+		val score = calculateCardScore(card)
+		println("Score: $score")
+		sum += score
+	}
+	println("Sum: $sum")
+
+}
+
+fun calculateCardScore(card: Card): Int {
+	var score = 0
+	var matchedCount = 0 // Count of matched numbers
+
+	val matching = mutableListOf<Int>();
+	for (number in card.lotteryNumbers) {
+		if (number in card.winningNumbers) {
+			matchedCount++
+			if (matchedCount > 2) {
+				score *= 2 // Double the score from the third match onwards
+			} else {
+				score += 1
+			}
+			matching.add(number)
+		}
+	}
+	println(matching)
+	return score
+}
+
+data class Card(val counter: Int, val winningNumbers: List<Int>, val lotteryNumbers: List<Int>)
+
+fun parseCardString(cardString: String): Card {
+	val parts = cardString.split(":")
+	val counter = parts[0].trim().substringAfter("Card").trim().toInt()
+
+	val numbers = parts[1].split("|").map { it.trim() }
+	val winningNumbers = numbers[0].split(" ").filter { it.isNotEmpty() }.map { it.toInt() }
+	val lotteryNumbers = numbers[1].split(" ").filter { it.isNotEmpty() }.map { it.toInt() }
+
+	return Card(counter, winningNumbers, lotteryNumbers)
 }
 
 fun uppg3b() {
