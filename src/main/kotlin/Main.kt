@@ -1,7 +1,35 @@
-import java.awt.Color.*
-
 fun main(args: Array<String>) {
-	uppg4a();
+	uppg4b();
+}
+
+fun uppg4b() {
+	val lines = getLinesFromFile("Input4.txt")
+
+	val copies = getCopies(lines)
+	println(copies.map { it.value }.sum())
+}
+
+fun getCopies(lines: List<String>): MutableMap<Int, Int> {
+	val cards = lines.map { parseCardString(it) }
+
+	val copies: MutableMap<Int, Int> = mutableMapOf()
+
+	for (card in cards) {
+		copies[card.counter] = 1
+	}
+	for (card in cards) {
+		println(card)
+		val score = calculateCardScore2(card)
+		for (i in 1..score) {
+			println("Adding $i to ${card.counter}")
+			copies[card.counter + i] = copies[card.counter + i]!! + copies[card.counter]!!
+		}
+	}
+
+	for (copy in copies) {
+		println("Copy: ${copy.key} Count: ${copy.value}")
+	}
+	return copies
 }
 
 fun uppg4a() {
@@ -16,6 +44,26 @@ fun uppg4a() {
 	}
 	println("Sum: $sum")
 
+}
+
+fun calculateCardScore2(card: Card): Int {
+	var score = 0
+	var matchedCount = 0 // Count of matched numbers
+
+	val matching = mutableListOf<Int>();
+	for (number in card.lotteryNumbers) {
+		if (number in card.winningNumbers) {
+			matchedCount++
+			if (matchedCount > 2) {
+				score *= 2 // Double the score from the third match onwards
+			} else {
+				score += 1
+			}
+			matching.add(number)
+		}
+	}
+	println(matching)
+	return matching.size
 }
 
 fun calculateCardScore(card: Card): Int {
