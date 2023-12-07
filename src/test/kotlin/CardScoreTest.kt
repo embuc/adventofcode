@@ -1,3 +1,5 @@
+import Uppg1to4.Companion.calculateCardScore
+import Uppg1to4.Companion.parseCardString
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -22,7 +24,7 @@ class CardScoreTest {
 			"Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
 		)
 
-		val copies = getCopies(testInputs)
+		val copies = Uppg1to4.getCopies(testInputs)
 		println(copies)
 		assertEquals(6, copies.size)
 		assertEquals(1, copies[1])
