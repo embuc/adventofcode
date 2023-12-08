@@ -68,6 +68,16 @@ class PokerHandSorterTest {
 		assertEquals(6592, sum);
 	}
 
+	@Test
+	fun testEdgeCasesPartB() {
+		val testHands = getTestHands()
+		val sortedHands = uppg7.sortPokerHandsPartB(testHands)
+		val expectedSortedHands = getExpectedSortedHandsPartB()
+		assertEquals(expectedSortedHands, sortedHands)
+		val sum = uppg7.getSum(sortedHands)
+		assertEquals(6839, sum);
+	}
+
 	private fun getTestHands(): List<Uppg7.Hand> {
 		return listOf(
 			Uppg7.Hand("2345A", 1),
@@ -91,6 +101,7 @@ class PokerHandSorterTest {
 			Uppg7.Hand("JJJJ2", 41)
 		)
 	}
+
 	private fun getExpectedSortedHands(): List<Uppg7.Hand> {
 		return listOf(
 			Uppg7.Hand("2345J", 3),
@@ -112,6 +123,30 @@ class PokerHandSorterTest {
 			Uppg7.Hand("AAAAJ", 59),
 			Uppg7.Hand("JJJJJ", 37),
 			Uppg7.Hand("AAAAA", 61)
+		)
+	}
+
+	private fun getExpectedSortedHandsPartB(): List<Uppg7.Hand> {
+		return listOf(
+			Uppg7.Hand("2345A", 1L),
+			Uppg7.Hand("J345A", 2L),
+			Uppg7.Hand("2345J", 3L),
+			Uppg7.Hand("32T3K", 5L),
+			Uppg7.Hand("KK677", 7L),
+			Uppg7.Hand("T3Q33", 11L),
+			Uppg7.Hand("Q2KJJ", 13L),
+			Uppg7.Hand("T3T3J", 17L),
+			Uppg7.Hand("Q2Q2Q", 19L),
+			Uppg7.Hand("2AAAA", 23L),
+			Uppg7.Hand("T55J5", 29L),
+			Uppg7.Hand("QQQJA", 31L),
+			Uppg7.Hand("KTJJT", 34L),
+			Uppg7.Hand("JJJJJ", 37L),
+			Uppg7.Hand("JJJJ2", 41L),
+			Uppg7.Hand("JAAAA", 43L),
+			Uppg7.Hand("2JJJJ", 53L),
+			Uppg7.Hand("AAAAJ", 59L),
+			Uppg7.Hand("AAAAA", 61L)
 		)
 	}
 }
