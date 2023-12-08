@@ -1,9 +1,23 @@
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+
 val seeds: LongArray = longArrayOf(
-	515785082L, 87905039L, 2104518691L, 503149843L, 720333403L,
-	385234193L, 1357904101L, 283386167L, 93533455L, 128569683L,
-	2844655470L, 24994629L, 3934515023L, 67327818L, 2655687716L,
-	8403417L, 3120497449L, 107756881L, 4055128129L, 9498708L
+	515785082L, 87905039L,
+	2104518691L, 503149843L,
+	720333403L,	385234193L,
+	1357904101L, 283386167L,
+	93533455L, 128569683L,
+	2844655470L, 24994629L,
+	3934515023L, 67327818L,
+	2655687716L, 8403417L,
+	3120497449L, 107756881L,
+	4055128129L, 9498708L
 )
+
+val seedRanges = seeds.toList().windowed(2, 2).map { (start, length) ->
+	start..<start + length
+}
 
 const val SEED_TO_SOIL = "seed-to-soil"
 const val SOIL_TO_FERTILIZER = "soil-to-fertilizer"
@@ -15,7 +29,42 @@ const val HUMIDITY_TO_LOCATION = "humidity-to-location"
 
 
 fun main(args: Array<String>) {
-	uppg5a();
+	uppg5b();
+}
+
+fun uppg5b() = runBlocking {
+	val allMappings = parseFileToMappings("Input5.txt")
+	val deferredResults = mutableListOf<Deferred<Long>>()
+
+	seedRanges.forEach { range ->
+		val deferred = async {
+			processRange(range, allMappings)
+		}
+		deferredResults.add(deferred)
+	}
+
+	// Wait for all coroutines to complete and collect their results
+	val results = deferredResults.map { it.await() }
+
+	// Do something with the results
+	var low = 999999999999L
+	results.forEach {
+		if (it < low) {
+			low = it
+		}
+	}
+	print ("Lowest location: $low")
+}
+
+suspend fun processRange(range: LongRange, allMappings: Map<String, List<MappingGroup>>): Long {
+	var low = 999999999999L
+	for (value in range) {
+		val loc = getLocation(allMappings, value)
+		if (loc < low) {
+			low = loc
+		}
+	}
+	return low
 }
 
 fun uppg5a() {
