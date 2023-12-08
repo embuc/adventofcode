@@ -83,7 +83,7 @@ fun uppg5a() {
 
 fun getLocation(allMappings: Map<String, List<MappingGroup>>, number: Long): Long {
 	var mappedValue = number;
-	println(allMappings[SEED_TO_SOIL])
+	//sprintln(allMappings[SEED_TO_SOIL])
 	mappedValue = transformForMappingType(allMappings[SEED_TO_SOIL]!!, mappedValue)
 	mappedValue = transformForMappingType(allMappings[SOIL_TO_FERTILIZER]!!, mappedValue)
 	mappedValue = transformForMappingType(allMappings[FERTILIZER_TO_WATER]!!, mappedValue)
@@ -112,9 +112,9 @@ class MappingGroup(destinationStart: Long, sourceStart: Long, length: Long) {
 
 	fun getMappedValue(number: Long): Long {
 		val offset = number - source.first
-		println(source.first)
-		println("offset: $offset")
-		println(destination.first)
+//		println(source.first)
+//		println("offset: $offset")
+//		println(destination.first)
 		return destination.first + offset
 	}
 	override fun toString(): String {
@@ -131,7 +131,6 @@ fun parseFileToMappings(fileName: String): Map<String, List<MappingGroup>> {
 	for (line in lines) {
 		if (line.endsWith(":")) {
 			if (currentSection.isNotEmpty()) {
-//				result[currentSection] = mappings.toList()
 				result[currentSection.removeSuffix(" map")] = mappings.toList()
 				mappings = mutableListOf()
 			}
