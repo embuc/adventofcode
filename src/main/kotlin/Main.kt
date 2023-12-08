@@ -2,7 +2,7 @@
 
 fun main(args: Array<String>) {
 	val uppg = Uppg8();
-	uppg.a();
+	uppg.b();
 }
 
 fun getLinesFromFile(fileName: String): List<String> {

@@ -11,7 +11,67 @@ class Uppg8 {
 		println(path.size)
 	}
 
+	fun b() {
+		val lines = getLinesFromFile("Input8.txt")
+		val dict = parseToMap(lines)
+		println("steps until all Z: ${countStepsUntilAllZ(dict, steps)}")
+	}
+
 	data class ValuePair(val left: String, val right: String)
+
+	fun countStepsUntilAllZ(map: Map<String, ValuePair>, steps: String): Int {
+		val startingNodes = map.keys.filter { it.endsWith("A") }
+		val currentNodes = startingNodes.toMutableList()
+		var stepCount = 0
+
+		// Custom generator for cycling through steps
+		fun cycleSteps() = sequence {
+			while (true) yieldAll(steps.asIterable())
+		}
+
+		val stepsIterator = cycleSteps().iterator()
+
+		while (stepsIterator.hasNext() && !currentNodes.all { it.endsWith("Z") }) {
+			val step = stepsIterator.next()
+			for (i in currentNodes.indices) {
+				map[currentNodes[i]]?.let { pair ->
+					currentNodes[i] = if (step == 'L') pair.left else pair.right
+				}
+			}
+			stepCount++
+		}
+
+		return if (currentNodes.all { it.endsWith("Z") }) stepCount else -1 // Return -1 if not all end with Z
+	}
+
+	fun synchronizedTraverseMap(map: Map<String, ValuePair>, steps: String): List<List<String>> {
+		val startingNodes = map.keys.filter { it.endsWith("A") }
+		val paths = startingNodes.map { mutableListOf(it) }
+		var allEndWithZ = false
+
+		// Custom generator for cycling through steps
+		fun cycleSteps() = sequence {
+			while (true) yieldAll(steps.asIterable())
+		}
+
+		val stepsIterator = cycleSteps().iterator()
+
+		while (stepsIterator.hasNext() && !allEndWithZ) {
+			val step = stepsIterator.next()
+			paths.forEach { path ->
+				val currentKey = path.last()
+				map[currentKey]?.let { pair ->
+					val nextKey = if (step == 'L') pair.left else pair.right
+					path.add(nextKey)
+				}
+			}
+
+			// Check if all current nodes end with 'Z' after this step
+			allEndWithZ = paths.all { it.last().endsWith("Z") }
+		}
+
+		return if (allEndWithZ) paths else emptyList()
+	}
 
 	fun parseToMap(strings: List<String>): Map<String, ValuePair> {
 		return strings.mapNotNull { str ->
