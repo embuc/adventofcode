@@ -82,7 +82,6 @@ class Uppg5 {
 
 	fun getLocation(allMappings: Map<String, List<MappingGroup>>, number: Long): Long {
 		var mappedValue = number;
-		//sprintln(allMappings[SEED_TO_SOIL])
 		mappedValue = transformForMappingType(allMappings[SEED_TO_SOIL]!!, mappedValue)
 		mappedValue = transformForMappingType(allMappings[SOIL_TO_FERTILIZER]!!, mappedValue)
 		mappedValue = transformForMappingType(allMappings[FERTILIZER_TO_WATER]!!, mappedValue)
@@ -111,9 +110,6 @@ class Uppg5 {
 
 		fun getMappedValue(number: Long): Long {
 			val offset = number - source.first
-//		println(source.first)
-//		println("offset: $offset")
-//		println(destination.first)
 			return destination.first + offset
 		}
 		override fun toString(): String {

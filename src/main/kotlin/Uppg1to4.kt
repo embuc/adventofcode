@@ -193,19 +193,6 @@ class Uppg1to4 {
 		return sb.toString() to currentCol // Return the number and the column index after the last digit
 	}
 
-//fun extractNumber(matrix: Array<Array<Char>>, row: Int, col: Int): Pair<String, Int> {
-//	if (col > 0 && matrix[row][col - 1].isDigit()) {
-//		return "" to col // Already part of a processed number, skip
-//	}
-//	val sb = StringBuilder()
-//	var currentCol = col
-//	while (currentCol < matrix[row].size && matrix[row][currentCol].isDigit()) {
-//		sb.append(matrix[row][currentCol])
-//		currentCol++
-//	}
-//	return sb.toString() to currentCol // Return the number and the ending column index
-//}
-
 	fun findValidNumbers(matrix: Array<Array<Char>>): List<String> {
 		val validNumbers = mutableListOf<String>()
 
