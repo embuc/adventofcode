@@ -4,10 +4,16 @@ class Uppg7 {
 		val lines = getLinesFromFile("Input7.txt")
 		val allHands = parseInput(lines)
 		println(allHands)
+		val sortedPokerHands = sortPokerHands(allHands);
+		val sum = getSum(sortedPokerHands)
+		println(sum)
 	}
 
+	fun getSum(sortedPokerHands: List<Hand>) =
+		sortedPokerHands.mapIndexed { index, hand -> hand.bid * (index + 1) }.sum()
 
-	class Hand(val hand:String, val bid:Long) {
+
+	data class Hand(val hand: String, val bid: Long) {
 		override fun toString(): String {
 			return "Hand(hand=$hand, bid=$bid)"
 		}
@@ -30,11 +36,20 @@ class Uppg7 {
 		return Hand(hand, bid)
 	}
 
-	fun evaluateHand(hand: String): Pair<Int, List<Char>> {
-		val cardCounts = hand.groupingBy { it }.eachCount()
-		val sortedByCountThenValue = cardCounts.toList().sortedWith(
-			compareByDescending<Pair<Char, Int>> { it.second }.thenByDescending { it.first }
-		).map { it.first }
+	fun evaluateHand(hand: Hand): Pair<Int, List<Char>> {
+		println()
+		println(hand)
+		val cardCounts = hand.hand.groupingBy { it }.eachCount()
+		val cardValueOrder = "AKQJT98765432".toList().reversed()
+		println("cardCounts $cardCounts")
+		// Sort cards based on frequency, then by their poker value
+		val sortedCards = cardCounts.entries.sortedWith(
+			compareByDescending<Map.Entry<Char, Int>> { it.value }
+				.thenByDescending { cardValueOrder.indexOf(it.key) }
+		).map { it.key }
+
+
+		println("sortedCards $sortedCards")
 
 		val score = when {
 			cardCounts.any { it.value == 5 } -> 7 // Five of a kind
@@ -46,26 +61,34 @@ class Uppg7 {
 			else -> 1 // High card
 		}
 
-		return Pair(score, sortedByCountThenValue)
+		return Pair(score, sortedCards)
 	}
 
-	fun sortPokerHands(hands: List<String>): List<String> {
+	fun sortPokerHands(hands: List<Hand>): List<Hand> {
 		val cardValueOrder = "AKQJT98765432".toList()
 
-		// Map each hand to its evaluation, but also keep the original hand string
-		val evaluatedHands = hands.map { hand -> Pair(hand, evaluateHand(hand)) }
-
-		// Sort the evaluated hands
-		val sortedEvaluatedHands = evaluatedHands.sortedWith(
-			compareByDescending<Pair<String, Pair<Int, List<Char>>>> { it.second.first }
+		return hands.map { hand -> Pair(hand, evaluateHand(hand)) }
+			.sortedWith(compareByDescending<Pair<Hand, Pair<Int, List<Char>>>> { it.second.first }
 				.thenComparator { a, b ->
-					a.second.second.zip(b.second.second).map { (x, y) ->
-						cardValueOrder.indexOf(x) - cardValueOrder.indexOf(y)
-					}.find { it != 0 } ?: 0
+					if (a.second.first == b.second.first) { // Same score
+						// Compare based on the lexicographical order of the cards
+						compareLexicographically(a.first.hand, b.first.hand, cardValueOrder)
+					} else {
+						0
+					}
 				}
-		)
-
-		// Return the original hand strings in the sorted order
-		return sortedEvaluatedHands.map { it.first }
+			).map { it.first }.reversed()
 	}
+
+	fun compareLexicographically(handA: String, handB: String, cardValueOrder: List<Char>): Int {
+		handA.forEachIndexed { index, charA ->
+			val charB = handB[index]
+			val diff = cardValueOrder.indexOf(charA) - cardValueOrder.indexOf(charB)
+			if (diff != 0) return diff
+		}
+		return 0
+	}
+
+
+
 }
