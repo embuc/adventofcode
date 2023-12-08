@@ -8,6 +8,5 @@ fun main(args: Array<String>) {
 fun getLinesFromFile(fileName: String): List<String> {
 	val inputStream = Thread.currentThread().contextClassLoader.getResourceAsStream(fileName)
 		?: throw IllegalArgumentException("File not found")
-	val lines = inputStream.bufferedReader().use { it.readLines() }
-	return lines
+	return inputStream.bufferedReader().use { it.readLines() }
 }
