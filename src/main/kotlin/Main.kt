@@ -1,7 +1,7 @@
 
 
 fun main(args: Array<String>) {
-	val uppg = Uppg8();
+	val uppg = Uppg9();
 	uppg.b();
 }
 

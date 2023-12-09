@@ -1,3 +1,5 @@
+import kotlin.math.abs
+
 const val steps = "LRLRRRLRRLRRRLRRRLLLLLRRRLRLRRLRLRLRRLRRLRRRLRLRLRRLLRLRRLRRLRRLRRRLLRRRLRRRLRRLRLLLRRLRRRLRLRRLRRRLRRLRLLLRRRLRRLRRLRRRLRRRLRRRLRLRLRLRRRLRRRLLLRRLLRRRLRLRLRRRLRRRLRRLRRRLRLRLLRRRLRLRRLRLRLRRLLLRRRLRRRLRRLRRLRLRRLLRRLRRRLRRRLLRRRLRRLRLLRRLRLRRLLRRRLLLLRRLRRRLRLRRLLRLLRRRLLRRLLRRRLRRRLRRLLRLRLLRRLLRLLLRRRR"
 
 class Uppg8 {
@@ -5,7 +7,6 @@ class Uppg8 {
 	fun a() {
 		val lines = getLinesFromFile("Input8.txt")
 		val dict = parseToMap(lines)
-//		println(dict)
 		val path = traverseMap(dict, "AAA", steps)
 		println(path)
 		println(path.size)
@@ -14,63 +15,51 @@ class Uppg8 {
 	fun b() {
 		val lines = getLinesFromFile("Input8.txt")
 		val dict = parseToMap(lines)
-		println("steps until all Z: ${countStepsUntilAllZ(dict, steps)}")
+		val commonStepCount = findCommonStepCount(dict, steps)
+		println("Common step count: $commonStepCount")
 	}
 
 	data class ValuePair(val left: String, val right: String)
 
-	fun countStepsUntilAllZ(map: Map<String, ValuePair>, steps: String): Int {
-		val startingNodes = map.keys.filter { it.endsWith("A") }
-		val currentNodes = startingNodes.toMutableList()
-		var stepCount = 0
 
-		// Custom generator for cycling through steps
-		fun cycleSteps() = sequence {
-			while (true) yieldAll(steps.asIterable())
-		}
-
-		val stepsIterator = cycleSteps().iterator()
-
-		while (stepsIterator.hasNext() && !currentNodes.all { it.endsWith("Z") }) {
-			val step = stepsIterator.next()
-			for (i in currentNodes.indices) {
-				map[currentNodes[i]]?.let { pair ->
-					currentNodes[i] = if (step == 'L') pair.left else pair.right
-				}
-			}
-			stepCount++
-		}
-
-		return if (currentNodes.all { it.endsWith("Z") }) stepCount else -1 // Return -1 if not all end with Z
+	fun gcd(a: Long, b: Long): Long {
+		return if (b == 0L) a else gcd(b, a % b)
 	}
 
-	fun synchronizedTraverseMap(map: Map<String, ValuePair>, steps: String): List<List<String>> {
-		val startingNodes = map.keys.filter { it.endsWith("A") }
-		val paths = startingNodes.map { mutableListOf(it) }
-		var allEndWithZ = false
+	fun lcm(a: Long, b: Long): Long {
+		return abs(a * b) / gcd(a, b)
+	}
 
-		// Custom generator for cycling through steps
-		fun cycleSteps() = sequence {
-			while (true) yieldAll(steps.asIterable())
-		}
+	fun findPathLengthToZ(map: Map<String, ValuePair>, startKey: String, steps: String): Long {
+		var currentKey = startKey
+		var count = 0L
+		var stepsIterator = steps.iterator()
 
-		val stepsIterator = cycleSteps().iterator()
-
-		while (stepsIterator.hasNext() && !allEndWithZ) {
-			val step = stepsIterator.next()
-			paths.forEach { path ->
-				val currentKey = path.last()
-				map[currentKey]?.let { pair ->
-					val nextKey = if (step == 'L') pair.left else pair.right
-					path.add(nextKey)
-				}
+		while (!currentKey.endsWith("Z")) {
+			if (!stepsIterator.hasNext()) {
+				stepsIterator = steps.iterator() // Restart the steps
 			}
-
-			// Check if all current nodes end with 'Z' after this step
-			allEndWithZ = paths.all { it.last().endsWith("Z") }
+			val step = stepsIterator.next()
+			val pair = map[currentKey]!!
+			currentKey = if (step == 'L') pair.left else pair.right
+			count++
 		}
 
-		return if (allEndWithZ) paths else emptyList()
+		return count
+	}
+
+	fun findCommonStepCount(map: Map<String, ValuePair>, steps: String): Long {
+		val startingNodes = map.keys.filter { it.endsWith("A") }
+		println("startingNodes $startingNodes")
+		val pathLengths = startingNodes.map { findPathLengthToZ(map, it, steps) }
+		println(pathLengths)
+		println(pathLengths.size)
+		// Calculate LCM of all path lengths
+		return findLCM(pathLengths)
+	}
+
+	private fun findLCM(pathLengths: List<Long>): Long {
+		return pathLengths.reduce { acc, length -> lcm(acc, length) }
 	}
 
 	fun parseToMap(strings: List<String>): Map<String, ValuePair> {
