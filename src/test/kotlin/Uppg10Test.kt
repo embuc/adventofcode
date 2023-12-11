@@ -28,6 +28,90 @@ class Uppg10Test {
 		// Assert
 		assertEquals(4, distance, "The longest distance from start should be 4")
 	}
+	@Test
+	fun testPipeTraversal_B() {
+		// Arrange
+		val lines = listOf(
+			".....",
+			".S-7.",
+			".|.|.",
+			".L-J.",
+			"....."
+		)
+
+		val uppg10 = Uppg10()
+
+		// Act
+		val grid = uppg10.parseGrid(lines)
+		uppg10.printGrid(grid)
+		val startPos = uppg10.findStartPosition(grid)
+		val path = uppg10.traversePath2(grid, startPos)
+		val count = uppg10.countInsideTiles(grid, path)
+		// Assert
+		assertEquals(1, count, "Number of inside tiles")
+	}
+
+	@Test
+	fun testPipeTraversal_B_1() {
+		// Arrange
+		val lines = listOf(
+			".....",
+			".S--7",
+			".|..|",
+			".L--J",
+			"....."
+		)
+
+		val uppg10 = Uppg10()
+
+		// Act
+		val grid = uppg10.parseGrid(lines)
+//		uppg10.printGrid(grid)
+		val startPos = uppg10.findStartPosition(grid)
+		val path = uppg10.traversePath2(grid, startPos)
+		val count = uppg10.countInsideTiles(grid, path)
+		// Assert
+		assertEquals(2, count, "Number of inside tiles")
+	}
+	@Test
+	fun testPipeTraversal_B_1_1() {
+		// Arrange
+		val lines = listOf(
+			"......",
+			".S--7.",
+			".|..L7",
+			".L---J",
+			"......"
+		)
+
+		val uppg10 = Uppg10()
+
+		// Act
+		val grid = uppg10.parseGrid(lines)
+//		uppg10.printGrid(grid)
+		val startPos = uppg10.findStartPosition(grid)
+		val path = uppg10.traversePath2(grid, startPos)
+		val count = uppg10.countInsideTiles(grid, path)
+		// Assert
+		assertEquals(2, count, "Number of inside tiles")
+	}
+
+	@Test
+	fun testPipeTraversal_B_2() {
+		val uppg10 = Uppg10()
+		// Arrange
+		val lines = getLinesFromFile("Input10test.txt")
+
+
+		// Act
+		val grid = uppg10.parseGrid(lines)
+//		uppg10.printGrid(grid)
+		val startPos = uppg10.findStartPosition(grid)
+		val path = uppg10.traversePath2(grid, startPos)
+		val count = uppg10.countInsideTiles(grid, path)
+		// Assert
+		assertEquals(10, count, "Number of inside tiles")
+	}
 
 	@Test
 	fun testHorizontalConnections() {
@@ -94,7 +178,7 @@ class Uppg10Test {
 
 		// Test valid connections for BEND_F
 		assertTrue(uppg10.canConnect(bendFTile, horizontalTile, Uppg10.Position(0, 0), Uppg10.Position(1, 0))) // Right
-		assertTrue(uppg10.canConnect(bendFTile, verticalTile, Uppg10.Position(0, 0), Uppg10.Position(0, -1))) // Up
+		assertTrue(uppg10.canConnect(bendFTile, verticalTile, Uppg10.Position(0, 0), Uppg10.Position(0, 1))) // down
 
 		// Test invalid connections for BEND_F
 		assertFalse(uppg10.canConnect(bendFTile, horizontalTile, Uppg10.Position(0, 0), Uppg10.Position(0, -1))) // Up

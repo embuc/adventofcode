@@ -9,6 +9,81 @@ class Uppg10 {
 
 		println("Longest distance from start: $distance")
 	}
+	fun b() {
+		val lines = getLinesFromFile("Input10.txt")
+		val grid = parseGrid(lines)
+		val startPos = findStartPosition(grid)
+		println("Start position: $startPos")
+		val path = traversePath2(grid, startPos)
+		val count = countInsideTiles(grid, path)
+
+		println("Number of inside tiles: $count")
+	}
+
+	fun countInsideTiles(grid: Array<Array<Uppg10.Tile>>, path: MutableList<Uppg10.Position>): Int {
+		var count = 0
+		for (y in grid.indices) {
+			for (x in grid[0].indices) {
+				val pos = Uppg10.Position(x, y)
+				if (!path.contains(pos)) {
+					if (insidePolygon(path, pos)) {
+						// This tile is inside the loop
+						println("found inside: x: ${pos.x} y: ${pos.y}")
+						count++
+					} else {
+						// This tile is outside the loop
+					}
+				}
+			}
+		}
+		return count
+	}
+
+	fun traversePath2(grid: Array<Array<Tile>>, startPos: Position): MutableList<Position> {
+		var steps = 0
+		val startTile = grid[startPos.y][startPos.x]
+		val path = mutableListOf<Uppg10.Position>()
+		path.add(startPos)
+		println("start x: "+startPos.x + " y:" + startPos.y + " type: " + startTile.type)
+		val (initialTile, _) = getInitialConnectedTiles(startTile)
+		steps++
+		var currentTile = initialTile ?: throw IllegalStateException("Invalid start configuration")
+		var previousTile: Tile? = startTile
+
+		while (currentTile.type != TileType.START) {
+			steps++
+			path.add(currentTile.pos ?: throw IllegalStateException("Invalid tile position"))
+			val nextTile = getNextTile(currentTile, previousTile)
+			previousTile = currentTile
+			currentTile = nextTile ?: break
+		}
+
+		return path
+	}
+
+	private fun insidePolygon(polygon: List<Position>, p: Position): Boolean {
+		var counter = 0
+		var p1 = polygon[0]
+
+		for (i in 1..polygon.size) {
+			val p2 = polygon[i % polygon.size]
+			if (p.y > minOf(p1.y, p2.y)) {
+				if (p.y <= maxOf(p1.y, p2.y)) {
+					if (p.x <= maxOf(p1.x, p2.x)) {
+						if (p1.y != p2.y) {
+							val xinters = ((p.y - p1.y) * (p2.x - p1.x).toDouble() / (p2.y - p1.y).toDouble() + p1.x).toInt()
+							if (p1.x == p2.x || p.x <= xinters) {
+								counter++
+							}
+						}
+					}
+				}
+			}
+			p1 = p2
+		}
+
+		return counter % 2 != 0
+	}
 
 	fun traversePath(grid: Array<Array<Tile>>, startPos: Position): Int {
 		var steps = 0
@@ -31,6 +106,7 @@ class Uppg10 {
 	}
 
 	class Tile(val type: TileType) {
+		var pos: Uppg10.Position? = null
 		var left: Tile? = null
 		var right: Tile? = null
 		var up: Tile? = null
@@ -54,7 +130,7 @@ class Uppg10 {
 		throw IllegalStateException("Start position not found in the grid")
 	}
 
-	fun getInitialConnectedTiles(startTile: Tile): Pair<Tile?, Tile?> {
+	private fun getInitialConnectedTiles(startTile: Tile): Pair<Tile?, Tile?> {
 		val connectedTiles = listOfNotNull(startTile.up, startTile.down, startTile.left, startTile.right)
 		require(connectedTiles.size == 2) { "Start position must be connected to exactly two tiles." }
 		return Pair(connectedTiles[0], connectedTiles[1])
@@ -66,6 +142,7 @@ class Uppg10 {
 		for (y in grid.indices) {
 			for (x in grid[0].indices) {
 				val tile = grid[y][x]
+				tile.pos = Position(x, y)
 				val pos = Position(x, y)
 
 				if (x > 0 && canConnect(tile, grid[y][x - 1], pos, Position(x - 1, y))) {
@@ -199,7 +276,7 @@ class Uppg10 {
 		}
 	}
 
-	fun determineTileType(char: Char): TileType {
+	private fun determineTileType(char: Char): TileType {
 		return when (char) {
 			'|' -> TileType.VERTICAL
 			'-' -> TileType.HORIZONTAL
@@ -213,7 +290,7 @@ class Uppg10 {
 		}
 	}
 
-	fun getNextTile(currentTile: Tile, previousTile: Tile?): Tile? {
+	private fun getNextTile(currentTile: Tile, previousTile: Tile?): Tile? {
 		// For each tile type, determine the possible next tiles and select one that is not the previous tile
 		return when (currentTile.type) {
 			TileType.VERTICAL, TileType.HORIZONTAL, TileType.START ->
