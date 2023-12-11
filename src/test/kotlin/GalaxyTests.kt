@@ -65,8 +65,18 @@ class GalaxyTests {
 		)
 		val expandedGrid = uppg11.expandGrid(input)
 		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
-		println(galaxyPairs)
+//		println(galaxyPairs)
+		println(uppg11.printExpandedGridIds(expandedGrid))
 		assertEquals(36, galaxyPairs.size)
+	}
+
+	@Test
+	fun findAllGalaxyPairsWhole() {
+		val uppg11 = Uppg11()
+		val input = getLinesFromFile("Input11.txt")
+		val expandedGrid = uppg11.expandGrid(input)
+		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
+		assertEquals(96141, galaxyPairs.size)
 	}
 
 	@Test

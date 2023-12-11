@@ -1,19 +1,40 @@
+import kotlin.random.Random
 
 class Uppg11 {
 
 	fun a() {
 		val lines = getLinesFromFile("Input11.txt")
 		val grid = expandGrid(lines)
-//		printGrid(grid)
-//		printGridCoord(grid)
 		val galaxyPairs = findAllGalaxyPairs(grid)
-//		println(galaxyPairs)
 		val shortestPaths = galaxyPairs.map { bfs(it.first, it.second, grid) }
-//		println(shortestPaths)
-		val sumOfpaths = shortestPaths.sumOf { it.size - 1 }
-		println(sumOfpaths)
-//		val shortestPathLength = shortestPathLengths.min()
-//		println(shortestPathLength)
+		val sumOfPaths = shortestPaths.sumOf { it.size - 1 }
+		println(sumOfPaths)
+	}
+
+	fun b() {
+		val lines = getLinesFromFile("Input11.txt")
+		val grid = expandGrid(lines)
+		val galaxyPairs = findAllGalaxyPairs(grid)
+		val shortestPaths = galaxyPairs.map { bfs(it.first, it.second, grid) }
+
+//		val totalLength = shortestPaths.sumOf { innerList ->
+//			innerList.sumOf { tile ->
+//				if (tile.times > 1) tile.times * 1_000_000 else 1
+//			}
+//		}
+
+		val totalLength = shortestPaths.sumOf { innerList ->
+			val innerSum = innerList.sumOf { tile ->
+				if (tile.times > 1) tile.times * 1_000_000 else 1
+			}
+
+			// Adjust the sum of each inner list by -1
+			if (innerSum > 0) innerSum - 1 else 0
+		}
+
+		println("Total length: $totalLength")
+//		val sumOfPaths = shortestPaths.sumOf { it.size - 1 }
+//		println(sumOfPaths)
 	}
 
 	fun printGrid(grid: List<List<Tile>>) {
@@ -34,17 +55,26 @@ class Uppg11 {
 		}
 	}
 
-	fun b() {
-		val lines = getLinesFromFile("uppg11.txt")
-		val grid = expandGrid(lines)
+	fun printExpandedGridIds(grid: List<List<Tile>>) {
+		for (row in grid) {
+			for (tile in row) {
+				print(" ${tile.times} ")
+			}
+			println()
+		}
 	}
-
 
 	fun expandGrid(lines: List<String>): List<List<Tile>> {
 		val colCount = lines.first().length
 		val rowCount = lines.size
 
-		val grid = List(rowCount) { r -> List(colCount) { c -> Tile(r, c, lines[r][c], ".") } }
+		val grid = List(rowCount) { r -> List(colCount) { c -> Tile(
+			r,
+			c,
+			lines[r][c],
+			".",
+			0
+		) } }
 		val fullRows = BooleanArray(rowCount) { true }
 		val fullCols = BooleanArray(colCount) { true }
 
@@ -57,6 +87,7 @@ class Uppg11 {
 				}
 			}
 		}
+		println("Galaxy count: ${galaxyCounter - 1}")
 
 		// Check for full rows and columns
 		for (r in 0 until rowCount) {
@@ -71,13 +102,16 @@ class Uppg11 {
 		// Expand rows
 		val expandedRows = mutableListOf<List<Tile>>()
 		var i = 0
+
 		grid.forEachIndexed { index, row ->
 			row.forEach { tile -> tile.x += i }
 			expandedRows.add(row)
 			if (fullRows[index]) {
 				println("Adding row at index $index")
 				i++
-				val newRow = List(colCount) { c -> Tile(index + i, c, '.', ".") }
+				val newRow = List(colCount) { c ->
+					Tile(index + i, c, '.', ".", 1)
+				}
 				expandedRows.add(newRow)
 			}
 		}
@@ -91,7 +125,7 @@ class Uppg11 {
 				newRow.add(tile)
 				if (fullCols[index]) {
 					i++
-					newRow.add(Tile(tile.x, tile.y + 1, '.',"."))
+					newRow.add(Tile(tile.x, tile.y + 1, '.', ".", tile.times + 1))
 				}
 			}
 			newRow.toTypedArray().toList()
@@ -159,13 +193,10 @@ class Uppg11 {
 
 		return neighbors
 	}
-
-
-
-
 }
 
-class Tile(var x: Int, var y: Int, private val value: Char, var label: String ) {
+class Tile(var x: Int, var y: Int, private val value: Char, var label: String, val times: Int = 0) {
+
 	fun isGalaxy(): Boolean {
 		return value == '#'
 	}
