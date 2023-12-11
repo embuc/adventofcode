@@ -1,8 +1,12 @@
+import kotlin.system.measureTimeMillis
 
 
 fun main(args: Array<String>) {
-	val uppg = Uppg11();
-	uppg.a();
+	val executionTime = measureTimeMillis {
+		val uppg = Uppg11();
+		uppg.b();
+	}
+	println("Execution time: $executionTime ms")
 }
 
 fun getLinesFromFile(fileName: String): List<String> {

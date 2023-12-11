@@ -33,7 +33,7 @@ class GalaxyTests {
 			"8....9......."
 		)
 
-		val expandedGrid = uppg11.expandGrid(input)
+		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
 		uppg11.printGrid(expandedGrid)
 		uppg11.printGridCoord(expandedGrid)
 
@@ -63,7 +63,7 @@ class GalaxyTests {
 			".......#..",
 			"#...#....."
 		)
-		val expandedGrid = uppg11.expandGrid(input)
+		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
 		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
 //		println(galaxyPairs)
 		println(uppg11.printExpandedGridIds(expandedGrid))
@@ -74,7 +74,7 @@ class GalaxyTests {
 	fun findAllGalaxyPairsWhole() {
 		val uppg11 = Uppg11()
 		val input = getLinesFromFile("Input11.txt")
-		val expandedGrid = uppg11.expandGrid(input)
+		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
 		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
 		assertEquals(96141, galaxyPairs.size)
 	}
@@ -94,19 +94,20 @@ class GalaxyTests {
 			".......#..",
 			"#...#....."
 		)
-		val expandedGrid = uppg11.expandGrid(input)
+		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
 		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
 		println(galaxyPairs)
 		uppg11.printGrid(expandedGrid)
-		var sum = 0;
+		/*var sum = 0;
 		for (pair in galaxyPairs) {
 			val path = uppg11.bfs(pair.first, pair.second, expandedGrid)
 			println("Path from ${pair.first.label} to ${pair.second.label} length: ${path.size}")
 			println(path)
 			sum +=path.size-1
 		}
-		println("sum: $sum")
+		println("sum: $sum")*/
+		val shortestPaths = uppg11.findSumOfPaths(galaxyPairs)
 		assertEquals(36, galaxyPairs.size)
-		assertEquals(374, sum)
+		assertEquals(374, shortestPaths)
 	}
 }
