@@ -3,8 +3,8 @@ import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
 	val executionTime = measureTimeMillis {
-		val uppg = Uppg11();
-		uppg.b();
+		val uppg = Uppg12();
+		uppg.a();
 	}
 	println("Execution time: $executionTime ms")
 }
