@@ -2,6 +2,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
+import utils.getLinesFromFile
+import y2023.Uppg10
 
 class Uppg10Test {
 
@@ -138,9 +140,9 @@ class Uppg10Test {
 		// Horizontal tile should not connect to vertical or ground tiles, or in up/down direction
 		assertFalse(uppg10.canConnect(horizontalTile, verticalTile, Uppg10.Position(0, 0), Uppg10.Position(0, 1)))
 		assertFalse(uppg10.canConnect(horizontalTile, horizontalTile, Uppg10.Position(0, 0), Uppg10.Position(0, -1)))
-		assertFalse(uppg10.canConnect(horizontalTile, bendLTile,Uppg10. Position(0, 0), Uppg10.Position(1, 0)))
-		assertFalse(uppg10.canConnect(horizontalTile, bendFTile, Uppg10.Position(0, 0),Uppg10. Position(1, 0)))
-		assertFalse(uppg10.canConnect(horizontalTile, groundTile,Uppg10. Position(0, 0), Uppg10.Position(1, 0)))
+		assertFalse(uppg10.canConnect(horizontalTile, bendLTile, Uppg10. Position(0, 0), Uppg10.Position(1, 0)))
+		assertFalse(uppg10.canConnect(horizontalTile, bendFTile, Uppg10.Position(0, 0), Uppg10. Position(1, 0)))
+		assertFalse(uppg10.canConnect(horizontalTile, groundTile, Uppg10. Position(0, 0), Uppg10.Position(1, 0)))
 	}
 
 

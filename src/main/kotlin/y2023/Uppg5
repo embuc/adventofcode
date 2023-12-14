@@ -1,3 +1,6 @@
+package y2023
+
+import utils.getLinesFromFile
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking

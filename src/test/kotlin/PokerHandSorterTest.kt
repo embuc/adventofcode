@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import y2023.Uppg7
 
 class PokerHandSorterTest {
 	val uppg7 = Uppg7()

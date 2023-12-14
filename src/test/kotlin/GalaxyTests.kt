@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import utils.getLinesFromFile
+import y2023.Uppg11
 
 class GalaxyTests {
 
@@ -66,7 +68,7 @@ class GalaxyTests {
 		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
 		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
 //		println(galaxyPairs)
-		println(uppg11.printExpandedGridIds(expandedGrid))
+//		println(uppg11.printExpandedGridIds(expandedGrid))
 		assertEquals(36, galaxyPairs.size)
 	}
 

@@ -1,16 +1,16 @@
+import y2023.Uppg12
+import y2023.Uppg13
 import kotlin.system.measureTimeMillis
 
 
 fun main(args: Array<String>) {
 	val executionTime = measureTimeMillis {
-		val uppg = Uppg12();
-		uppg.a();
+		val task = Uppg13();
+		val result = task.a();
+		println("Execution result: $result")
 	}
 	println("Execution time: $executionTime ms")
 }
 
-fun getLinesFromFile(fileName: String): List<String> {
-	val inputStream = Thread.currentThread().contextClassLoader.getResourceAsStream(fileName)
-		?: throw IllegalArgumentException("File not found")
-	return inputStream.bufferedReader().use { it.readLines() }
-}
+
+

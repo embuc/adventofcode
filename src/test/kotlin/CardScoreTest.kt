@@ -1,6 +1,7 @@
-import Uppg1to4.Companion.calculateCardScore
-import Uppg1to4.Companion.parseCardString
+import y2023.Uppg1to4.Companion.calculateCardScore
+import y2023.Uppg1to4.Companion.parseCardString
 import org.junit.jupiter.api.Test
+import y2023.Uppg1to4
 import kotlin.test.assertEquals
 
 class CardScoreTest {

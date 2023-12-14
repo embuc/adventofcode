@@ -1,3 +1,7 @@
+package y2023
+
+import utils.getLinesFromFile
+
 class Uppg10 {
 
 	fun a() {
@@ -20,11 +24,11 @@ class Uppg10 {
 		println("Number of inside tiles: $count")
 	}
 
-	fun countInsideTiles(grid: Array<Array<Uppg10.Tile>>, path: MutableList<Uppg10.Position>): Int {
+	fun countInsideTiles(grid: Array<Array<Tile>>, path: MutableList<Position>): Int {
 		var count = 0
 		for (y in grid.indices) {
 			for (x in grid[0].indices) {
-				val pos = Uppg10.Position(x, y)
+				val pos = Position(x, y)
 				if (!path.contains(pos)) {
 					if (insidePolygon(path, pos)) {
 						// This tile is inside the loop
@@ -42,7 +46,7 @@ class Uppg10 {
 	fun traversePath2(grid: Array<Array<Tile>>, startPos: Position): MutableList<Position> {
 		var steps = 0
 		val startTile = grid[startPos.y][startPos.x]
-		val path = mutableListOf<Uppg10.Position>()
+		val path = mutableListOf<Position>()
 		path.add(startPos)
 		println("start x: "+startPos.x + " y:" + startPos.y + " type: " + startTile.type)
 		val (initialTile, _) = getInitialConnectedTiles(startTile)
@@ -106,7 +110,7 @@ class Uppg10 {
 	}
 
 	class Tile(val type: TileType) {
-		var pos: Uppg10.Position? = null
+		var pos: Position? = null
 		var left: Tile? = null
 		var right: Tile? = null
 		var up: Tile? = null
@@ -313,7 +317,7 @@ class Uppg10 {
 		}
 	}
 
-	fun printGrid(grid: Array<Array<Uppg10.Tile>>) {
+	fun printGrid(grid: Array<Array<Tile>>) {
 		for (y in grid.indices) {
 			for (x in grid[y].indices) {
 				print(

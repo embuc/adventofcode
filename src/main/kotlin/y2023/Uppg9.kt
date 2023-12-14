@@ -1,3 +1,7 @@
+package y2023
+
+import utils.getLinesFromFile
+
 class Uppg9 {
 
 

@@ -1,13 +1,16 @@
+package y2023
+
+import Task
+import utils.getLinesFromFile
 import kotlin.math.abs
 
-class Uppg11 {
+class Uppg11 :Task{
 
-	fun a() {
+	override fun a(): Any {
 		val lines = getLinesFromFile("Input11.txt")
 		val grid = expandGrid(lines, 2)
 		val galaxyPairs = findAllGalaxyPairs(grid)
-		val shortestPaths = findSumOfPaths(galaxyPairs)
-		println("Shortest path: $shortestPaths")
+		return findSumOfPaths(galaxyPairs)
 	}
 
 	fun findSumOfPaths(galaxyPairs: List<Pair<Tile, Tile>>): Long {
@@ -18,29 +21,14 @@ class Uppg11 {
 		return shortestPaths
 	}
 
-	fun b() {
+	override fun b(): Any {
 		val lines = getLinesFromFile("Input11.txt")
 		val grid = expandGrid(lines,1_000_000)
 		val galaxyPairs = findAllGalaxyPairs(grid)
-//		val shortestPaths = galaxyPairs.map { bfs(it.first, it.second, grid) }
-
-
-		/*val totalLength = shortestPaths.sumOf { innerList ->
-			val innerSum = innerList.sumOf { tile ->
-				if (tile.times > 0) tile.times * 1_000_000 else 1
-			}
-
-			// Adjust the sum of each inner list by -1
-			if (innerSum > 0) innerSum - 1 else 0
-		}*/
-		val shortestPaths = findSumOfPaths(galaxyPairs)
-		println("Shortest path: $shortestPaths")
-//		println("Total length: $totalLength")
-//		val sumOfPaths = shortestPaths.sumOf { it.size - 1 }
-//		println(sumOfPaths)
+		return findSumOfPaths(galaxyPairs)
 	}
 
-	fun manhattanDistanceLong(p1: Tile, p2: Tile): Long {
+	private fun manhattanDistanceLong(p1: Tile, p2: Tile): Long {
 		val deltaX = abs(p1.x - p2.x).toLong()
 		val deltaY = abs(p1.y - p2.y).toLong()
 		return deltaX + deltaY
@@ -63,7 +51,6 @@ class Uppg11 {
 			println()
 		}
 	}
-
 
 	fun expandGrid(lines: List<String>, times: Long): List<List<Tile>> {
 		val colCount = lines.first().length
@@ -109,10 +96,6 @@ class Uppg11 {
 			if (fullRows[index]) {
 				println("Adding row at index $index")
 				i++
-//				val newRow = List(colCount) { c ->
-//					Tile(index + i, c.toLong(), '.', ".")
-//				}
-//				expandedRows.add(newRow)
 			}
 		}
 
@@ -125,7 +108,6 @@ class Uppg11 {
 				newRow.add(tile)
 				if (fullCols[index]) {
 					i++
-//					newRow.add(Tile(tile.x, tile.y + 1, '.', "."))
 				}
 			}
 			newRow.toTypedArray().toList()

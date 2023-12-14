@@ -1,7 +1,7 @@
-import Uppg1to4.Companion.extractNumber
-import Uppg1to4.Companion.findProducts
-import Uppg1to4.Companion.findValidNumbers
-import Uppg1to4.Companion.isAdjacentToSymbol
+import y2023.Uppg1to4.Companion.extractNumber
+import y2023.Uppg1to4.Companion.findProducts
+import y2023.Uppg1to4.Companion.findValidNumbers
+import y2023.Uppg1to4.Companion.isAdjacentToSymbol
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

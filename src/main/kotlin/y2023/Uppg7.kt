@@ -1,3 +1,7 @@
+package y2023
+
+import utils.getLinesFromFile
+
 class Uppg7 {
 
 	fun a() {
@@ -37,7 +41,7 @@ class Uppg7 {
 		return hands
 	}
 
-	private fun parseHand(line: String): Uppg7.Hand {
+	private fun parseHand(line: String): Hand {
 		val parts = line.split(" ")
 		val hand = parts.subList(0, parts.size - 1).joinToString(" ")
 		val bid = parts.last().toLong()

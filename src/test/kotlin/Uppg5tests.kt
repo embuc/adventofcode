@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.platform.commons.util.ClassLoaderUtils.getLocation
+import y2023.SEED_TO_SOIL
+import y2023.Uppg5
 
 class Uppg5tests {
 
