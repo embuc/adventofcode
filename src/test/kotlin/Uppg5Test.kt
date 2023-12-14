@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test
 import y2023.SEED_TO_SOIL
 import y2023.Uppg5
 
-class Uppg5tests {
+class Uppg5Test {
 
 	@Test
 	fun testMappingGroup() {

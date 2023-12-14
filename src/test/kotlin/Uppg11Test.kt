@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test
 import utils.getLinesFromFile
 import y2023.Uppg11
 
-class GalaxyTests {
+class Uppg11Test {
 
 	@Test
 	fun testExpandGrid() {

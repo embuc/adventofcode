@@ -50,7 +50,7 @@ class Uppg2: Task {
 		return cubeSet.first * cubeSet.second * cubeSet.third
 	}
 
-	private fun parseGame(input: String): Game {
+	fun parseGame(input: String): Game {
 		val gameIdRegex = "Game (\\d+):".toRegex()
 		val gameId = gameIdRegex.find(input)?.groups?.get(1)?.value?.toInt()
 			?: throw IllegalArgumentException("Invalid game format")

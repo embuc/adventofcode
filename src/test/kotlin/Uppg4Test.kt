@@ -1,10 +1,8 @@
-import y2023.Uppg1to4.Companion.calculateCardScore
-import y2023.Uppg1to4.Companion.parseCardString
 import org.junit.jupiter.api.Test
-import y2023.Uppg1to4
+import y2023.Uppg4
 import kotlin.test.assertEquals
 
-class CardScoreTest {
+class Uppg4Test {
 
 	//	you end up with
 	//	1 instance of card 1,
@@ -25,7 +23,8 @@ class CardScoreTest {
 			"Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
 		)
 
-		val copies = Uppg1to4.getCopies(testInputs)
+		val uppg4 = Uppg4()
+		val copies = uppg4.getCopies(testInputs)
 		println(copies)
 		assertEquals(6, copies.size)
 		assertEquals(1, copies[1])
@@ -38,9 +37,10 @@ class CardScoreTest {
 
 	@Test
 	fun testCalculateCardScore() {
+		val uppg4 = Uppg4()
 		val cardString = "Card 1: 4 16 87 61 11 37 43 25 49 17 | 54 36 14 55 83 58 43 15 87 17 97 11 62 75 37 4 49 80 42 61 20 79 25 24 16"
-		val card = parseCardString(cardString)
-		val score = calculateCardScore(card)
+		val card = uppg4.parseCardString(cardString)
+		val score = uppg4.calculateCardScore(card)
 
 		// Calculate the expected score based on the test string
 		val expectedScore = 1 + 1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256
