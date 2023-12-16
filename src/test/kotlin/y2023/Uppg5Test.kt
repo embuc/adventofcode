@@ -1,9 +1,11 @@
+package y2023
+
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import y2023.SEED_TO_SOIL
-import y2023.Uppg5
 
 class Uppg5Test {
+
+	val uppg = Uppg5()
 
 	@Test
 	fun testMappingGroup() {
@@ -24,7 +26,7 @@ class Uppg5Test {
 	fun testInputFile() {
 		val seed = 79L
 		val location = 82L
-		val uppg = Uppg5()
+//		val uppg = Uppg5()
 		val allMappings = uppg.parseFileToMappings("Input5Test.txt")
 		println("Keys: ${allMappings.keys}")
 		println("Values: ${allMappings.values}")

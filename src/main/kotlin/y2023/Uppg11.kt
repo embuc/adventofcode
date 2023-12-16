@@ -4,7 +4,7 @@ import Task
 import utils.getLinesFromFile
 import kotlin.math.abs
 
-class Uppg11 :Task{
+class Uppg11:Task {
 
 	override fun a(): Any {
 		val lines = getLinesFromFile("Input11.txt")

@@ -68,7 +68,7 @@ class Uppg3:Task {
 	}
 
 
-	fun getProductOfAdjacentNumbers(matrix: Array<Array<Char>>, starRow: Int, starCol: Int, usedNumbers: MutableSet<Pair<Int, Int>>): Long {
+	private fun getProductOfAdjacentNumbers(matrix: Array<Array<Char>>, starRow: Int, starCol: Int, usedNumbers: MutableSet<Pair<Int, Int>>): Long {
 		val directions = arrayOf(
 			-1 to 0, 1 to 0, 0 to -1, 0 to 1,  // Up, Down, Left, Right
 			-1 to -1, -1 to 1, 1 to -1, 1 to 1 // Diagonals

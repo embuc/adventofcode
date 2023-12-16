@@ -1,3 +1,5 @@
+package y2023
+
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import y2023.Uppg1
