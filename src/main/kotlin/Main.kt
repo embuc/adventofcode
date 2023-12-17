@@ -7,7 +7,7 @@ import kotlin.system.measureTimeMillis
 fun main(args: Array<String>) {
 	val executionTime = measureTimeMillis {
 		val task = Task15;
-		val result = task.a();
+		val result = task.b();
 		println("Execution result: $result")
 	}
 	println("Execution time: $executionTime ms")
