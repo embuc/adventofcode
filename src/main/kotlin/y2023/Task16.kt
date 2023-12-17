@@ -2,6 +2,9 @@ package y2023
 
 import Task
 import utils.getLinesFromFile
+import y2023.Task14.solveB
+import y2023.Task16.DIAGONAL_LEFT
+import y2023.Task16.DIAGONAL_RIGHT
 
 object Task16 : Task {
 
@@ -17,18 +20,44 @@ object Task16 : Task {
 
 	override fun a(): Any {
 		val grid = getLinesFromFile("2023_16.txt").map { it.toCharArray() }.toTypedArray()
-		return solveA(grid).sumOf { booleanArray -> booleanArray.count() { it } }
+
+		return evaluateGrid(solveGrid(grid, Pair(0, 0), Direction.RIGHT))
 	}
 
 	override fun b(): Any {
-		return -1
+		val grid = getLinesFromFile("2023_16.txt").map { it.toCharArray() }.toTypedArray()
+		var maxResult = Int.MIN_VALUE
+		//TOP
+		for(j in grid[0].indices) {
+			val result = evaluateGrid(solveGrid(grid, Pair(0,j), Direction.DOWN))
+			maxResult = maxOf(maxResult, result)
+		}
+		//Bottom
+		for(j in grid[0].indices) {
+			val result = evaluateGrid(solveGrid(grid, Pair(grid.size-1,j), Direction.UP))
+			maxResult = maxOf(maxResult, result)
+		}
+		//Left
+		for(i in grid.indices) {
+			val result = evaluateGrid(solveGrid(grid, Pair(i,0), Direction.RIGHT))
+			maxResult = maxOf(maxResult, result)
+		}
+		//Right
+		for(i in grid.indices) {
+			val result = evaluateGrid(solveGrid(grid, Pair(i,grid[0].size-1), Direction.LEFT))
+			maxResult = maxOf(maxResult, result)
+		}
+
+		return maxResult
+
 	}
+
+	private fun evaluateGrid(solveGrid: Array<BooleanArray>): Int =
+		solveGrid.sumOf { booleanArray -> booleanArray.count() { it } }
 
 	data class PositionAndDirection(val position: Pair<Int, Int>, val direction: Direction)
 
-	fun solveA(grid: Array<CharArray>): Array<BooleanArray> {
-		val position = Pair(0, 0)
-		val direction = Direction.RIGHT
+	fun solveGrid(grid: Array<CharArray>, position: Pair<Int, Int>, direction: Direction): Array<BooleanArray> {
 		val visited = Array(grid.size) { BooleanArray(grid[0].size) }
 		val cache = mutableSetOf<PositionAndDirection>()
 		traverseBeam(grid, visited, position, direction, cache)
@@ -157,6 +186,4 @@ object Task16 : Task {
 			println(rowString)
 		}
 	}
-
-
 }
