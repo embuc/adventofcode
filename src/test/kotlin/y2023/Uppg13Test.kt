@@ -6,6 +6,8 @@ import utils.readInput
 
 class Uppg13Test {
 
+	private val uppg13 = Uppg13()
+
 	@Test
 	fun testParseInputToRowsAndColumns() {
 		val uppg13 = Uppg13()
@@ -99,4 +101,15 @@ class Uppg13Test {
 		}
 		assertEquals(35538, sum)
 	}
+
+	@Test
+	fun partB() {
+		val task = Uppg13()
+	    val result = task.b()
+		assertEquals(30442, result)
+	}
+
+
+
+
 }
