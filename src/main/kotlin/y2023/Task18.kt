@@ -16,34 +16,38 @@ object Task18 : Task {
 					"d" -> DOWN
 					"l" -> LEFT
 					"r" -> RIGHT
+					"3" -> UP
+					"1" -> DOWN
+					"2" -> LEFT
+					"0" -> RIGHT
 					else -> throw IllegalArgumentException("Unknown direction: $value")
 				}
 			}
 		}
 	}
 
-	data class Instruction(val direction: Direction, val steps: Int, val color: String)
+	data class Instruction(val direction: String, val steps: Long)
 
 	override fun a(): Any {
 		val lines = getLinesFromFile("2023_18.txt")
-		val polygonInstructions = parseToPolygonInstructions(lines)
+		val polygonInstructions = parseToPolygonInstructions(lines, false)
 		val createPolygon = createPolygon(polygonInstructions)
 		return lavaCubicMeters(createPolygon)
 	}
 
 	override fun b(): Any {
 		val lines = getLinesFromFile("2023_18.txt")
-		val polygonInstructions = parseToPolygonInstructions(lines)
+		val polygonInstructions = parseToPolygonInstructions(lines, true)
 		val createPolygon = createPolygon(polygonInstructions)
-		return -1
+		return lavaCubicMeters(createPolygon)
 
 	}
 
 	/*	Shoelace formula
 	*  Area = |(1/2) * Σ(from i=1 to n-1) of (x_i * y_(i+1) - x_(i+1) * y_i) + (x_n * y_1 - x_1 * y_n)|
 	*  */
-	fun calculateArea(vertices: List<Pair<Int, Int>>): Int {
-		var area = 0
+	fun calculateArea(vertices: List<Pair<Long, Long>>): Long {
+		var area = 0L
 		val n = vertices.size
 
 		for (i in 0 until n ) {
@@ -52,21 +56,29 @@ object Task18 : Task {
 			area -= vertices[j].first * vertices[i].second
 		}
 
-		return Math.abs(area / 2)
+		return Math.abs(area / 2L)
 	}
 
-	fun lavaCubicMeters(vertices: List<Pair<Int, Int>>): Int {
-		val interior = calculateArea(vertices) - vertices.size / 2
+	/* Correct for discrete polygon graph: lavaCubicMeters function is an adaptation of the Shoelace formula
+	for use in a discrete, grid-based context. It accounts for the differences between continuous geometry
+	(where the Shoelace formula is precise) and discrete geometry (like pixels or tiles on a computer screen),
+	where you have to consider the individual units that make up the shapes.
+	Subtracting vertices.size / 2: This is a common adjustment in discrete geometry and is related to the concept of
+	fenceposting (counting points on a grid or intersections in a lattice). Its a discrete analogue
+	to the correction term in Pick's Theorem, which accounts for boundary points.*/
+	fun lavaCubicMeters(vertices: List<Pair<Long, Long>>): Long {
+		val interior = calculateArea(vertices) - vertices.size / 2L
 		return interior + vertices.size
 	}
 
-	fun createPolygon(polygonInstructions: List<Task18.Instruction>): List<Pair<Int, Int>> {
-		val polygon = mutableListOf<Pair<Int, Int>>()
-		var currentX = 0
-		var currentY = 0
+	fun createPolygon(polygonInstructions: List<Task18.Instruction>): List<Pair<Long, Long>> {
+		val polygon = mutableListOf<Pair<Long, Long>>()
+		var currentX = 0L
+		var currentY = 0L
 		polygon.add(Pair(currentX, currentY))
 		polygonInstructions.forEach { instruction ->
-			when (instruction.direction) {
+			val direction = Direction.fromString(instruction.direction)
+			when (direction) {
 				Direction.UP -> {
 					for (i in 1..instruction.steps) {
 						currentX--
@@ -99,19 +111,20 @@ object Task18 : Task {
 		}
 		return polygon
 	}
-	fun parseToPolygonInstructions(lines: List<String>): List<Instruction> {
+	fun parseToPolygonInstructions(lines: List<String>, usingColor: Boolean): List<Instruction> {
 		return lines.map { line -> line.split(" ") }
-			.map { line -> Instruction(Direction.fromString(line[0]), line[1].toInt(), line[2]) }
+			.map{line -> line[2].removeSurrounding("(", ")").drop(1)}
+			.map { line -> Instruction(line.takeLast(1), line.take(5).toInt(16).toLong()) }
 			.toList()
 	}
 
-	fun findBounds(polygon: List<Pair<Int, Int>>): Pair<Int, Int> {
+	fun findBounds(polygon: List<Pair<Long, Long>>): Pair<Long, Long> {
 		val maxX = polygon.maxOf { it.first }
 		val maxY = polygon.maxOf { it.second }
 		return maxX to maxY
 	}
 
-	fun printPolygon(polygon: List<Pair<Int, Int>>) {
+	fun printPolygon(polygon: List<Pair<Long, Long>>) {
 		val bounds = findBounds(polygon)
 		val maxX = bounds.first
 		val maxY = bounds.second
