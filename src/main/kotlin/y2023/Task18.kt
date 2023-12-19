@@ -65,7 +65,14 @@ object Task18 : Task {
 	where you have to consider the individual units that make up the shapes.
 	Subtracting vertices.size / 2: This is a common adjustment in discrete geometry and is related to the concept of
 	fenceposting (counting points on a grid or intersections in a lattice). Its a discrete analogue
-	to the correction term in Pick's Theorem, which accounts for boundary points.*/
+	to the correction term in Pick's Theorem, which accounts for boundary points.
+	Vertices are 'in the middle' of the area they represent, so we subtract half a unit from each vertex on the straight
+	sides, corners cancel each other from 1/4 to 3/4 but there is an extra one in the end.
+	###
+	#.#
+	###
+	so here is area 9 even if it looks like 8 because vertices are in the middle of the area they represent
+	*/
 	fun lavaCubicMeters(vertices: List<Pair<Long, Long>>): Long {
 		val interior = calculateArea(vertices) - vertices.size / 2L
 		return interior + vertices.size
