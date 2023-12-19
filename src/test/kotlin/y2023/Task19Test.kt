@@ -92,10 +92,46 @@ class Task19Test {
 	}
 
 	@Test
+	fun shouldEvaluatePartToB() {
+		val exampleInputString = """
+		in{s<1351:px,qqz}
+		qqz{A}
+		px{A}
+
+		{x=1,m=2,a=3,s=4}
+	""".trimIndent()
+		val (workflows) = Task19.parseInput(exampleInputString)
+		val workflowMap = workflows.associateBy { it.name }
+		val result = Task19.evaluatePartB(workflowMap, workflowMap["in"]!!, Task19.PartB())
+//		px+qqz
+		assertEquals(86_400_000_000_000 + 169_600_000_000_000, result)
+	}
+
+	@Test
 	fun shouldSolveA() {
+		val actual = Task19.a()
+		assertEquals(492702L, actual)
 	}
 
 	@Test
 	fun shouldSolveB() {
+	}
+
+	@Test
+	fun shouldCalculateProduct() {
+		val actual = Task19.getProductOfRanges(Task19.PartB().copy(s=LongRange(0, 1350)))
+		assertEquals(86_400_000_000_000, actual)
+	}
+
+	@Test
+	fun shouldCalculateProductUpper() {
+		val actual = Task19.getProductOfRanges(Task19.PartB().copy(s=LongRange(1350, 4000)))
+		assertEquals(169_600_000_000_000, actual)
+	}
+
+	@Test
+	fun shouldUpperSecondaryRange() {
+		val actual = Task19.adjustRangeForMoreThanCondition(LongRange(0, 4000), 1351, true)
+		assertEquals(LongRange(1350, 4000), actual)
 	}
 }
