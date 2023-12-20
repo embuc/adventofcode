@@ -103,7 +103,7 @@ class Task19Test {
 	""".trimIndent()
 		val (workflows) = Task19.parseInput(exampleInputString)
 		val workflowMap = workflows.associateBy { it.name }
-		val result = Task19.evaluatePartB(workflowMap, workflowMap["in"]!!, Task19.PartB())
+		val result = Task19.evaluateRange(workflowMap, workflowMap["in"]!!, Task19.RangePart())
 //		px+qqz
 		assertEquals(86_400_000_000_000 + 169_600_000_000_000, result)
 	}
@@ -112,7 +112,7 @@ class Task19Test {
 	fun shouldEvaluateExampleB() {
 		val (workflows) = Task19.parseInput(exampleInputString)
 		val workflowMap = workflows.associateBy { it.name }
-		val result = Task19.evaluatePartB(workflowMap, workflowMap["in"]!!, Task19.PartB())
+		val result = Task19.evaluateRange(workflowMap, workflowMap["in"]!!, Task19.RangePart())
 		assertEquals(167_409_079_868_000, result)
 //		assertEquals(167_409_079_868_000, answer)
 	}
@@ -131,13 +131,13 @@ class Task19Test {
 
 	@Test
 	fun shouldCalculateProduct() {
-		val actual = Task19.getProductOfRanges(Task19.PartB().copy(s=LongRange(1, 1350)))
+		val actual = Task19.getProductOfRanges(Task19.RangePart().copy(s=LongRange(1, 1350)))
 		assertEquals(86_400_000_000_000, actual)
 	}
 
 	@Test
 	fun shouldCalculateProductUpper() {
-		val actual = Task19.getProductOfRanges(Task19.PartB().copy(s=LongRange(1351, 4000)))
+		val actual = Task19.getProductOfRanges(Task19.RangePart().copy(s=LongRange(1351, 4000)))
 		assertEquals(169_600_000_000_000, actual)
 	}
 
@@ -171,13 +171,13 @@ class Task19Test {
 
 		@Test
 		fun `range includes threshold with secondary`() {
-			val result = Task19.adjustRangeForLessThanCondition(5L..15L, 10, secondary = true)
+			val result = Task19.adjustRangeForLessThanCondition(5L..15L, 10, inverted = true)
 			assertEquals(5L..10L, result)
 		}
 
 		@Test
 		fun `range includes threshold with secondary at limit`() {
-			val result = Task19.adjustRangeForLessThanCondition(9L..10L, 10, secondary = true)
+			val result = Task19.adjustRangeForLessThanCondition(9L..10L, 10, inverted = true)
 			assertEquals(9L..10L, result)
 		}
 	}
@@ -206,7 +206,7 @@ class Task19Test {
 
 		@Test
 		fun `range straddles threshold with secondary`() {
-			val result = Task19.adjustRangeForMoreThanCondition(5L..15L, 10, secondary = true)
+			val result = Task19.adjustRangeForMoreThanCondition(5L..15L, 10, inverted = true)
 			assertEquals(10L..15L, result)
 		}
 
@@ -218,7 +218,7 @@ class Task19Test {
 
 		@Test
 		fun `range just below threshold with secondary`() {
-			val result = Task19.adjustRangeForMoreThanCondition(9L..12L, 10, secondary = true)
+			val result = Task19.adjustRangeForMoreThanCondition(9L..12L, 10, inverted = true)
 			assertEquals(10L..12L, result)
 		}
 
@@ -230,7 +230,7 @@ class Task19Test {
 
 		@Test
 		fun `range just above threshold with secondary`() {
-			val result = Task19.adjustRangeForMoreThanCondition(10L..12L, 10, secondary = true)
+			val result = Task19.adjustRangeForMoreThanCondition(10L..12L, 10, inverted = true)
 			assertEquals(10L..12L, result)
 		}
 
@@ -247,7 +247,7 @@ class Task19Test {
 
 		@Test
 		fun `range equal to threshold with secondary`() {
-			val result = Task19.adjustRangeForMoreThanCondition(10L..10L, 10, secondary = true)
+			val result = Task19.adjustRangeForMoreThanCondition(10L..10L, 10, inverted = true)
 			assertEquals(10L..10L, result)
 		}
 

@@ -16,6 +16,14 @@ object Task19 : Task {
 	}
 
 	data class Workflow(val name: String, val rules: ArrayList<Rule>, val nextOrEndTarget: String)
+	data class Part(val x: Long, val m: Long, val a: Long, val s: Long)
+
+	data class RangePart(
+		val x: LongRange = LongRange(1, 4000),
+		val m: LongRange = LongRange(1, 4000),
+		val a: LongRange = LongRange(1, 4000),
+		val s: LongRange = LongRange(1, 4000)
+	)
 
 	data class Rule(
 		val name: String,
@@ -24,8 +32,6 @@ object Task19 : Task {
 		val operator: String,
 		val target: String
 	)
-
-	data class Part(val x: Long, val m: Long, val a: Long, val s: Long)
 
 	fun solveA(input: String): Long {
 		val (workflows, parts) = parseInput(input)
@@ -43,7 +49,7 @@ object Task19 : Task {
 		val (workflows) = parseInput(lines)
 		val workflowMap = workflows.associateBy { it.name }
 		var currentWorkflow = workflowMap["in"]!!
-		return evaluatePartB(workflowMap, currentWorkflow, PartB());
+		return evaluateRange(workflowMap, currentWorkflow, RangePart());
 	}
 
 	fun evaluatePart(
@@ -77,246 +83,99 @@ object Task19 : Task {
 		}
 	}
 
-	data class PartB(
-		val x: LongRange = LongRange(1, 4000),
-		val m: LongRange = LongRange(1, 4000),
-		val a: LongRange = LongRange(1, 4000),
-		val s: LongRange = LongRange(1, 4000)
-	)
-
-	fun evaluatePartB(
+	fun evaluateRange(
 		workflowMap: Map<String, Task19.Workflow>,
 		currentWorkflow: Task19.Workflow,
-		partB: Task19.PartB,
+		rangePart: Task19.RangePart,
 		sum: Long = 0
 	): Long {
-
-		var currentPartB = partB
-//		in{s<1351:px,qqz}
-//		var partialSum = sum
-		println("Current node: ${currentWorkflow.name} current sum:"+ (getProductOfRanges(currentPartB)) + " currentPartB: $currentPartB")
+		var currentPartB = rangePart
 
 		var partialSum = 0L
 		for (rule in currentWorkflow.rules) {
-			when (rule.name) {
-				"x" -> {
-					if (rule.operator == "<") {
-						val newRange = adjustRangeForLessThanCondition(currentPartB.x, rule.conditionValue)
-						if (!newRange.isEmpty()) {
-							val overPart = currentPartB.copy(x = newRange)
-							if(rule.target == "A") {
-								partialSum += getProductOfRanges(overPart)
-							} else if (rule.target == "R") {
-//								return 0L
-							} else {
-								partialSum += evaluatePartB(workflowMap, workflowMap[rule.target]!!, overPart, partialSum)
-							}
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-						val overSecondaryPart2 = adjustRangeForMoreThanCondition(currentPartB.x, rule.conditionValue, true)
-						if (!overSecondaryPart2.isEmpty()) {
-							currentPartB = currentPartB.copy(x = overSecondaryPart2)
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-					} else { //">"
-						val newRange = adjustRangeForMoreThanCondition(currentPartB.x, rule.conditionValue)
-						if (!newRange.isEmpty()) {
-							val overPart = currentPartB.copy(x = newRange)
-							if(rule.target == "A") {
-								partialSum += getProductOfRanges(overPart)
-							} else if (rule.target == "R") {
-//								return 0L
-							} else {
-								partialSum += evaluatePartB(workflowMap, workflowMap[rule.target]!!, overPart, partialSum)
-							}
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-						val overSecondaryPart2 = adjustRangeForLessThanCondition(currentPartB.x, rule.conditionValue, true)
-						if (!overSecondaryPart2.isEmpty()) {
-							currentPartB = currentPartB.copy(x = overSecondaryPart2)
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-					}
-				}
-
-				"m" -> {
-					if (rule.operator == "<") {
-						val newRange = adjustRangeForLessThanCondition(currentPartB.m, rule.conditionValue)
-						if (!newRange.isEmpty()) {
-							val overPart = currentPartB.copy(m = newRange)
-							if(rule.target == "A") {
-								partialSum += getProductOfRanges(overPart)
-							} else if (rule.target == "R") {
-//								return 0L
-							} else {
-								partialSum += evaluatePartB(workflowMap, workflowMap[rule.target]!!, overPart, partialSum)
-							}
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-						val overSecondaryPart2 = adjustRangeForMoreThanCondition(currentPartB.m, rule.conditionValue, true)
-						if (!overSecondaryPart2.isEmpty()) {
-							currentPartB = currentPartB.copy(m = overSecondaryPart2)
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-					} else { //">"
-						val newRange = adjustRangeForMoreThanCondition(currentPartB.m, rule.conditionValue)
-						if (!newRange.isEmpty()) {
-							val overPart = currentPartB.copy(m = newRange)
-							if(rule.target == "A") {
-								partialSum += getProductOfRanges(overPart)
-							} else if (rule.target == "R") {
-//								return 0L
-							} else {
-								partialSum += evaluatePartB(workflowMap, workflowMap[rule.target]!!, overPart, partialSum)
-							}
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-						val overSecondaryPart2 = adjustRangeForLessThanCondition(currentPartB.m, rule.conditionValue, true)
-						if (!overSecondaryPart2.isEmpty()) {
-							currentPartB = currentPartB.copy(m = overSecondaryPart2)
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-					}
-				}
-
-				"a" -> {
-					if (rule.operator == "<") {
-						val newRange = adjustRangeForLessThanCondition(currentPartB.a, rule.conditionValue)
-						if (!newRange.isEmpty()) {
-							val overPart = currentPartB.copy(a = newRange)
-							if(rule.target == "A") {
-								partialSum += getProductOfRanges(overPart)
-							} else if (rule.target == "R") {
-//								return 0L
-							} else {
-								partialSum += evaluatePartB(workflowMap, workflowMap[rule.target]!!, overPart, partialSum)
-							}
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-						val overSecondaryPart2 = adjustRangeForMoreThanCondition(currentPartB.a, rule.conditionValue, true)
-						if (!overSecondaryPart2.isEmpty()) {
-							currentPartB = currentPartB.copy(a = overSecondaryPart2)
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-					} else { //">"
-						val newRange = adjustRangeForMoreThanCondition(currentPartB.a, rule.conditionValue)
-						if (!newRange.isEmpty()) {
-							val overPart = currentPartB.copy(a = newRange)
-							if(rule.target == "A") {
-								partialSum += getProductOfRanges(overPart)
-							} else if (rule.target == "R") {
-//								return 0L
-							} else {
-								partialSum += evaluatePartB(workflowMap, workflowMap[rule.target]!!, overPart, partialSum)
-							}
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-						val overSecondaryPart2 = adjustRangeForLessThanCondition(currentPartB.a, rule.conditionValue, true)
-						if (!overSecondaryPart2.isEmpty()) {
-							currentPartB = currentPartB.copy(a = overSecondaryPart2)
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-					}
-				}
-
-				"s" -> {
-					if (rule.operator == "<") {
-						val newRange = adjustRangeForLessThanCondition(currentPartB.s, rule.conditionValue)
-						if (!newRange.isEmpty()) {
-							val overPart = currentPartB.copy(s = newRange)
-							if(rule.target == "A") {
-								partialSum += getProductOfRanges(overPart)
-							} else if (rule.target == "R") {
-//								return 0L
-							} else {
-								partialSum += evaluatePartB(workflowMap, workflowMap[rule.target]!!, overPart, partialSum)
-							}
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-						val overSecondaryPart2 = adjustRangeForMoreThanCondition(currentPartB.s, rule.conditionValue, true)
-						if (!overSecondaryPart2.isEmpty()) {
-							currentPartB = currentPartB.copy(s = overSecondaryPart2)
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-					} else { //">"
-						val newRange = adjustRangeForMoreThanCondition(currentPartB.s, rule.conditionValue)
-						if (!newRange.isEmpty()) {
-							val overPart = currentPartB.copy(s = newRange)
-							if(rule.target == "A") {
-								partialSum += getProductOfRanges(overPart)
-							} else if (rule.target == "R") {
-//								return 0L
-							}else{
-								partialSum += evaluatePartB(workflowMap, workflowMap[rule.target]!!, overPart, partialSum)
-							}
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-						val overSecondaryPart2 = adjustRangeForLessThanCondition(currentPartB.s, rule.conditionValue, true)
-						if (!overSecondaryPart2.isEmpty()) {
-							currentPartB = currentPartB.copy(s = overSecondaryPart2)
-						} else {
-							//this range can not continue
-//							return 0L
-						}
-					}
-				}
-			}
+			val (updatedPartB, updatedSum) = processPart(rule, workflowMap, currentPartB, partialSum)
+			currentPartB = updatedPartB
+			partialSum = updatedSum
 		}
 
 
 		if (currentWorkflow.nextOrEndTarget == "A") {
-//			println("partialSum + getProductOfRanges(currentPartB)" + (partialSum + getProductOfRanges(currentPartB)))
 			partialSum += getProductOfRanges(currentPartB)
-//			partialSum += getProductOfRanges(currentPartB)
-		} else if (currentWorkflow.nextOrEndTarget == "R") {
-//			return 0L
-		} else if (currentWorkflow.nextOrEndTarget != "") {
-//			return evaluatePartB(workflowMap, workflowMap[currentWorkflow.nextOrEndTarget]!!, currentPartB, partialSum)
-			partialSum += evaluatePartB(workflowMap, workflowMap[currentWorkflow.nextOrEndTarget]!!, currentPartB, partialSum)
+		}else if (currentWorkflow.nextOrEndTarget != "R") {
+			partialSum += evaluateRange(workflowMap, workflowMap[currentWorkflow.nextOrEndTarget]!!, currentPartB, partialSum)
 		}
-//		println("partialSum bottom: $partialSum")
 		return partialSum
 	}
 
-	fun getProductOfRanges(overPart: Task19.PartB): Long {
+	fun processPart(
+		rule: Rule,
+		workflowMap: Map<String, Workflow>,
+		currentPartB: RangePart,
+		partialSum: Long
+	): Pair<RangePart, Long> {
+		val partRange = getRange(currentPartB, rule.name)
+		val isLessThan = rule.operator == "<"
+		val newRange = if (isLessThan) {
+			adjustRangeForLessThanCondition(partRange, rule.conditionValue)
+		} else {
+			adjustRangeForMoreThanCondition(partRange, rule.conditionValue)
+		}
+
+		var updatedPartialSum = partialSum
+		if (!newRange.isEmpty()) {
+			val overPart = when (rule.name) {
+				"x" -> currentPartB.copy(x = newRange)
+				"m" -> currentPartB.copy(m = newRange)
+				"s" -> currentPartB.copy(s = newRange)
+				"a" -> currentPartB.copy(a = newRange)
+				else -> currentPartB
+			}
+			updatedPartialSum += when (rule.target) {
+				"A" -> getProductOfRanges(overPart)
+				"R" -> 0L // Assuming this is the intended logic
+				else -> evaluateRange(workflowMap, workflowMap[rule.target]!!, overPart, updatedPartialSum)
+			}
+		}
+
+		val secondaryRange = if (isLessThan) {
+			adjustRangeForMoreThanCondition(partRange, rule.conditionValue, true)
+		} else {
+			adjustRangeForLessThanCondition(partRange, rule.conditionValue, true)
+		}
+
+		val updatedPartB = if (!secondaryRange.isEmpty()) {
+			when (rule.name) {
+				"x" -> currentPartB.copy(x = secondaryRange)
+				"m" -> currentPartB.copy(m = secondaryRange)
+				"s" -> currentPartB.copy(s = secondaryRange)
+				"a" -> currentPartB.copy(a = secondaryRange)
+				else -> currentPartB
+			}
+		} else {
+			currentPartB
+		}
+
+		return Pair(updatedPartB, updatedPartialSum)
+	}
+
+	fun getRange(partB: RangePart, name: String): LongRange {
+		return when (name) {
+			"x" -> partB.x
+			"m" -> partB.m
+			"s" -> partB.s
+			"a" -> partB.a
+			else -> LongRange.EMPTY
+		}
+	}
+
+	fun getProductOfRanges(overPart: Task19.RangePart): Long {
 		return (overPart.x.last - overPart.x.start + 1 ) *
 				(overPart.m.last - overPart.m.start + 1) *
 				(overPart.a.last - overPart.a.start + 1) *
 				(overPart.s.last - overPart.s.start + 1)
-
 	}
 
-	fun adjustRangeForLessThanCondition(range: LongRange, threshold: Int, secondary: Boolean = false): LongRange {
+	fun adjustRangeForLessThanCondition(range: LongRange, threshold: Int, inverted: Boolean = false): LongRange {
 		// If the entire range is below the threshold, return it as is
 		if (range.last < threshold) return range
 
@@ -325,14 +184,14 @@ object Task19 : Task {
 
 		// Adjust the range so that it ends at the threshold - 1
 		var term = 0
-		if (secondary) {
+		if (inverted) {
 			term += 1
 		}
 
 		return range.first until threshold + term
 	}
 
-	fun adjustRangeForMoreThanCondition(range: LongRange, threshold: Int, secondary: Boolean = false): LongRange {
+	fun adjustRangeForMoreThanCondition(range: LongRange, threshold: Int, inverted: Boolean = false): LongRange {
 		// If the range starts above the threshold, return as is
 		if (range.first >= threshold) return range
 
@@ -340,7 +199,7 @@ object Task19 : Task {
 
 		// Adjust the range so that it starts at the threshold + 1 (or threshold if secondary is true)
 		var term = threshold + 1
-		if (secondary) {
+		if (inverted) {
 			term = threshold
 		}
 		return term until range.last + 1
