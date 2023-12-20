@@ -1,9 +1,9 @@
 package y2023
 
+import Task
 import utils.getLinesFromFile
 
-class Uppg9 {
-
+object Task9:Task {
 
 	fun c() {
 		val line = "10 13 16 21 30 45"
@@ -14,8 +14,8 @@ class Uppg9 {
 		println(originalSeries)
 	}
 
-	fun a() {
-		val lines = getLinesFromFile("Input9.txt")
+	override fun a(): Int {
+		val lines = getLinesFromFile("2023_9.txt")
 		var sum = 0
 		for (line in lines) {
 			val series = parseSeries(line)
@@ -23,19 +23,19 @@ class Uppg9 {
 			println(next)
 			sum += next
 		}
-		println("sum $sum")
+		return sum
 	}
-	fun b() {
-		val lines = getLinesFromFile("Input9.txt")
+
+	override fun b(): Int {
+		val lines = getLinesFromFile("2023_9.txt")
 		var sum = 0
 		for (line in lines) {
 			val series = parseSeries(line)
 			val matrix = mutableLists(series)
 			val next = reconstructSeries(matrix)[0]
-			println(next)
 			sum += next
 		}
-		println("sum $sum")
+		return sum
 	}
 
 	fun reconstructSeries(matrix: MutableList<MutableList<Int>>): List<Int> {

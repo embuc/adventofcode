@@ -1,10 +1,9 @@
 package y2023
 
 import org.junit.jupiter.api.Test
-import y2023.Uppg4
 import kotlin.test.assertEquals
 
-class Uppg4Test {
+class Task4Test {
 
 	//	you end up with
 	//	1 instance of card 1,

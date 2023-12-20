@@ -1,21 +1,19 @@
 package y2023
 
-import utils.getLinesFromFile
+import Task
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import utils.getLinesFromFile
 
-import Task
-
-const val SEED_TO_SOIL = "seed-to-soil"
-const val SOIL_TO_FERTILIZER = "soil-to-fertilizer"
-const val FERTILIZER_TO_WATER = "fertilizer-to-water"
-const val WATER_TO_LIGHT = "water-to-light"
-const val LIGHT_TO_TEMPERATURE = "light-to-temperature"
-const val TEMPERATURE_TO_HUMIDITY = "temperature-to-humidity"
-const val HUMIDITY_TO_LOCATION = "humidity-to-location"
-
-class Uppg5:Task {
+object Task5:Task {
+	const val SEED_TO_SOIL = "seed-to-soil"
+	const val SOIL_TO_FERTILIZER = "soil-to-fertilizer"
+	const val FERTILIZER_TO_WATER = "fertilizer-to-water"
+	const val WATER_TO_LIGHT = "water-to-light"
+	const val LIGHT_TO_TEMPERATURE = "light-to-temperature"
+	const val TEMPERATURE_TO_HUMIDITY = "temperature-to-humidity"
+	const val HUMIDITY_TO_LOCATION = "humidity-to-location"
 
 	val seeds: LongArray = longArrayOf(
 		515785082L, 87905039L,
@@ -35,17 +33,17 @@ class Uppg5:Task {
 	}
 
 	override fun a(): Any {
-			val allMappings = parseFileToMappings("Input5.txt")
-			println(allMappings)
-			var low = 9999999999L
-			for (num in seeds) {
-				val loc = getLocation(allMappings, num)
-				if (loc < low) {
-					low = loc
-				}
-				println("Seed: $num, Location: $loc")
+		val allMappings = parseFileToMappings("2023_5.txt")
+		println(allMappings)
+		var low = 9999999999L
+		for (num in seeds) {
+			val loc = getLocation(allMappings, num)
+			if (loc < low) {
+				low = loc
 			}
-			return low
+			println("Seed: $num, Location: $loc")
+		}
+		return low
 
 	}
 
@@ -54,7 +52,7 @@ class Uppg5:Task {
 	}
 
 	fun uppg5b() = runBlocking {
-		val allMappings = parseFileToMappings("Input5.txt")
+		val allMappings = parseFileToMappings("2023_5.txt")
 		val deferredResults = mutableListOf<Deferred<Long>>()
 
 		seedRanges.forEach { range ->

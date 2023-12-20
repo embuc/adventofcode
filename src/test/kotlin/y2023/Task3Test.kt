@@ -3,7 +3,7 @@ package y2023
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class Uppg3Test {
+class Task3Test {
 
 	//@Test TODO fix
 	fun testExtractNumber() {

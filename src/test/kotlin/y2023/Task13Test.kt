@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import utils.readInput
 
-class Uppg13Test {
+class Task13Test {
 
-	private val uppg13 = Uppg13()
+	private val task13 = Task13()
 
 	@Test
 	fun testParseInputToRowsAndColumns() {
-		val uppg13 = Uppg13()
+		val task13 = Task13()
 		val input = """
             #.##..##.
             ..#.##.#.
@@ -21,7 +21,7 @@ class Uppg13Test {
             #.#.##.#.
         """.trimIndent()
 
-		val (rows, columns) = uppg13.parseInputToRowsAndColumns(input)
+		val (rows, columns) = task13.parseInputToRowsAndColumns(input)
 
 		val expectedRows = listOf(
 			"#.##..##.",
@@ -51,7 +51,7 @@ class Uppg13Test {
 
 	@Test
 	fun testFindMirroredCentersColumns() {
-		val uppg13 = Uppg13()
+		val task13 = Task13()
 		val input = """
             #.##..##.
             ..#.##.#.
@@ -62,9 +62,9 @@ class Uppg13Test {
             #.#.##.#.
         """.trimIndent()
 
-		val (rows, columns) = uppg13.parseInputToRowsAndColumns(input)
-		val mirroredRows = uppg13.findMirroredCenters(rows, 100)
-		val mirroredColumns = uppg13.findMirroredCenters(columns, 1)
+		val (rows, columns) = task13.parseInputToRowsAndColumns(input)
+		val mirroredRows = task13.findMirroredCenters(rows, 100)
+		val mirroredColumns = task13.findMirroredCenters(columns, 1)
 
 		assertEquals(0, mirroredRows)
 		assertEquals(5, mirroredColumns)
@@ -72,7 +72,7 @@ class Uppg13Test {
 
 	@Test
 	fun testFindMirroredCentersRows() {
-		val uppg13 = Uppg13()
+		val task13 = Task13()
 		val input = """
 			#...##..#
 			#....#..#
@@ -83,9 +83,9 @@ class Uppg13Test {
 			#....#..#
 		""".trimIndent()
 
-		val (rows, columns) = uppg13.parseInputToRowsAndColumns(input)
-		val mirroredRows = uppg13.findMirroredCenters(rows, 100)
-		val mirroredColumns = uppg13.findMirroredCenters(columns, 1)
+		val (rows, columns) = task13.parseInputToRowsAndColumns(input)
+		val mirroredRows = task13.findMirroredCenters(rows, 100)
+		val mirroredColumns = task13.findMirroredCenters(columns, 1)
 
 		assertEquals(400, mirroredRows)
 		assertEquals(0, mirroredColumns)
@@ -93,9 +93,9 @@ class Uppg13Test {
 
 	@Test
 	fun partA() {
-		val task = Uppg13()
+		val task = Task13()
 
-		val input = readInput("Input13.txt")
+		val input = readInput("2023_13.txt")
 		val sum = task.parseMultipleBlocks(input).sumOf { (rows, columns) ->
 			task.findMirroredCenters(rows, 100) + task.findMirroredCenters(columns, 1)
 		}
@@ -104,7 +104,7 @@ class Uppg13Test {
 
 	@Test
 	fun partB() {
-		val task = Uppg13()
+		val task = Task13()
 	    val result = task.b()
 		assertEquals(30442, result)
 	}

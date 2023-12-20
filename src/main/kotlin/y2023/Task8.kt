@@ -1,25 +1,25 @@
 package y2023
 
+import Task
 import utils.getLinesFromFile
 import kotlin.math.abs
 
-const val steps = "LRLRRRLRRLRRRLRRRLLLLLRRRLRLRRLRLRLRRLRRLRRRLRLRLRRLLRLRRLRRLRRLRRRLLRRRLRRRLRRLRLLLRRLRRRLRLRRLRRRLRRLRLLLRRRLRRLRRLRRRLRRRLRRRLRLRLRLRRRLRRRLLLRRLLRRRLRLRLRRRLRRRLRRLRRRLRLRLLRRRLRLRRLRLRLRRLLLRRRLRRRLRRLRRLRLRRLLRRLRRRLRRRLLRRRLRRLRLLRRLRLRRLLRRRLLLLRRLRRRLRLRRLLRLLRRRLLRRLLRRRLRRRLRRLLRLRLLRRLLRLLLRRRR"
+object Task8: Task {
 
-class Uppg8 {
+	const val steps = "LRLRRRLRRLRRRLRRRLLLLLRRRLRLRRLRLRLRRLRRLRRRLRLRLRRLLRLRRLRRLRRLRRRLLRRRLRRRLRRLRLLLRRLRRRLRLRRLRRRLRRLRLLLRRRLRRLRRLRRRLRRRLRRRLRLRLRLRRRLRRRLLLRRLLRRRLRLRLRRRLRRRLRRLRRRLRLRLLRRRLRLRRLRLRLRRLLLRRRLRRRLRRLRRLRLRRLLRRLRRRLRRRLLRRRLRRLRLLRRLRLRRLLRRRLLLLRRLRRRLRLRRLLRLLRRRLLRRLLRRRLRRRLRRLLRLRLLRRLLRLLLRRRR"
 
-	fun a() {
-		val lines = getLinesFromFile("Input8.txt")
+	override fun a(): Int {
+		val lines = getLinesFromFile("2023_8.txt")
 		val dict = parseToMap(lines)
 		val path = traverseMap(dict, "AAA", steps)
-		println(path)
-		println(path.size)
+		return path.size
 	}
 
-	fun b() {
-		val lines = getLinesFromFile("Input8.txt")
+	override fun b(): Long {
+		val lines = getLinesFromFile("2023_8.txt")
 		val dict = parseToMap(lines)
 		val commonStepCount = findCommonStepCount(dict, steps)
-		println("Common step count: $commonStepCount")
+		return commonStepCount
 	}
 
 	data class ValuePair(val left: String, val right: String)
@@ -96,14 +96,11 @@ class Uppg8 {
 			path.add(currentKey)
 			val step = stepsIterator.next()
 			val pair = map[currentKey] ?: break // Break if the current key is not found
-//			println("step: $step, pair: $pair")
 
 			currentKey = if (step == 'L') pair.left else pair.right
-//			println("currentKey: $currentKey")
 			if (currentKey == "ZZZ") break
 		}
 
 		return path
 	}
-
 }

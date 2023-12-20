@@ -3,10 +3,10 @@ package y2023
 import Task
 import utils.getLinesFromFile
 
-class Uppg1: Task {
+object Task1: Task {
 
 	override fun a(): Any {
-		val lines = getLinesFromFile("Input1.txt")
+		val lines = getLinesFromFile("2023_1.txt")
 		var sum = 0
 		lines.forEach { line ->
 			val (firstNumber, lastNumber) = extractFirstAndLastNumber(line)
@@ -16,11 +16,11 @@ class Uppg1: Task {
 			println(combinedAsInt)
 			sum+=combinedAsInt
 		}
-		return -1
+		return sum
 	}
 
 	override fun b(): Any {
-		val lines = getLinesFromFile("Input1.txt")
+		val lines = getLinesFromFile("2023_1.txt")
 		var sum = 0
 		lines.forEach { line ->
 			val (firstNumber, lastNumber) = extractFirstAndLastDigit(line)

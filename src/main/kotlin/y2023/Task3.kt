@@ -3,10 +3,10 @@ package y2023
 import Task
 import utils.getLinesFromFile
 
-class Uppg3:Task {
+object Task3:Task {
 
 	override fun a(): Any {
-		val lines = getLinesFromFile("Input3.txt")
+		val lines = getLinesFromFile("2023_3.txt")
 		val matrix = lines.map { it.toCharArray().toTypedArray() }.toTypedArray()
 
 		val validNumbers = findValidNumbers(matrix)
@@ -16,7 +16,7 @@ class Uppg3:Task {
 	}
 
 	override fun b(): Any {
-		val matrix = getLinesFromFile("Input3.txt").map { it.toCharArray().toTypedArray() }.toTypedArray()
+		val matrix = getLinesFromFile("2023_3.txt").map { it.toCharArray().toTypedArray() }.toTypedArray()
 		val products = findProducts(matrix)
 		return products.sum()
 	}

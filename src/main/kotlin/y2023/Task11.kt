@@ -4,10 +4,10 @@ import Task
 import utils.getLinesFromFile
 import kotlin.math.abs
 
-class Uppg11:Task {
+object Task11:Task  {
 
 	override fun a(): Any {
-		val lines = getLinesFromFile("Input11.txt")
+		val lines = getLinesFromFile("2023_11.txt")
 		val grid = expandGrid(lines, 2)
 		val galaxyPairs = findAllGalaxyPairs(grid)
 		return findSumOfPaths(galaxyPairs)
@@ -22,7 +22,7 @@ class Uppg11:Task {
 	}
 
 	override fun b(): Any {
-		val lines = getLinesFromFile("Input11.txt")
+		val lines = getLinesFromFile("2023_11.txt")
 		val grid = expandGrid(lines,1_000_000)
 		val galaxyPairs = findAllGalaxyPairs(grid)
 		return findSumOfPaths(galaxyPairs)
@@ -129,6 +129,17 @@ class Uppg11:Task {
 		return pairs
 	}
 
+	class Tile(var x: Long, var y: Long, private val value: Char, var label: String) {
+
+		fun isGalaxy(): Boolean {
+			return value == '#'
+		}
+		override fun toString(): String {
+			return if (isGalaxy()) label.toString() else value.toString()
+		}
+	}
+
+
 //	fun bfs(start: Tile, end: Tile, grid: List<List<Tile>>): List<Tile> {
 //		val visited = mutableSetOf<Tile>()
 //		val queue = ArrayDeque<List<Tile>>()
@@ -177,12 +188,3 @@ class Uppg11:Task {
 //	}
 }
 
-class Tile(var x: Long, var y: Long, private val value: Char, var label: String) {
-
-	fun isGalaxy(): Boolean {
-		return value == '#'
-	}
-	override fun toString(): String {
-		return if (isGalaxy()) label.toString() else value.toString()
-	}
-}

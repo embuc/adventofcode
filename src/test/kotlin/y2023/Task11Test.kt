@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import utils.getLinesFromFile
 
-class Uppg11Test {
+class Task11Test {
 
 //	@Test TODO Fix this test
 	fun testExpandGrid() {
-		val uppg11 = Uppg11()
+		val task11 = Task11()
 
 		val input = listOf(
 			"...#......",
@@ -37,9 +37,9 @@ class Uppg11Test {
 			"8....9......."
 		)
 
-		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
-		uppg11.printGrid(expandedGrid)
-		uppg11.printGridCoord(expandedGrid)
+		val expandedGrid = task11.expandGrid(input, 1_000_000)
+		task11.printGrid(expandedGrid)
+		task11.printGridCoord(expandedGrid)
 
 		// Define your expected result
 		val expected = expandedProcessedInput
@@ -54,7 +54,7 @@ class Uppg11Test {
 
 	@Test
 	fun findAllGalaxyPairs() {
-		val uppg11 = Uppg11()
+		val task11 = Task11()
 		val input = listOf(
 			"...#......",
 			".......#..",
@@ -67,23 +67,23 @@ class Uppg11Test {
 			".......#..",
 			"#...#....."
 		)
-		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
-		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
+		val expandedGrid = task11.expandGrid(input, 1_000_000)
+		val galaxyPairs = task11.findAllGalaxyPairs(expandedGrid)
 		assertEquals(36, galaxyPairs.size)
 	}
 
 	@Test
 	fun findAllGalaxyPairsWhole() {
-		val uppg11 = Uppg11()
-		val input = getLinesFromFile("Input11.txt")
-		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
-		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
+		val task11 = Task11()
+		val input = getLinesFromFile("2023_11.txt")
+		val expandedGrid = task11.expandGrid(input, 1_000_000)
+		val galaxyPairs = task11.findAllGalaxyPairs(expandedGrid)
 		assertEquals(96141, galaxyPairs.size)
 	}
 
 //	@Test TODO Fix this test
 	fun findShortestPaths() {
-		val uppg11 = Uppg11()
+		val task11 = Task11()
 		val input = listOf(
 			"...#......",
 			".......#..",
@@ -96,10 +96,10 @@ class Uppg11Test {
 			".......#..",
 			"#...#....."
 		)
-		val expandedGrid = uppg11.expandGrid(input, 1_000_000)
-		val galaxyPairs = uppg11.findAllGalaxyPairs(expandedGrid)
-		uppg11.printGrid(expandedGrid)
-		val shortestPaths = uppg11.findSumOfPaths(galaxyPairs)
+		val expandedGrid = task11.expandGrid(input, 1_000_000)
+		val galaxyPairs = task11.findAllGalaxyPairs(expandedGrid)
+		task11.printGrid(expandedGrid)
+		val shortestPaths = task11.findSumOfPaths(galaxyPairs)
 		assertEquals(36, galaxyPairs.size)
 		assertEquals(374, shortestPaths)
 	}

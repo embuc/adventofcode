@@ -6,12 +6,12 @@ import utils.readInput
 import java.lang.StringBuilder
 import java.util.LinkedList
 
-class Uppg12 : Task {
+object Task12 : Task {
 
 	data class Input(val condition: String, val groups: List<Int>)
 
 
-	companion object {
+	object {
 		private val memoizationMap = mutableMapOf<Input, Long>()
 	}
 
@@ -43,12 +43,12 @@ class Uppg12 : Task {
 
 
 	override fun b(): Any {
-		val strings = getLinesFromFile("Input12.txt")
+		val strings = getLinesFromFile("2023_12.txt")
 		return part2()
 	}
 
 	fun a2(): Any {
-		val strings = getLinesFromFile("Input12.txt")
+		val strings = getLinesFromFile("2023_12.txt")
 		return part1()
 	}
 
@@ -64,7 +64,7 @@ class Uppg12 : Task {
 		return splits == sizes
 	}
 
-	private fun parseInput() = readInput("Input12.txt").split("\n").map {
+	private fun parseInput() = readInput("2023_12.txt").split("\n").map {
 		val (springs, sizes) = it.split(' ')
 		springs to sizes.split(',').map { it.toInt() }
 	}
@@ -72,7 +72,7 @@ class Uppg12 : Task {
 
 //-------------
 
-	private val input = getLinesFromFile("Input12.txt").map { line -> line.split(" ").let { (l, r) -> l to r } }
+	private val input = getLinesFromFile("2023_12.txt").map { line -> line.split(" ").let { (l, r) -> l to r } }
 
 	private fun getArrangements(s: String, ls: List<Int>): Long {
 		val memo = IntArray(s.length) { i -> s.drop(i).takeWhile { c -> c != '.' }.length }

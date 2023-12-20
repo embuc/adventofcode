@@ -1,20 +1,23 @@
 package y2023
 
+import Task
 import utils.getLinesFromFile
 
-class Uppg10 {
+object Task10:Task {
 
-	fun a() {
-		val lines = getLinesFromFile("Input10.txt")
+	override fun a(): Int {
+		val lines = getLinesFromFile("2023_10.txt")
 		val grid = parseGrid(lines)
 		val startPos = findStartPosition(grid)
 		println("Start position: $startPos")
 		val distance = traversePath(grid, startPos)
 
 		println("Longest distance from start: $distance")
+		return distance
 	}
-	fun b() {
-		val lines = getLinesFromFile("Input10.txt")
+
+	override fun b(): Int {
+		val lines = getLinesFromFile("2023_10.txt")
 		val grid = parseGrid(lines)
 		val startPos = findStartPosition(grid)
 		println("Start position: $startPos")
@@ -22,6 +25,7 @@ class Uppg10 {
 		val count = countInsideTiles(grid, path)
 
 		println("Number of inside tiles: $count")
+		return count
 	}
 
 	fun countInsideTiles(grid: Array<Array<Tile>>, path: MutableList<Position>): Int {

@@ -3,14 +3,14 @@ package y2023
 import Task
 import utils.getLinesFromFile
 
-class Uppg2: Task {
+object Task2: Task {
 
 	override fun a(): Any {
 		val red = 12
 		val green = 13
 		val blue = 14
 
-		val lines = getLinesFromFile("Input2.txt")
+		val lines = getLinesFromFile("2023_2.txt")
 
 		var sum = 0
 		lines.forEach { line ->
@@ -22,7 +22,7 @@ class Uppg2: Task {
 	}
 
 	override fun b(): Any {
-		val lines = getLinesFromFile("Input2.txt")
+		val lines = getLinesFromFile("2023_2.txt")
 		var sum = 0
 		lines.forEach { line ->
 			println(line)

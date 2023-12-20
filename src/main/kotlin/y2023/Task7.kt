@@ -1,24 +1,23 @@
 package y2023
 
+import Task
 import utils.getLinesFromFile
 
-class Uppg7 {
+object Task7:Task {
 
-	fun a() {
-		val lines = getLinesFromFile("Input7.txt")
+	override fun a(): Long {
+		val lines = getLinesFromFile("2023_7.txt")
 		val allHands = parseInput(lines)
-//		println(allHands)
 		val sortedPokerHands = sortPokerHands(allHands);
 		val sum = getSum(sortedPokerHands)
-		println(sum)
+		return sum
 	}
-	fun b() {
-		val lines = getLinesFromFile("Input7.txt")
+	override fun b(): Long {
+		val lines = getLinesFromFile("2023_7.txt")
 		val allHands = parseInput(lines)
-//		println(allHands)
 		val sortedPokerHands = sortPokerHandsPartB(allHands);
 		val sum = getSum(sortedPokerHands)
-		println(sum)
+		return sum
 	}
 
 	fun getSum(sortedPokerHands: List<Hand>) =
