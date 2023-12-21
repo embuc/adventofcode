@@ -2,7 +2,7 @@ package y2023
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 
 class Task11Test {
 
@@ -74,7 +74,7 @@ class Task11Test {
 
 	@Test
 	fun findAllGalaxyPairsWhole() {
-		val input = getLinesFromFile("2023_11.txt")
+		val input = readInputAsListOfStrings("2023_11.txt")
 		val expandedGrid = task11.expandGrid(input, 1_000_000)
 		val galaxyPairs = task11.findAllGalaxyPairs(expandedGrid)
 		assertEquals(96141, galaxyPairs.size)

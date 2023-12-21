@@ -1,17 +1,17 @@
 package y2023
 
 import Task
-import utils.readInput
+import utils.readInputAsString
 
 object Task19 : Task {
 
 	override fun a(): Any {
-		val input = readInput("2023_19.txt")
+		val input = readInputAsString("2023_19.txt")
 		return solveA(input)
 	}
 
 	override fun b(): Any {
-		val input = readInput("2023_19.txt")
+		val input = readInputAsString("2023_19.txt")
 		return solveB(input)
 	}
 

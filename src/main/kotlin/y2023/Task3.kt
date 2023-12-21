@@ -1,12 +1,12 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 
 object Task3:Task {
 
 	override fun a(): Any {
-		val lines = getLinesFromFile("2023_3.txt")
+		val lines = readInputAsListOfStrings("2023_3.txt")
 		val matrix = lines.map { it.toCharArray().toTypedArray() }.toTypedArray()
 
 		val validNumbers = findValidNumbers(matrix)
@@ -16,7 +16,7 @@ object Task3:Task {
 	}
 
 	override fun b(): Any {
-		val matrix = getLinesFromFile("2023_3.txt").map { it.toCharArray().toTypedArray() }.toTypedArray()
+		val matrix = readInputAsListOfStrings("2023_3.txt").map { it.toCharArray().toTypedArray() }.toTypedArray()
 		val products = findProducts(matrix)
 		return products.sum()
 	}

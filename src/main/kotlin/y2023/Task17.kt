@@ -2,18 +2,18 @@ package y2023
 
 import Task
 import utils.Point2D
-import utils.readInput
+import utils.readInputAsString
 import java.util.*
 
 object Task17:Task {
 
 	override fun a(): Any {
-		val grid = readInput("2023_17.txt").lines().map { s -> s.map { it.digitToInt() }.toIntArray() }.toTypedArray()
+		val grid = readInputAsString("2023_17.txt").lines().map { s -> s.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 		return solvePart1(grid)
 	}
 
 	override fun b(): Any {
-		val grid = readInput("2023_17.txt").lines().map { s -> s.map { it.digitToInt() }.toIntArray() }.toTypedArray()
+		val grid = readInputAsString("2023_17.txt").lines().map { s -> s.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 		return solvePart2(grid)
 	}
 

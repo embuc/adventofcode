@@ -2,7 +2,7 @@ package y2023
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import utils.readInput
+import utils.readInputAsString
 
 class Task13Test {
 
@@ -91,7 +91,7 @@ class Task13Test {
 	@Test
 	fun partA() {
 
-		val input = readInput("2023_13.txt")
+		val input = readInputAsString("2023_13.txt")
 		val sum = task.parseMultipleBlocks(input).sumOf { (rows, columns) ->
 			task.findMirroredCenters(rows, 100) + task.findMirroredCenters(columns, 1)
 		}

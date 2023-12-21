@@ -1,19 +1,19 @@
 package y2023
 
 import Task
-import utils.readInput
+import utils.readInputAsString
 
 object Task13 : Task {
 
 	override fun a(): Any {
-		val input = readInput("2023_13.txt")
+		val input = readInputAsString("2023_13.txt")
 		return parseMultipleBlocks(input).sumOf { (rows, columns) ->
 			findMirroredCenters(rows, 100) + findMirroredCenters(columns, 1)
 		}
 	}
 
 	override fun b(): Any {
-		val input = readInput("2023_13.txt")
+		val input = readInputAsString("2023_13.txt")
 
 		return parseMultipleBlocks(input)
 			.sumOf { (rows, columns) ->

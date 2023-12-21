@@ -1,10 +1,7 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
-import y2023.Task14.solveB
-import y2023.Task16.DIAGONAL_LEFT
-import y2023.Task16.DIAGONAL_RIGHT
+import utils.readInputAsListOfStrings
 
 object Task16 : Task {
 
@@ -19,13 +16,13 @@ object Task16 : Task {
 	}
 
 	override fun a(): Any {
-		val grid = getLinesFromFile("2023_16.txt").map { it.toCharArray() }.toTypedArray()
+		val grid = readInputAsListOfStrings("2023_16.txt").map { it.toCharArray() }.toTypedArray()
 
 		return evaluateGrid(solveGrid(grid, Pair(0, 0), Direction.RIGHT))
 	}
 
 	override fun b(): Any {
-		val grid = getLinesFromFile("2023_16.txt").map { it.toCharArray() }.toTypedArray()
+		val grid = readInputAsListOfStrings("2023_16.txt").map { it.toCharArray() }.toTypedArray()
 		var maxResult = Int.MIN_VALUE
 		//TOP
 		for(j in grid[0].indices) {

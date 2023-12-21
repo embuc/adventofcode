@@ -1,19 +1,19 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 
 object Task7:Task {
 
 	override fun a(): Long {
-		val lines = getLinesFromFile("2023_7.txt")
+		val lines = readInputAsListOfStrings("2023_7.txt")
 		val allHands = parseInput(lines)
 		val sortedPokerHands = sortPokerHands(allHands);
 		val sum = getSum(sortedPokerHands)
 		return sum
 	}
 	override fun b(): Long {
-		val lines = getLinesFromFile("2023_7.txt")
+		val lines = readInputAsListOfStrings("2023_7.txt")
 		val allHands = parseInput(lines)
 		val sortedPokerHands = sortPokerHandsPartB(allHands);
 		val sum = getSum(sortedPokerHands)

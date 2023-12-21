@@ -1,17 +1,17 @@
 package y2023
 
 import Task
-import utils.readInput
+import utils.readInputAsString
 
 object Task15 : Task {
 
 	override fun a(): Any {
-		val strings = readInput("2023_15.txt").split(",")
+		val strings = readInputAsString("2023_15.txt").split(",")
 		return strings.sumOf {s-> calcHash(s) }
 	}
 
 	override fun b(): Any {
-		return solvePart2(readInput("2023_15.txt").split(","))
+		return solvePart2(readInputAsString("2023_15.txt").split(","))
 	}
 
 	//	Determine the ASCII code for the current character of the string.

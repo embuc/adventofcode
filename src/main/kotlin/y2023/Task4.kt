@@ -1,13 +1,13 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 
 
 object Task4:Task {
 
 	override fun a():Any {
-		val lines = getLinesFromFile("2023_4.txt")
+		val lines = readInputAsListOfStrings("2023_4.txt")
 		val cards = lines.map { parseCardString(it) }
 		var sum = 0
 		for (card in cards) {
@@ -20,7 +20,7 @@ object Task4:Task {
 	}
 
 	override fun b():Any {
-		val lines = getLinesFromFile("2023_4.txt")
+		val lines = readInputAsListOfStrings("2023_4.txt")
 		val copies = getCopies(lines)
 		return copies.map { it.value }.sum()
 	}

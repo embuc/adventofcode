@@ -1,13 +1,13 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 import kotlin.math.abs
 
 object Task11:Task  {
 
 	override fun a(): Any {
-		val lines = getLinesFromFile("2023_11.txt")
+		val lines = readInputAsListOfStrings("2023_11.txt")
 		val grid = expandGrid(lines, 2)
 		val galaxyPairs = findAllGalaxyPairs(grid)
 		return findSumOfPaths(galaxyPairs)
@@ -22,7 +22,7 @@ object Task11:Task  {
 	}
 
 	override fun b(): Any {
-		val lines = getLinesFromFile("2023_11.txt")
+		val lines = readInputAsListOfStrings("2023_11.txt")
 		val grid = expandGrid(lines,1_000_000)
 		val galaxyPairs = findAllGalaxyPairs(grid)
 		return findSumOfPaths(galaxyPairs)

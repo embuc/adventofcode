@@ -2,7 +2,7 @@ package y2023
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 import y2023.Task14.EMPTY
 import y2023.Task14.ROCK
 import y2023.Task14.CUBE
@@ -99,14 +99,14 @@ class Task14Test {
 	@Test
 	fun testSolveA() {
 		val expected = 105784
-		val actual = Task14.solveA(getLinesFromFile("2023_14.txt"))
+		val actual = Task14.solveA(readInputAsListOfStrings("2023_14.txt"))
 		assertEquals(expected, actual)
 	}
 
 	@Test
 	fun testSolveB() {
 		val expected = 91286
-		val actual = Task14.solveB(getLinesFromFile("2023_14.txt"))
+		val actual = Task14.solveB(readInputAsListOfStrings("2023_14.txt"))
 		assertEquals(expected, actual)
 	}
 

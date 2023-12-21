@@ -1,7 +1,7 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 import java.util.*
 
 object Task18 : Task {
@@ -29,14 +29,14 @@ object Task18 : Task {
 	data class Instruction(val direction: String, val steps: Long)
 
 	override fun a(): Any {
-		val lines = getLinesFromFile("2023_18.txt")
+		val lines = readInputAsListOfStrings("2023_18.txt")
 		val polygonInstructions = parseToPolygonInstructions(lines, false)
 		val createPolygon = createPolygon(polygonInstructions)
 		return lavaCubicMeters(createPolygon)
 	}
 
 	override fun b(): Any {
-		val lines = getLinesFromFile("2023_18.txt")
+		val lines = readInputAsListOfStrings("2023_18.txt")
 		val polygonInstructions = parseToPolygonInstructions(lines, true)
 		val createPolygon = createPolygon(polygonInstructions)
 		return lavaCubicMeters(createPolygon)

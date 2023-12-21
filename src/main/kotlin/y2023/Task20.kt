@@ -3,13 +3,11 @@ package y2023
 import Task
 import utils.Utils
 import utils.Utils.allEquals
-import utils.getLinesFromFile
-import utils.lcm
-import java.io.File
+import utils.readInputAsListOfStrings
 
 object Task20:Task {
 
-	val input = getLinesFromFile("2023_20.txt")
+	val input = readInputAsListOfStrings("2023_20.txt")
 
 	override fun a(): Any {
 //		return solvePart1(input)

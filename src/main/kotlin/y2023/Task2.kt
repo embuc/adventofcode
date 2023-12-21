@@ -1,7 +1,7 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 
 object Task2: Task {
 
@@ -10,7 +10,7 @@ object Task2: Task {
 		val green = 13
 		val blue = 14
 
-		val lines = getLinesFromFile("2023_2.txt")
+		val lines = readInputAsListOfStrings("2023_2.txt")
 
 		var sum = 0
 		lines.forEach { line ->
@@ -22,7 +22,7 @@ object Task2: Task {
 	}
 
 	override fun b(): Any {
-		val lines = getLinesFromFile("2023_2.txt")
+		val lines = readInputAsListOfStrings("2023_2.txt")
 		var sum = 0
 		lines.forEach { line ->
 			println(line)

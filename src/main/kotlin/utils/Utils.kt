@@ -1,5 +1,8 @@
 package utils
 
+import utils.Grid
+import utils.LongPoint
+import utils.Point
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
@@ -52,6 +55,16 @@ object Utils {
 		return true
 	}
 
+	fun generateRandomGrid(rows: Int, columns: Int, obstacleProbability: Double): Grid<Boolean> {
+		val grid = Grid<Boolean>(rows, columns)
+		for (row in 0..<rows) {
+			for (column in 0..<columns) {
+				grid[row, column] = Random.nextDouble() < obstacleProbability
+			}
+		}
+		return grid
+	}
+
 	fun toFahrenheit(celsius: Double) = celsius * 9 / 5 + 32
 	fun toCelsius(fahrenheit: Double) = (fahrenheit - 32) * 5 / 9
 
@@ -102,6 +115,7 @@ object Utils {
 		return (this % mod + mod) % mod
 	}
 
+	infix fun Int.p(y: Int): Point = Point(this, y)
 	infix fun Set<*>.and(other: Set<*>): Set<*> = this.intersect(other)
 	infix fun Set<*>.or(other: Set<*>): Set<*> = this.union(other)
 	infix fun Set<*>.xor(other: Set<*>): Set<*> = this.union(other).minus(this.intersect(other))
@@ -239,6 +253,8 @@ object Utils {
 	fun File.rt(): String = this.readText().trim()
 	fun File.sdnl() = this.rt().split("\n\n")
 	fun List<String>.snl() = this.map { it.split("\n") }
+	fun Collection<Point>.getNeighbors() = this.flatMap { it.getNeighbors() }.toSet()
+	fun Collection<Point>.getCardinalNeighbors() = this.flatMap { it.getCardinalNeighbors() }.toSet()
 	fun <T> Collection<T>.filterConsecutive(predicate: (T) -> Boolean): List<List<T>> {
 		val result = mutableListOf<List<T>>()
 		var currentList = mutableListOf<T>()
@@ -531,5 +547,39 @@ object Utils {
 				first[i][j] - second[i][j]
 			}
 		}
+	}
+
+	@JvmName("getPolygonAreaInt")
+	fun getPolygonArea(vertices: List<Point>): Long {
+		if (vertices.size < 3) return 0L
+		var sum1 = 0L
+		var sum2 = 0L
+
+		for (i in vertices.indices) {
+			val current = vertices[i]
+			val next = vertices[(i + 1) % vertices.size]
+
+			sum1 += current.x * next.y
+			sum2 += current.y * next.x
+		}
+
+		return abs(sum1 - sum2) / 2
+	}
+
+	@JvmName("getPolygonAreaLong")
+	fun getPolygonArea(vertices: List<LongPoint>): Long {
+		if (vertices.size < 3) return 0L
+		var sum1 = 0L
+		var sum2 = 0L
+
+		for (i in vertices.indices) {
+			val current = vertices[i]
+			val next = vertices[(i + 1) % vertices.size]
+
+			sum1 += current.x * next.y
+			sum2 += current.y * next.x
+		}
+
+		return abs(sum1 - sum2) / 2
 	}
 }

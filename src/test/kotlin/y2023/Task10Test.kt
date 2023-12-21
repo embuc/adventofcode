@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 
 class Task10Test {
 
@@ -77,7 +77,7 @@ class Task10Test {
 
 	@Test
 	fun testPipeTraversal_B_2() {
-		val lines = getLinesFromFile("Input10test.txt")
+		val lines = readInputAsListOfStrings("Input10test.txt")
 		val grid = task10.parseGrid(lines)
 		val startPos = task10.findStartPosition(grid)
 		val path = task10.traversePath2(grid, startPos)

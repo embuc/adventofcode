@@ -1,12 +1,12 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 
 object Task10:Task {
 
 	override fun a(): Int {
-		val lines = getLinesFromFile("2023_10.txt")
+		val lines = readInputAsListOfStrings("2023_10.txt")
 		val grid = parseGrid(lines)
 		val startPos = findStartPosition(grid)
 		println("Start position: $startPos")
@@ -17,7 +17,7 @@ object Task10:Task {
 	}
 
 	override fun b(): Int {
-		val lines = getLinesFromFile("2023_10.txt")
+		val lines = readInputAsListOfStrings("2023_10.txt")
 		val grid = parseGrid(lines)
 		val startPos = findStartPosition(grid)
 		println("Start position: $startPos")

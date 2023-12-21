@@ -1,10 +1,7 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
-import y2023.Task14.CUBE
-import y2023.Task14.ROCK
-import javax.management.Query.or
+import utils.readInputAsListOfStrings
 
 object Task14 : Task {
 	const val EMPTY = 0 // .
@@ -13,11 +10,11 @@ object Task14 : Task {
 
 
 	override fun a(): Any {
-		return solveA(getLinesFromFile("2023_14.txt"))
+		return solveA(readInputAsListOfStrings("2023_14.txt"))
 	}
 
 	override fun b(): Any {
-		return solveB(getLinesFromFile("2023_14.txt"))
+		return solveB(readInputAsListOfStrings("2023_14.txt"))
 	}
 
 	fun solveA(list: List<String>): Any {

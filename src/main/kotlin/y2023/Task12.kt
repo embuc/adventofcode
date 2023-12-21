@@ -1,8 +1,8 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
-import utils.readInput
+import utils.readInputAsListOfStrings
+import utils.readInputAsString
 import java.lang.StringBuilder
 import java.util.LinkedList
 
@@ -40,12 +40,12 @@ object Task12 : Task {
 
 
 	override fun b(): Any {
-		val strings = getLinesFromFile("2023_12.txt")
+		val strings = readInputAsListOfStrings("2023_12.txt")
 		return part2()
 	}
 
 	fun a2(): Any {
-		val strings = getLinesFromFile("2023_12.txt")
+		val strings = readInputAsListOfStrings("2023_12.txt")
 		return part1()
 	}
 
@@ -61,7 +61,7 @@ object Task12 : Task {
 		return splits == sizes
 	}
 
-	private fun parseInput() = readInput("2023_12.txt").split("\n").map {
+	private fun parseInput() = readInputAsString("2023_12.txt").split("\n").map {
 		val (springs, sizes) = it.split(' ')
 		springs to sizes.split(',').map { it.toInt() }
 	}
@@ -69,7 +69,7 @@ object Task12 : Task {
 
 //-------------
 
-	private val input = getLinesFromFile("2023_12.txt").map { line -> line.split(" ").let { (l, r) -> l to r } }
+	private val input = readInputAsListOfStrings("2023_12.txt").map { line -> line.split(" ").let { (l, r) -> l to r } }
 
 	private fun getArrangements(s: String, ls: List<Int>): Long {
 		val memo = IntArray(s.length) { i -> s.drop(i).takeWhile { c -> c != '.' }.length }

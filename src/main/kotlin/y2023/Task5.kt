@@ -4,7 +4,7 @@ import Task
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 
 object Task5:Task {
 	const val SEED_TO_SOIL = "seed-to-soil"
@@ -124,7 +124,7 @@ object Task5:Task {
 	}
 
 	fun parseFileToMappings(fileName: String): Map<String, List<MappingGroup>> {
-		val lines = getLinesFromFile(fileName)
+		val lines = readInputAsListOfStrings(fileName)
 		val result = mutableMapOf<String, List<MappingGroup>>()
 		var currentSection = ""
 		var mappings = mutableListOf<MappingGroup>()

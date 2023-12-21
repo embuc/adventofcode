@@ -1,7 +1,7 @@
 package y2023
 
 import Task
-import utils.getLinesFromFile
+import utils.readInputAsListOfStrings
 import kotlin.math.abs
 
 object Task8: Task {
@@ -9,14 +9,14 @@ object Task8: Task {
 	const val steps = "LRLRRRLRRLRRRLRRRLLLLLRRRLRLRRLRLRLRRLRRLRRRLRLRLRRLLRLRRLRRLRRLRRRLLRRRLRRRLRRLRLLLRRLRRRLRLRRLRRRLRRLRLLLRRRLRRLRRLRRRLRRRLRRRLRLRLRLRRRLRRRLLLRRLLRRRLRLRLRRRLRRRLRRLRRRLRLRLLRRRLRLRRLRLRLRRLLLRRRLRRRLRRLRRLRLRRLLRRLRRRLRRRLLRRRLRRLRLLRRLRLRRLLRRRLLLLRRLRRRLRLRRLLRLLRRRLLRRLLRRRLRRRLRRLLRLRLLRRLLRLLLRRRR"
 
 	override fun a(): Int {
-		val lines = getLinesFromFile("2023_8.txt")
+		val lines = readInputAsListOfStrings("2023_8.txt")
 		val dict = parseToMap(lines)
 		val path = traverseMap(dict, "AAA", steps)
 		return path.size
 	}
 
 	override fun b(): Long {
-		val lines = getLinesFromFile("2023_8.txt")
+		val lines = readInputAsListOfStrings("2023_8.txt")
 		val dict = parseToMap(lines)
 		val commonStepCount = findCommonStepCount(dict, steps)
 		return commonStepCount
