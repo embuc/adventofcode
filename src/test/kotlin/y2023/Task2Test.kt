@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 class Task2Test {
+	val task = Task2
+
 	companion object {
 		@JvmStatic
 		fun gameData(): Stream<Arguments> {
@@ -57,14 +59,13 @@ class Task2Test {
 	@MethodSource("gameData")
 	fun testGameParsing(input: String, expected: Task2.Game) {
 		println(input)
-		val task = Task2()
+
 		val result = task.parseGame(input)
 		Assertions.assertEquals(expected, result)
 	}
 
 	@Test
 	fun parseGameTest() {
-		val task = Task2()
 		val input = "Game 1: 12 red, 2 green, 1 blue; 13 green, 2 red; 14 blue, 4 green, 3 red; 8 blue"
 		val game = task.parseGame(input)
 		Assertions.assertEquals(1, game.gameId)

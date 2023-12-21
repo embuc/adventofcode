@@ -5,6 +5,8 @@ import kotlin.test.assertEquals
 
 class Task4Test {
 
+	val task = Task4
+
 	//	you end up with
 	//	1 instance of card 1,
 	//	2 instances of card 2,
@@ -24,9 +26,7 @@ class Task4Test {
 			"Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
 		)
 
-		val uppg4 = Uppg4()
-		val copies = uppg4.getCopies(testInputs)
-		println(copies)
+		val copies = task.getCopies(testInputs)
 		assertEquals(6, copies.size)
 		assertEquals(1, copies[1])
 		assertEquals(2, copies[2])
@@ -38,10 +38,9 @@ class Task4Test {
 
 	@Test
 	fun testCalculateCardScore() {
-		val uppg4 = Uppg4()
 		val cardString = "Card 1: 4 16 87 61 11 37 43 25 49 17 | 54 36 14 55 83 58 43 15 87 17 97 11 62 75 37 4 49 80 42 61 20 79 25 24 16"
-		val card = uppg4.parseCardString(cardString)
-		val score = uppg4.calculateCardScore(card)
+		val card = task.parseCardString(cardString)
+		val score = task.calculateCardScore(card)
 
 		// Calculate the expected score based on the test string
 		val expectedScore = 1 + 1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256

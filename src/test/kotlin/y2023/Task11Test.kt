@@ -6,10 +6,10 @@ import utils.getLinesFromFile
 
 class Task11Test {
 
+	val task11 = Task11
+
 //	@Test TODO Fix this test
 	fun testExpandGrid() {
-		val task11 = Task11()
-
 		val input = listOf(
 			"...#......",
 			".......#..",
@@ -22,6 +22,7 @@ class Task11Test {
 			".......#..",
 			"#...#....."
 		)
+
 		val expandedProcessedInput = listOf(
 			"....1........",
 			".........2...",
@@ -54,7 +55,6 @@ class Task11Test {
 
 	@Test
 	fun findAllGalaxyPairs() {
-		val task11 = Task11()
 		val input = listOf(
 			"...#......",
 			".......#..",
@@ -74,7 +74,6 @@ class Task11Test {
 
 	@Test
 	fun findAllGalaxyPairsWhole() {
-		val task11 = Task11()
 		val input = getLinesFromFile("2023_11.txt")
 		val expandedGrid = task11.expandGrid(input, 1_000_000)
 		val galaxyPairs = task11.findAllGalaxyPairs(expandedGrid)
@@ -83,7 +82,6 @@ class Task11Test {
 
 //	@Test TODO Fix this test
 	fun findShortestPaths() {
-		val task11 = Task11()
 		val input = listOf(
 			"...#......",
 			".......#..",

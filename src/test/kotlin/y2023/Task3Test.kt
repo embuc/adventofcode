@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test
 
 class Task3Test {
 
+	val task = Task3
+
 	//@Test TODO fix
 	fun testExtractNumber() {
-		val task = Uppg3()
+
 		val matrix = arrayOf(
 			arrayOf('4', '6', '7', '.', '.', '1', '1', '4', '.', '.'),
 			// ... other rows
@@ -18,7 +20,6 @@ class Task3Test {
 
 	@Test
 	fun testIsAdjacentToSymbol() {
-		val task = Uppg3()
 		val matrix = arrayOf(
 			arrayOf('4', '6', '7', '*', '.', '1', '1', '4', '.', '.'),
 			arrayOf('.', '.', '.', '.', '.', '.', '.', '.', '.', '.'),
@@ -31,7 +32,6 @@ class Task3Test {
 
 	//@Test TODO fix
 	fun testValidNumbers() {
-		val task = Uppg3()
 		val matrix = arrayOf(
 			arrayOf('4', '6', '7', '.', '.', '1', '1', '4', '.', '.'),
 			arrayOf('.', '.', '.', '*', '.', '.', '.', '.', '.', '.'),
@@ -44,7 +44,6 @@ class Task3Test {
 
 	@Test
 	fun testValidNumbers2() {
-		val task = Uppg3()
 		val testInput = """
     ..........................................389.314.................206......................449.523..................138..................512
     .........+.....954......723..........................................*.............687.....*..........692..........*.......................*
@@ -62,7 +61,6 @@ class Task3Test {
 
 	@Test
 	fun testValidNumbers3() {
-		val task = Uppg3()
 		val testInput = """
     ..........................................389.314.................206......................449.523..................138..................512
     .........+.....954......723..........................................*.............687.....*..........692..........*.......................*

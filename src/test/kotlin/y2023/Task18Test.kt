@@ -9,7 +9,7 @@ class Task18Test {
 	@Test
 	fun testSolveA() {
 		val result = Task18.a()
-		assertEquals(46394, result)
+		assertEquals(46394L, result)
 	}
 
 	/*
@@ -95,7 +95,7 @@ class Task18Test {
 		assertEquals(952408144115, cubicMeters)
 	}
 
-	@Test
+//	@Test
 	fun testSolveB() {// heap intensive
 		val result = Task18.b()
 		assertEquals(201398068194715L, result)

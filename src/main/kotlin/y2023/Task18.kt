@@ -119,9 +119,12 @@ object Task18 : Task {
 		return polygon
 	}
 	fun parseToPolygonInstructions(lines: List<String>, usingColor: Boolean): List<Instruction> {
-		return lines.map { line -> line.split(" ") }
+		return if(usingColor) lines.map { line -> line.split(" ") }
 			.map{line -> line[2].removeSurrounding("(", ")").drop(1)}
 			.map { line -> Instruction(line.takeLast(1), line.take(5).toInt(16).toLong()) }
+			.toList()
+			else lines.map { line -> line.split(" ") }
+			.map { line -> Instruction(line[0], line[1].toLong()) }
 			.toList()
 	}
 

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class Task7Test {
-	val task7 = Task7()
+	val task7 = Task7
 
 	@Test
 	fun testPokerHandSorting() {

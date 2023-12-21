@@ -8,9 +8,10 @@ import utils.getLinesFromFile
 
 class Task10Test {
 
+	val task10 = Task10
+
 	@Test
 	fun testPipeTraversal() {
-		// Arrange
 		val lines = listOf(
 			".....",
 			".S-7.",
@@ -18,22 +19,15 @@ class Task10Test {
 			".L-J.",
 			"....."
 		)
-
-		val task10 = Task10()
-
-		// Act
 		val grid = task10.parseGrid(lines)
 		task10.printGrid(grid)
 		val startPos = task10.findStartPosition(grid)
-		println("Start position: $startPos")
 		val distance = task10.traversePath(grid, startPos)
-
-		// Assert
 		assertEquals(4, distance, "The longest distance from start should be 4")
 	}
+
 	@Test
 	fun testPipeTraversal_B() {
-		// Arrange
 		val lines = listOf(
 			".....",
 			".S-7.",
@@ -41,22 +35,16 @@ class Task10Test {
 			".L-J.",
 			"....."
 		)
-
-		val task10 = Task10()
-
-		// Act
 		val grid = task10.parseGrid(lines)
 		task10.printGrid(grid)
 		val startPos = task10.findStartPosition(grid)
 		val path = task10.traversePath2(grid, startPos)
 		val count = task10.countInsideTiles(grid, path)
-		// Assert
 		assertEquals(1, count, "Number of inside tiles")
 	}
 
 	@Test
 	fun testPipeTraversal_B_1() {
-		// Arrange
 		val lines = listOf(
 			".....",
 			".S--7",
@@ -64,21 +52,15 @@ class Task10Test {
 			".L--J",
 			"....."
 		)
-
-		val task10 = Task10()
-
-		// Act
 		val grid = task10.parseGrid(lines)
-//		uppg10.printGrid(grid)
 		val startPos = task10.findStartPosition(grid)
 		val path = task10.traversePath2(grid, startPos)
 		val count = task10.countInsideTiles(grid, path)
-		// Assert
 		assertEquals(2, count, "Number of inside tiles")
 	}
+
 	@Test
 	fun testPipeTraversal_B_1_1() {
-		// Arrange
 		val lines = listOf(
 			"......",
 			".S--7.",
@@ -86,39 +68,25 @@ class Task10Test {
 			".L---J",
 			"......"
 		)
-
-		val task10 = Task10()
-
-		// Act
 		val grid = task10.parseGrid(lines)
-//		uppg10.printGrid(grid)
 		val startPos = task10.findStartPosition(grid)
 		val path = task10.traversePath2(grid, startPos)
 		val count = task10.countInsideTiles(grid, path)
-		// Assert
 		assertEquals(2, count, "Number of inside tiles")
 	}
 
 	@Test
 	fun testPipeTraversal_B_2() {
-		val task10 = Task10()
-		// Arrange
 		val lines = getLinesFromFile("Input10test.txt")
-
-
-		// Act
 		val grid = task10.parseGrid(lines)
-//		uppg10.printGrid(grid)
 		val startPos = task10.findStartPosition(grid)
 		val path = task10.traversePath2(grid, startPos)
 		val count = task10.countInsideTiles(grid, path)
-		// Assert
 		assertEquals(10, count, "Number of inside tiles")
 	}
 
 	@Test
 	fun testHorizontalConnections() {
-		val task10 = Task10()
 		val horizontalTile = Task10.Tile(Task10.TileType.HORIZONTAL)
 		val verticalTile = Task10.Tile(Task10.TileType.VERTICAL)
 		val bendLTile = Task10.Tile(Task10.TileType.BEND_L)
@@ -149,8 +117,6 @@ class Task10Test {
 
 	@Test
 	fun testBend7Connections() {
-		val task10 = Task10()
-
 		val bend7Tile = Task10.Tile(Task10.TileType.BEND_7)
 		val bendLTile = Task10.Tile(Task10.TileType.BEND_L)
 		val bendFTile = Task10.Tile(Task10.TileType.BEND_F)
@@ -173,8 +139,6 @@ class Task10Test {
 
 	@Test
 	fun testBendFConnections() {
-		val task10 = Task10()
-
 		val bendFTile = Task10.Tile(Task10.TileType.BEND_F)
 		val horizontalTile = Task10.Tile(Task10.TileType.HORIZONTAL)
 		val verticalTile = Task10.Tile(Task10.TileType.VERTICAL)
@@ -190,8 +154,6 @@ class Task10Test {
 
 	@Test
 	fun testStartConnections() {
-		val task10 = Task10()
-
 		val startTile = Task10.Tile(Task10.TileType.START)
 		val groundTile = Task10.Tile(Task10.TileType.GROUND)
 		val verticalTile = Task10.Tile(Task10.TileType.VERTICAL)

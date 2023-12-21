@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test
 
 class Task1Test {
 
+	val task = Task1
+
 	@Test
 	fun extractFirstAndLastDigit() {
-		val task = Task1()
 		val input = "one two three four five six seven eight nine"
 		val (firstDigit, lastDigit) = task.extractFirstAndLastDigit(input)
 		Assertions.assertEquals(1, firstDigit)
@@ -16,7 +17,6 @@ class Task1Test {
 
 	@Test
 	fun extractFirstAndLastDigitOverlaping() {
-		val task = Task1()
 		val input = "dc572twonejgl"
 		val (firstDigit, lastDigit) = task.extractFirstAndLastDigit(input)
 		Assertions.assertEquals(5, firstDigit)
@@ -25,7 +25,6 @@ class Task1Test {
 
 	@Test
 	fun extractFirstAndLastDigitOverlaping2() {
-		val task = Task1()
 		val input = "dtwonec572twone7jgl"
 		val (firstDigit, lastDigit) = task.extractFirstAndLastDigit(input)
 		Assertions.assertEquals(2, firstDigit)

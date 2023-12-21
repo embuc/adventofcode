@@ -2,16 +2,17 @@ package y2023
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import y2023.Task5.SEED_TO_SOIL
 
-class Uppg5Test {
+class Task5Test {
 
-	val uppg = Uppg5()
+	val task = Task5
 
 	@Test
 	fun testMappingGroup() {
 		// Input: destinationStart = 52, sourceStart = 50, length = 48
 		// Expected: Input 70 should be mapped to 81
-		val mappingGroup = Uppg5.MappingGroup(52, 50, 48)
+		val mappingGroup = Task5.MappingGroup(52, 50, 48)
 
 		// Check if 70 is within the source range
 		assertTrue(mappingGroup.isInSourceRange(79))
@@ -27,12 +28,12 @@ class Uppg5Test {
 		val seed = 79L
 		val location = 82L
 //		val uppg = Uppg5()
-		val allMappings = uppg.parseFileToMappings("Input5Test.txt")
+		val allMappings = task.parseFileToMappings("Input5Test.txt")
 		println("Keys: ${allMappings.keys}")
 		println("Values: ${allMappings.values}")
 		assertEquals(7, allMappings.size)
 		assertEquals(2, allMappings[SEED_TO_SOIL]!!.size)
-		assertEquals(location, uppg.getLocation(allMappings, seed))
+		assertEquals(location, task.getLocation(allMappings, seed))
 	}
 }
 

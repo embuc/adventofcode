@@ -10,10 +10,7 @@ object Task12 : Task {
 
 	data class Input(val condition: String, val groups: List<Int>)
 
-
-	object {
-		private val memoizationMap = mutableMapOf<Input, Long>()
-	}
+	private val memoizationMap = mutableMapOf<Input, Long>()
 
 	override fun a(): Int {
 		return parseInput().sumOf { (springs, sizes) ->
