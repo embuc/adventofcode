@@ -1,1 +1,4 @@
-# adventofcode2023
+# Advent of code (aoc)
+
+https://adventofcode.com/
+
