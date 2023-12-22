@@ -8,6 +8,12 @@ class Task21Test {
 
 	@Test
 	fun a() {
+		val actual = Task21.a()
+		assertEquals(3574, actual)
+	}
+
+	@Test
+	fun solveA() {
 		val input = """
 			...........
 			.....###.#.
@@ -26,11 +32,9 @@ class Task21Test {
 	}
 
 	@Test
-	fun solveA() {
-	}
-
-	@Test
 	fun b() {
+		val actual = Task21.b()
+		assertEquals(600090522932119, actual)
 	}
 
 	@Test
