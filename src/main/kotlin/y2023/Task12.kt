@@ -8,7 +8,7 @@ import java.util.LinkedList
 
 object Task12 : Task {
 
-	data class Input(val condition: String, val groups: List<Int>)
+	private data class Input(val condition: String, val groups: List<Int>)
 
 	private val memoizationMap = mutableMapOf<Input, Long>()
 
@@ -40,15 +40,12 @@ object Task12 : Task {
 
 
 	override fun b(): Any {
-		val strings = readInputAsListOfStrings("2023_12.txt")
 		return part2()
 	}
 
 	fun a2(): Any {
-		val strings = readInputAsListOfStrings("2023_12.txt")
 		return part1()
 	}
-
 
 	private fun String.replaceAt(index: Int, char: Char): String {
 		val sb = StringBuilder(this)

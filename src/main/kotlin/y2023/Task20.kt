@@ -7,17 +7,14 @@ import utils.readInputAsListOfStrings
 
 object Task20:Task {
 
-	val input = readInputAsListOfStrings("2023_20.txt")
+	private val input = readInputAsListOfStrings("2023_20.txt")
 
 	override fun a(): Any {
-//		return solvePart1(input)
 		return solveA(input)
 	}
 
 	override fun b(): Any {
-
 		return solvePart2(input)
-//		return solveB(input)
 	}
 
 	private val destinations = input.map { it.split(" -> ") }.associate { (name, destinations) ->
