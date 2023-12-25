@@ -1,6 +1,7 @@
 package y2023
 
 import Task
+import org.graphstream.graph.implementations.SingleGraph
 import org.jgrapht.alg.StoerWagnerMinimumCut
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.DefaultUndirectedGraph
@@ -20,12 +21,29 @@ class Task25(private val input:List<String>): Task {
 			}
 		}
 		val minCut = StoerWagnerMinimumCut(graph).minCut()
-		println(graph)
+		System.setProperty("org.graphstream.ui", "swing")
+//		println(graph)
+//		utils.Graphs.visualizeGraph(graph)
+//		Thread.sleep(10000)
 		graph.removeAllVertices(minCut)
 		return graph.vertexSet().size * minCut.size
 	}
 
 	override fun b(): Any {
-		TODO("Not yet implemented")
+		return "Red button pressed!"
 	}
+
+}
+
+fun main() {
+	System.setProperty("org.graphstream.ui", "swing")
+
+	val graph = SingleGraph("Example")
+	graph.setStrict(false);
+	graph.setAutoCreate( true );
+	graph.addNode("A")
+	graph.addNode("B")
+	graph.addEdge("AB", "A", "B")
+
+	graph.display()
 }

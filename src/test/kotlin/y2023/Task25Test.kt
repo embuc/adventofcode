@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
+import utils.Graphs
 import utils.readInputAsListOfStrings
 
 class Task25Test {
@@ -34,7 +35,7 @@ class Task25Test {
 		@Test
 		fun `Matches actual`() {
 			val answer = Task25(readInputAsListOfStrings("2023_25.txt")).a()
-			assertEquals(0, answer)
+			assertEquals(547410, answer)
 		}
 	}
 }
