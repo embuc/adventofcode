@@ -6,6 +6,7 @@ import utils.Line
 import utils.PointDouble
 import utils.Utils.die
 import utils.Utils.rl
+import utils.Utils.component6
 import java.io.File
 import com.microsoft.z3.Context
 import com.microsoft.z3.Status
@@ -60,11 +61,11 @@ class Task24(private val input: List<String>, private val minBoundary: Double, p
 
 
 	override fun b(): Any {
-		return -1
+		return solvePart2(input)
 	}
 
-	fun solvePart2(input: File): Any {
-		val hail = input.rl().map { it.split(" @ ", ", ").map { it.trim().toLong() } }
+	fun solvePart2(input: List<String>): Any {
+		val hail = input.map { it.split(" @ ", ", ").map { it.trim().toLong() } }
 		val ctx = Context()
 		val solver = ctx.mkSolver()
 		val mx = ctx.mkRealConst("mx")

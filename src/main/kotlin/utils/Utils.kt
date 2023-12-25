@@ -25,11 +25,17 @@ object Utils {
 
 	fun String.extractLetters(): String = this.filter { it.isLetter() }
 	fun String.extractSpecial(): String = this.filter { !it.isLetter() && !it.isDigit() }
-	fun String.extractNumbersSeparated(): List<Int> = this.split(Regex("\\D+")).filter { it.isNotBlank() }.map { it.toInt() }
-	fun String.extractNegativesSeparated(): List<Int> = this.split(Regex("[^-\\d]+")).filter { it.isNotBlank() }.map { it.toInt() }
+	fun String.extractNumbersSeparated(): List<Int> =
+		this.split(Regex("\\D+")).filter { it.isNotBlank() }.map { it.toInt() }
+
+	fun String.extractNegativesSeparated(): List<Int> =
+		this.split(Regex("[^-\\d]+")).filter { it.isNotBlank() }.map { it.toInt() }
+
 	fun String.removeTrailingNumbers(): String = this.replace(Regex("\\d+$"), "")
 	fun String.containsNumber(): Boolean = this.contains(Regex("\\d+"))
-	fun String.toChar(): Char = if (this.l != 1) throw IllegalArgumentException("String of length other than 1 cannot be converted to a Char") else this.toCharArray().first()
+	fun String.toChar(): Char =
+		if (this.l != 1) throw IllegalArgumentException("String of length other than 1 cannot be converted to a Char") else this.toCharArray()
+			.first()
 
 	fun Char.asInt() = this.toString().toInt()
 	infix fun <T> List<T>.at(pos: Int) = this[pos % this.size]
@@ -40,7 +46,7 @@ object Utils {
 	fun Long.abs() = abs(this)
 	fun Long.pow(power: Int): Long = this.toDouble().pow(power).toLong()
 	fun Int.pow(power: Int): Int = this.toDouble().pow(power).toInt()
-	fun <T> Collection<T>.isAllEqual(): Boolean {
+	fun <T> List<T>.isAllEqual(): Boolean {
 		for (i in 1..<this.size) if (this[i] != this[i - 1]) return false
 		return true
 	}
@@ -89,7 +95,8 @@ object Utils {
 		val sorted = this.sortedBy { it.first }
 		sorted.drop(1).fold(mutableListOf(sorted.first())) { reduced, range ->
 			val lastRange = reduced.last()
-			if (range.first <= lastRange.last) reduced[reduced.lastIndex] = (lastRange.first..maxOf(lastRange.last, range.last))
+			if (range.first <= lastRange.last) reduced[reduced.lastIndex] =
+				(lastRange.first..maxOf(lastRange.last, range.last))
 			else reduced.add(range)
 			reduced
 		}
@@ -126,9 +133,11 @@ object Utils {
 	infix fun Set<*>.and(other: Set<*>): Set<*> = this.intersect(other)
 	infix fun Set<*>.or(other: Set<*>): Set<*> = this.union(other)
 	infix fun Set<*>.xor(other: Set<*>): Set<*> = this.union(other).minus(this.intersect(other))
-	infix fun String.hash(algorithm: String) = MessageDigest.getInstance(algorithm).digest(this.toByteArray()).joinToString("") { "%02x".format(it) }
+	infix fun String.hash(algorithm: String) =
+		MessageDigest.getInstance(algorithm).digest(this.toByteArray()).joinToString("") { "%02x".format(it) }
 
-	fun copyToClipboard(content: String) = Toolkit.getDefaultToolkit().systemClipboard.setContents(StringSelection(content), null)
+	fun copyToClipboard(content: String) =
+		Toolkit.getDefaultToolkit().systemClipboard.setContents(StringSelection(content), null)
 
 	fun <T> List<T>.zipWithAll(): List<Pair<T, T>> {
 		val result = mutableListOf<Pair<T, T>>()
@@ -228,8 +237,12 @@ object Utils {
 	}
 
 
-	infix fun String.matching(other: String): String = this.zip(other).filter { (a, b) -> a == b }.map { it.first }.joinToString("")
-	infix fun String.nonmatching(other: String): String = this.zip(other).filter { (a, b) -> a != b }.map { it.first }.joinToString("")
+	infix fun String.matching(other: String): String =
+		this.zip(other).filter { (a, b) -> a == b }.map { it.first }.joinToString("")
+
+	infix fun String.nonmatching(other: String): String =
+		this.zip(other).filter { (a, b) -> a != b }.map { it.first }.joinToString("")
+
 	fun String.halve() = this.splitAt(this.l / 2)
 	fun String.split() = this.split(" ").dropBlanks()
 	fun <T> Collection<T>.dropBlanks() = this.filter { it.toString().isNotBlank() }
@@ -241,7 +254,9 @@ object Utils {
 	infix fun String.splitAt(index: Int) = Pair(this.substring(0, index), this.substring(index))
 	infix fun <T, R> Iterable<T>.mp(transform: (T) -> R) = this.map(transform)
 	fun String.distinct() = this.toSet().joinToString("")
-	fun String.duplicates(): String = this.groupingBy { it }.eachCount().filter { it.value > 1 }.flatMap { (char, count) -> List(count) { char } }.joinToString("")
+	fun String.duplicates(): String =
+		this.groupingBy { it }.eachCount().filter { it.value > 1 }.flatMap { (char, count) -> List(count) { char } }
+			.joinToString("")
 
 	fun List<String>.containsLength(length: Int) = this.any { it.l == length }
 	fun String.contains(char: Char, count: Int): Boolean = this.count { it == char } == count
@@ -287,7 +302,6 @@ object Utils {
 		return this.filter { frequencyMap[it]!! > 1 }
 	}
 
-	operator fun <T> Collection<T>.get(index: Int): T = if (index.sign == -1) this[this.size - index] else this[index]
 	operator fun <T> Collection<T>.get(range: IntRange): List<T> = this.toList().subList(range.first, range.last + 1)
 	operator fun <T> MutableList<T>.set(range: IntRange, value: T) {
 		range.forEach { this[it] = value }
@@ -414,6 +428,16 @@ object Utils {
 		return gcd(b, a % b)
 	}
 
+	fun gcd(a: BigDecimal, b: BigDecimal): BigDecimal {
+		if (b == BigDecimal.ZERO) return a
+		return gcd(b, a % b)
+	}
+
+	fun gcd(a: BigInteger, b: BigInteger): BigInteger {
+		if (b == BigInteger.ZERO) return a
+		return gcd(b, a % b)
+	}
+
 	fun lcm(a: Int, b: Int): Int {
 		return abs(a * b) / gcd(a, b)
 	}
@@ -452,31 +476,74 @@ object Utils {
 
 	fun String.uniques(): Int = distinct().count()
 	fun String.counts(): Map<Char, Int> = groupingBy { it }.eachCount()
-	fun String.ifNotContains(char: Char, action: (String) -> (String)): String = if (this.contains(char)) this else action(this)
-	fun String.ifContains(char: Char, action: (String) -> (String)): String = if (this.contains(char)) action(this) else this
-	fun String.ifNotStartsWith(char: Char, action: (String) -> (String)): String = if (this.startsWith(char)) this else action(this)
-	fun String.ifStartsWith(char: Char, action: (String) -> (String)): String = if (this.startsWith(char)) action(this) else this
-	fun String.ifNotEndsWith(char: Char, action: (String) -> (String)): String = if (this.endsWith(char)) this else action(this)
-	fun String.ifEndsWith(char: Char, action: (String) -> (String)): String = if (this.endsWith(char)) action(this) else this
+	fun String.ifNotContains(char: Char, action: (String) -> (String)): String =
+		if (this.contains(char)) this else action(this)
 
-	fun String.ifNotContains(str: String, action: (String) -> (String)): String = if (this.contains(str)) this else action(this)
-	fun String.ifContains(str: String, action: (String) -> (String)): String = if (this.contains(str)) action(this) else this
-	fun String.ifNotStartsWith(str: String, action: (String) -> (String)): String = if (this.startsWith(str)) this else action(this)
-	fun String.ifStartsWith(str: String, action: (String) -> (String)): String = if (this.startsWith(str)) action(this) else this
-	fun String.ifNotEndsWith(str: String, action: (String) -> (String)): String = if (this.endsWith(str)) this else action(this)
-	fun String.ifEndsWith(str: String, action: (String) -> (String)): String = if (this.endsWith(str)) action(this) else this
+	fun String.ifContains(char: Char, action: (String) -> (String)): String =
+		if (this.contains(char)) action(this) else this
+
+	fun String.ifNotStartsWith(char: Char, action: (String) -> (String)): String =
+		if (this.startsWith(char)) this else action(this)
+
+	fun String.ifStartsWith(char: Char, action: (String) -> (String)): String =
+		if (this.startsWith(char)) action(this) else this
+
+	fun String.ifNotEndsWith(char: Char, action: (String) -> (String)): String =
+		if (this.endsWith(char)) this else action(this)
+
+	fun String.ifEndsWith(char: Char, action: (String) -> (String)): String =
+		if (this.endsWith(char)) action(this) else this
+
+	fun String.ifNotContains(str: String, action: (String) -> (String)): String =
+		if (this.contains(str)) this else action(this)
+
+	fun String.ifContains(str: String, action: (String) -> (String)): String =
+		if (this.contains(str)) action(this) else this
+
+	fun String.ifNotStartsWith(str: String, action: (String) -> (String)): String =
+		if (this.startsWith(str)) this else action(this)
+
+	fun String.ifStartsWith(str: String, action: (String) -> (String)): String =
+		if (this.startsWith(str)) action(this) else this
+
+	fun String.ifNotEndsWith(str: String, action: (String) -> (String)): String =
+		if (this.endsWith(str)) this else action(this)
+
+	fun String.ifEndsWith(str: String, action: (String) -> (String)): String =
+		if (this.endsWith(str)) action(this) else this
+
 	fun String.ifEquals(str: String, action: (String) -> (String)): String = if (this == str) action(this) else this
 	fun String.ifNotEquals(str: String, action: (String) -> (String)): String = if (this != str) this else action(this)
-	fun String.ifEquals(char: Char, action: (String) -> (String)): String = if (this == char.toString()) action(this) else this
-	fun String.ifNotEquals(char: Char, action: (String) -> (String)): String = if (this != char.toString()) this else action(this)
-	fun String.ifNotContains(regex: Regex, action: (String) -> (String)): String = if (this.contains(regex)) this else action(this)
-	fun String.ifContains(regex: Regex, action: (String) -> (String)): String = if (this.contains(regex)) action(this) else this
-	fun String.ifNotStartsWith(regex: Regex, action: (String) -> (String)): String = if (this.startsWith(regex)) this else action(this)
-	fun String.ifStartsWith(regex: Regex, action: (String) -> (String)): String = if (this.startsWith(regex)) action(this) else this
-	fun String.ifNotEndsWith(regex: Regex, action: (String) -> (String)): String = if (this.endsWith(regex)) this else action(this)
-	fun String.ifEndsWith(regex: Regex, action: (String) -> (String)): String = if (this.endsWith(regex)) action(this) else this
-	fun String.ifNotMatches(regex: Regex, action: (String) -> (String)): String = if (this.matches(regex)) this else action(this)
-	fun String.ifMatches(regex: Regex, action: (String) -> (String)): String = if (this.matches(regex)) action(this) else this
+	fun String.ifEquals(char: Char, action: (String) -> (String)): String =
+		if (this == char.toString()) action(this) else this
+
+	fun String.ifNotEquals(char: Char, action: (String) -> (String)): String =
+		if (this != char.toString()) this else action(this)
+
+	fun String.ifNotContains(regex: Regex, action: (String) -> (String)): String =
+		if (this.contains(regex)) this else action(this)
+
+	fun String.ifContains(regex: Regex, action: (String) -> (String)): String =
+		if (this.contains(regex)) action(this) else this
+
+	fun String.ifNotStartsWith(regex: Regex, action: (String) -> (String)): String =
+		if (this.startsWith(regex)) this else action(this)
+
+	fun String.ifStartsWith(regex: Regex, action: (String) -> (String)): String =
+		if (this.startsWith(regex)) action(this) else this
+
+	fun String.ifNotEndsWith(regex: Regex, action: (String) -> (String)): String =
+		if (this.endsWith(regex)) this else action(this)
+
+	fun String.ifEndsWith(regex: Regex, action: (String) -> (String)): String =
+		if (this.endsWith(regex)) action(this) else this
+
+	fun String.ifNotMatches(regex: Regex, action: (String) -> (String)): String =
+		if (this.matches(regex)) this else action(this)
+
+	fun String.ifMatches(regex: Regex, action: (String) -> (String)): String =
+		if (this.matches(regex)) action(this) else this
+
 	fun String.endsWith(regex: Regex): Boolean {
 		return this.endsWith(regex.find(this)?.value ?: return false)
 	}
@@ -489,13 +556,17 @@ object Utils {
 		return this.replace(Regex("\\s+"), " ")
 	}
 
+	operator fun <T> List<T>.component6(): T {
+		return this[5]
+	}
+
 	fun chineseRemainder(mod: List<Long>, rem: List<Long>): Long {
 		val prod = mod.fold(1L) { acc, i -> acc * i }
 
 		return mod.zip(rem).sumOf { (moduli, remainder) ->
 			val p = prod / moduli
 			remainder * modularMultiplicativeInverse(p, moduli) * p
-		} % prod
+		}.mod(prod)
 	}
 
 	fun modularMultiplicativeInverse(a: Long, m: Long): Long {
@@ -520,6 +591,47 @@ object Utils {
 		}
 
 		return if (x < 0) x + m else x
+	}
+
+
+	fun chineseRemainder(mod: List<BigInteger>, rem: List<BigInteger>): BigInteger {
+		val prod = mod.fold(BigInteger.ONE) { acc, i -> acc * i }
+
+		return mod.zip(rem).sumOf { (moduli, remainder) ->
+			val p = prod / moduli
+			remainder * modularMultiplicativeInverse(p, moduli) * p
+		}.mod(prod)
+	}
+
+	fun modularMultiplicativeInverse(a: BigInteger, m: BigInteger): BigInteger {
+		var m0 = m
+		var x0 = BigInteger.ZERO
+		var x1 = BigInteger.ONE
+
+		if (m0 == BigInteger.ONE) return BigInteger.ZERO
+
+		var aTemp = a
+		while (aTemp > BigInteger.ONE) {
+			if (m0 == BigInteger.ZERO) {
+				println("Inverse doesn't exist")
+				return BigInteger.ZERO
+			}
+			val q = aTemp / m0
+			var t = m0
+
+			m0 = aTemp % m0
+			aTemp = t
+			t = x0
+
+			x0 = x1 - q * x0
+			x1 = t
+		}
+
+		if (x1 < BigInteger.ZERO) {
+			x1 += m
+		}
+
+		return x1
 	}
 
 	fun multiplyMatrices(first: Array<IntArray>, second: Array<IntArray>): Array<IntArray>? {
