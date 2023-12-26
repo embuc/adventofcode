@@ -23,8 +23,10 @@ class Task25(private val input:List<String>): Task {
 		val minCut = StoerWagnerMinimumCut(graph).minCut()
 		System.setProperty("org.graphstream.ui", "swing")
 //		println(graph)
-//		utils.Graphs.visualizeGraph(graph)
-//		Thread.sleep(10000)
+		println("vertices: " + graph.vertexSet().size)
+		println("edges:" + graph.edgeSet().size)
+		utils.Graphs.visualizeGraph(graph)
+		Thread.sleep(300000)
 		graph.removeAllVertices(minCut)
 		return graph.vertexSet().size * minCut.size
 	}

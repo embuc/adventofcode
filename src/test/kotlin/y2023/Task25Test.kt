@@ -32,6 +32,7 @@ class Task25Test {
 			val answer = Task25(input).a()
 			assertEquals(54, answer)
 		}
+
 		@Test
 		fun `Matches actual`() {
 			val answer = Task25(readInputAsListOfStrings("2023_25.txt")).a()
