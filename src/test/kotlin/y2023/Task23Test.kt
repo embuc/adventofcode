@@ -84,7 +84,7 @@ class Task23Test {
 		@Test
 		fun `Matches actual`() {
 			val answer = Task23(readInputAsListOfStrings("2023_23.txt")).b()
-			assertEquals(0, answer)
+			assertEquals(6426, answer)
 		}
 	}
 

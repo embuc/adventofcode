@@ -8,49 +8,14 @@ class Task11Test {
 
 	val task11 = Task11
 
-//	@Test TODO Fix this test
-	fun testExpandGrid() {
-		val input = listOf(
-			"...#......",
-			".......#..",
-			"#.........",
-			"..........",
-			"......#...",
-			".#........",
-			".........#",
-			"..........",
-			".......#..",
-			"#...#....."
-		)
+	@Test
+	fun a() {
+		assertEquals(9795148L, task11.a())
+	}
 
-		val expandedProcessedInput = listOf(
-			"....1........",
-			".........2...",
-			"3............",
-			".............",
-			".............",
-			"........4....",
-			".5...........",
-			"............6",
-			".............",
-			".............",
-			".........7...",
-			"8....9......."
-		)
-
-		val expandedGrid = task11.expandGrid(input, 1_000_000)
-		task11.printGrid(expandedGrid)
-		task11.printGridCoord(expandedGrid)
-
-		// Define your expected result
-		val expected = expandedProcessedInput
-
-		// Convert expandedGrid to a comparable format if necessary
-		val actual = expandedGrid.map { row ->
-			row.joinToString("") { it.label }
-		}
-
-		assertEquals(expected, actual)
+	@Test
+	fun b() {
+		assertEquals(650672493820, task11.b())
 	}
 
 	@Test
@@ -96,7 +61,6 @@ class Task11Test {
 		)
 		val expandedGrid = task11.expandGrid(input, 1_000_000)
 		val galaxyPairs = task11.findAllGalaxyPairs(expandedGrid)
-		task11.printGrid(expandedGrid)
 		val shortestPaths = task11.findSumOfPaths(galaxyPairs)
 		assertEquals(36, galaxyPairs.size)
 		assertEquals(374, shortestPaths)

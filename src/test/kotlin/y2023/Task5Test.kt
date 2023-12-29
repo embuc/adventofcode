@@ -27,10 +27,7 @@ class Task5Test {
 	fun testInputFile() {
 		val seed = 79L
 		val location = 82L
-//		val uppg = Uppg5()
 		val allMappings = task.parseFileToMappings("Input5Test.txt")
-		println("Keys: ${allMappings.keys}")
-		println("Values: ${allMappings.values}")
 		assertEquals(7, allMappings.size)
 		assertEquals(2, allMappings[SEED_TO_SOIL]!!.size)
 		assertEquals(location, task.getLocation(allMappings, seed))

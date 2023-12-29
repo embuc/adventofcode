@@ -3,15 +3,13 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
+// --- Day 3: Gear Ratios ---
 object Task3:Task {
 
 	override fun a(): Any {
 		val lines = readInputAsListOfStrings("2023_3.txt")
 		val matrix = lines.map { it.toCharArray().toTypedArray() }.toTypedArray()
-
 		val validNumbers = findValidNumbers(matrix)
-
-		println("Valid Numbers: $validNumbers")
 		return validNumbers.sumOf { it.toInt() }
 	}
 
@@ -84,9 +82,6 @@ object Task3:Task {
 				if (startCoords !in usedNumbers) {
 					val (number, _) = extractNumber(matrix, newRow, newCol)
 					if (number.isNotBlank()) {
-						if(numbersFound == 1) {
-							println("Found $product and $number at $startCoords which produce product: ${product * number.toLong()}") // Debug
-						}
 						product *= number.toLong()
 						numbersFound++
 						usedNumbers.add(startCoords)

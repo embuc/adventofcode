@@ -3,6 +3,9 @@ package y2023
 import Task
 import utils.readInputAsString
 
+// --- Day 19: Aplenty ---
+// Realizing that some sort of ranged arithmetic is needed, you set up a simple workflow language to describe the
+// process. However, I had some one-off error here that took some hours to debug. Nice puzzle though!
 object Task19 : Task {
 
 	override fun a(): Any {

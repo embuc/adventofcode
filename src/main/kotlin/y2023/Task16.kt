@@ -3,6 +3,9 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
+// --- Day 16: The Floor Will Be Lava ---
+// I liked this one, it was a fun puzzle to solve.
+// Part B can be optimized for sure, but it runs ok.
 object Task16 : Task {
 
 	const val EMPTY = '.'
@@ -46,7 +49,6 @@ object Task16 : Task {
 		}
 
 		return maxResult
-
 	}
 
 	private fun evaluateGrid(solveGrid: Array<BooleanArray>): Int =

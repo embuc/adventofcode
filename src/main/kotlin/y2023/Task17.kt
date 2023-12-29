@@ -1,10 +1,17 @@
 package y2023
 
 import Task
-import utils.Point2D
+import utils.borrowed.Point2D
 import utils.readInputAsString
 import java.util.*
 
+// --- Day 17: Clumsy Crucible ---
+// This one was a bit tricky. It was clear that it was a shortest path problem, but the twist was that you could only
+// move a certain number of blocks in a given direction before you had to turn. This meant that you couldn't use a
+// simple BFS, but had to keep track of the number of blocks moved in the current direction. I spent a lot of time
+// on this one, but then I moved on to other problems and came back to this one later. This solution is not mine but
+// its from user: github.com/ClouddJR.
+// *** Needs more work ***.
 object Task17:Task {
 
 	override fun a(): Any {
@@ -20,7 +27,7 @@ object Task17:Task {
 	fun solvePart1(grid: Array<IntArray>): Int {
 		return findMinHeatLoss(
 			grid,
-			initialStates = listOf(State(utils.Point2D(0, 0), Point2D.EAST, 0)),
+			initialStates = listOf(State(Point2D(0, 0), Point2D.EAST, 0)),
 			minBlocks = 0,
 			maxBlocks = 3
 		)
@@ -28,14 +35,14 @@ object Task17:Task {
 	fun solvePart2(grid: Array<IntArray>): Int {
 		return findMinHeatLoss(
 			grid,
-			initialStates = listOf(State(utils.Point2D(0, 0), Point2D.EAST, 0), State(utils.Point2D(0, 0), Point2D.SOUTH, 0)),
+			initialStates = listOf(State(Point2D(0, 0), Point2D.EAST, 0), State(Point2D(0, 0), Point2D.SOUTH, 0)),
 			minBlocks = 4,
 			maxBlocks = 10
 		)
 	}
 
 	private fun findMinHeatLoss(grid: Array<IntArray>, initialStates: List<State>, minBlocks: Int, maxBlocks: Int): Int {
-		val end = utils.Point2D(grid.first().lastIndex, grid.lastIndex)
+		val end = Point2D(grid.first().lastIndex, grid.lastIndex)
 
 		val costs = mutableMapOf<State, Int>().withDefault { Int.MAX_VALUE }
 		val toVisit = PriorityQueue<StateWithCost>()

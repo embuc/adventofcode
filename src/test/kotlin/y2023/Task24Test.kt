@@ -1,11 +1,9 @@
 package y2023
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import utils.readInputAsListOfStrings
-import java.io.File
 
 class Task24Test {
 
@@ -36,9 +34,9 @@ class Task24Test {
 	inner class Part2 {
 
 		fun setupClass() {
-//			println("java.library.path: " + System.getProperty("java.library.path"))
-			System.load(System.getProperty("java.library.path") + "/libz3.dylib")
-			System.load(System.getProperty("java.library.path") + "/libz3java.dylib")
+			val homeDir = System.getProperty("user.home")
+			val libraryPath = "~/Library/Java/Extensions/libz3.dylib".replaceFirst("^~".toRegex(), homeDir)
+			System.load(libraryPath)
 		}
 
 		@Test

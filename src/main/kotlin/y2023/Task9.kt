@@ -3,15 +3,15 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
+//--- Day 9: Mirage Maintenance ---
 object Task9:Task {
 
-	fun c() {
+	fun c(): List<Int> {
 		val line = "10 13 16 21 30 45"
 		val series = parseSeries(line)
 		val matrix = mutableLists(series)
 
-		val originalSeries = reconstructSeries(matrix)
-		println(originalSeries)
+		return reconstructSeries(matrix)
 	}
 
 	override fun a(): Int {
@@ -20,7 +20,6 @@ object Task9:Task {
 		for (line in lines) {
 			val series = parseSeries(line)
 			val next = calculateSeries(series)
-			println(next)
 			sum += next
 		}
 		return sum

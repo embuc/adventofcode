@@ -2,7 +2,7 @@ package y2023
 
 import Task
 import kotlin.system.measureTimeMillis
-
+// --- Day 6: Wait For It ---
 object Task6: Task {
 
 	//Time:        59     79     65     75
@@ -18,7 +18,6 @@ object Task6: Task {
 			for (race in races2) {
 				result *= findWays(race);
 			}
-			println(result)
 		}
 		return executionTime
 	}

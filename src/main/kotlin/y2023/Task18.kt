@@ -4,6 +4,11 @@ import Task
 import utils.readInputAsListOfStrings
 import java.util.*
 
+// --- Day 18: Lavaduct Lagoon ---
+// I liked this one. It was a bit tricky to get the area calculation right, I tried a number of different approaches
+// before I found the right one. However, part b is not optimized, it takes a long time and lots of heap to run.
+// I'm sure there is a better way to do it, but I haven't found it yet (It's Christmastime, had to move one - for now).
+// *** Needs more work ***.
 object Task18 : Task {
 
 	enum class Direction {

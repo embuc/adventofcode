@@ -3,6 +3,7 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
+// --- Day 7: Camel Cards ---
 object Task7:Task {
 
 	override fun a(): Long {
@@ -34,7 +35,6 @@ object Task7:Task {
 		val hands = mutableListOf<Hand>()
 		for (line in input) {
 			val hand = parseHand(line)
-			println(hand)
 			hands.add(hand)
 		}
 		return hands
@@ -48,19 +48,13 @@ object Task7:Task {
 	}
 
 	fun evaluateHand(hand: Hand): Pair<Int, List<Char>> {
-		println()
-		println(hand)
 		val cardCounts = hand.hand.groupingBy { it }.eachCount()
 		val cardValueOrder = "AKQJT98765432".toList().reversed()
-		println("cardCounts $cardCounts")
 		// Sort cards based on frequency, then by their poker value
 		val sortedCards = cardCounts.entries.sortedWith(
 			compareByDescending<Map.Entry<Char, Int>> { it.value }
 				.thenByDescending { cardValueOrder.indexOf(it.key) }
 		).map { it.key }
-
-
-		println("sortedCards $sortedCards")
 
 		val score = when {
 			cardCounts.any { it.value == 5 } -> 7 // Five of a kind
@@ -137,17 +131,7 @@ object Task7:Task {
 		val score = findBestScore()
 		val sortedCards = hand.hand.toList().sortedByDescending { cardValueOrder.indexOf(it) }
 
-		println()
-		println(hand)
 		val maxCount = cardCounts.values.maxOrNull() ?: 0
-		println("maxcount $maxCount")
-		println("sortedCards $sortedCards")
-		println("cardCounts $cardCounts")
-		println("score $score")
-		println("Pair(score, sortedCards) ${Pair(score, sortedCards)})")
 		return Pair(score, sortedCards)
 	}
-
-
-
 }

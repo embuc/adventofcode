@@ -3,11 +3,13 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
+// --- Day 14: Parabolic Reflector Dish ---
+// This was a fun problem, however even here my initial solution was a bit too slow,
+// Reddit discussions pointed me in the right direction to optimize it (somewhat, I believe there is more to be done).
 object Task14 : Task {
 	const val EMPTY = 0 // .
 	const val ROCK = 1  // O
 	const val CUBE = 2  // #
-
 
 	override fun a(): Any {
 		return solveA(readInputAsListOfStrings("2023_14.txt"))
@@ -35,7 +37,6 @@ object Task14 : Task {
 			if (i == -1) { oldGrids.add(grid.map(IntArray::copyOf)); continue }
 			// We have a cycle, state is the same as when we started
 			val cycleLength = cycle - i
-			println("Cycle length: $cycleLength")
 			val remaining = 1_000_000_000 - cycle
 			val offset = remaining % cycleLength
 			return getLoad(oldGrids[i + offset])

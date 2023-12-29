@@ -1,3 +1,4 @@
+// @author embuc
 package utils
 
 import org.graphstream.graph.implementations.SingleGraph

@@ -4,6 +4,7 @@ import Task
 import utils.readInputAsListOfStrings
 import kotlin.math.abs
 
+// --- Day 8: Haunted Wasteland ---
 object Task8: Task {
 
 	const val steps = "LRLRRRLRRLRRRLRRRLLLLLRRRLRLRRLRLRLRRLRRLRRRLRLRLRRLLRLRRLRRLRRLRRRLLRRRLRRRLRRLRLLLRRLRRRLRLRRLRRRLRRLRLLLRRRLRRLRRLRRRLRRRLRRRLRLRLRLRRRLRRRLLLRRLLRRRLRLRLRRRLRRRLRRLRRRLRLRLLRRRLRLRRLRLRLRRLLLRRRLRRRLRRLRRLRLRRLLRRLRRRLRRRLLRRRLRRLRLLRRLRLRRLLRRRLLLLRRLRRRLRLRRLLRLLRRRLLRRLLRRRLRRRLRRLLRLRLLRRLLRLLLRRRR"
@@ -23,7 +24,6 @@ object Task8: Task {
 	}
 
 	data class ValuePair(val left: String, val right: String)
-
 
 	fun gcd(a: Long, b: Long): Long {
 		return if (b == 0L) a else gcd(b, a % b)
@@ -53,10 +53,7 @@ object Task8: Task {
 
 	fun findCommonStepCount(map: Map<String, ValuePair>, steps: String): Long {
 		val startingNodes = map.keys.filter { it.endsWith("A") }
-		println("startingNodes $startingNodes")
 		val pathLengths = startingNodes.map { findPathLengthToZ(map, it, steps) }
-		println(pathLengths)
-		println(pathLengths.size)
 		// Calculate LCM of all path lengths
 		return findLCM(pathLengths)
 	}
@@ -82,8 +79,6 @@ object Task8: Task {
 	fun traverseMap(map: Map<String, ValuePair>, startKey: String, steps: String): List<String> {
 		var currentKey = startKey
 		val path = mutableListOf<String>()
-		println("START: currentKey: $currentKey")
-
 		// Custom generator for cycling through steps
 		fun cycleSteps() = sequence {
 			while (true) yieldAll(steps.asIterable())

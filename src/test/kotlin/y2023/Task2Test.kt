@@ -58,8 +58,6 @@ class Task2Test {
 	@ParameterizedTest
 	@MethodSource("gameData")
 	fun testGameParsing(input: String, expected: Task2.Game) {
-		println(input)
-
 		val result = task.parseGame(input)
 		Assertions.assertEquals(expected, result)
 	}

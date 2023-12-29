@@ -1,10 +1,15 @@
 package y2023
 
 import Task
-import utils.Utils
-import utils.Utils.allEquals
+import utils.allEquals
+import utils.lcm
 import utils.readInputAsListOfStrings
 
+// --- Day 20: Pulse Propagation ---
+// This one was too hard for me to solve in the given time-frame, this solution is from user: github.com/clouddjr.
+// for part one and part two is solution by user: github.com/eagely.
+// I'll circle back to this one later (Iß think this one was hardest this year).
+// *** Needs more work ***.
 object Task20:Task {
 
 	private val input = readInputAsListOfStrings("2023_20.txt")
@@ -59,36 +64,6 @@ object Task20:Task {
 		return low * high
 	}
 
-//	fun solveB(input: List<String>): Long {
-//		val monitored = mutableMapOf("rx" to 0L)
-////		val monitored = mutableMapOf("hh" to 0L, "lk" to 0L, "fn" to 0L, "fh" to 0L)
-//
-//		var i = 0L
-//		while (monitored.values.any { it == 0L }) {
-//			i++
-//			var current = listOf(modules.getValue("broadcaster") to false)
-//
-//			while (current.isNotEmpty()) {
-//				current = buildList {
-//					for ((module, receivedPulse) in current) {
-//						val output = module.output(receivedPulse) ?: continue
-//
-//						if (module.name in monitored && output) {
-//							monitored[module.name] = i
-//						}
-//
-//						for (destination in destinations.getValue(module.name).map { modules.getValue(it) }) {
-//							destination.receive(module.name, output)
-//							add(destination to output)
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//		return monitored.values.lcm()
-//	}
-
 	private sealed class Module {
 		abstract val name: String
 
@@ -131,45 +106,8 @@ object Task20:Task {
 		}
 	}
 
-
-//	...............................................................................................................
-
 	data class Gate(val name: String, var state: Boolean, val targets: List<String>, val memory: HashMap<String, Boolean> = hashMapOf())
 
-//	fun solvePart1(input: List<String>): Any {
-//		val gates = input.map {
-//			val (name, targets) = it.split(" -> ")
-//			Gate(name, false, targets.split(", "))
-//		}
-//		var beep = 0L
-//		var notbeep = 0L
-//		val queue = ArrayDeque<Pair<String, Gate>>()
-//		val bread = gates.first { it.name == "broadcaster" }
-//		gates.filter { it.name.first() == '&' }.forEach { gate -> gate.memory.putAll(gates.filter { gate.name.drop(1) in it.targets }.associate { it.name to false }) }
-//		repeat(1000) {
-//			notbeep++
-//			queue.addAll(bread.targets.map { it to bread })
-//			while (queue.isNotEmpty()) {
-//				val (name, origin) = queue.removeFirst()
-//				if (origin.state) beep++ else notbeep++
-//				if (name !in gates.map { it.name.drop(1) }) continue
-//				val gate = gates.first { it.name.drop(1) == name }
-//				when (gate.name.first()) {
-//					'%' -> {
-//						if (origin.state) continue
-//						gate.state = !gate.state
-//					}
-//
-//					'&' -> {
-//						gate.memory[origin.name] = origin.state
-//						gate.state = !gate.memory.values.allEquals(true)
-//					}
-//				}
-//				queue.addAll(gate.targets.map { it to gate })
-//			}
-//		}
-//		return notbeep * beep
-//	}
 
 	fun solvePart2(input: List<String>): Any {
 		val gates = input.map {
@@ -206,7 +144,7 @@ object Task20:Task {
 				queue.addAll(gate.targets.map { it to gate })
 			}
 		}
-		return Utils.lcm(cycles.values)
+		return cycles.values.lcm()
 	}
 
 }

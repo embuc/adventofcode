@@ -3,6 +3,9 @@ package y2023
 import Task
 import utils.readInputAsString
 
+// --- Day 13: Point of Incidence ---
+// Interesting problem, but I don't think I solved it in the most elegant way.
+// It reads ok, but I've seen some other solutions which are much shorter (and possibly more elegant).
 object Task13 : Task {
 
 	override fun a(): Any {
@@ -19,7 +22,6 @@ object Task13 : Task {
 			.sumOf { (rows, columns) ->
 				100 * getNrBeforeSmudgeReflection(rows, false) + getNrBeforeSmudgeReflection(rows, true)
 			}
-
 	}
 
 	private fun getNrBeforeSmudgeReflection(pattern: List<String>, columns: Boolean): Int {

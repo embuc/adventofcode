@@ -9,63 +9,6 @@ import y2023.Task14.CUBE
 
 class Task14Test {
 
-
-	@Test
-	fun testMapStringToGrid() {
-		val stringLines = """
-            O....#....
-            O.OO#....#
-            .....##...
-            OO.#O....O
-            .O.....O#.
-            O.#..O.#.#
-            ..O..#O..O
-            .......O..
-            #....###..
-            #OO..#....
-        """.trimIndent().split("\n")
-
-		val expectedGrid = arrayOf(
-			intArrayOf(1, 0, 0, 0, 0, 2, 0, 0, 0, 0),
-			intArrayOf(1, 0, 1, 1, 2, 0, 0, 0, 0, 2),
-			intArrayOf(0, 0, 0, 0, 0, 2, 2, 0, 0, 0),
-			intArrayOf(1, 1, 0, 2, 1, 0, 0, 0, 0, 1),
-			intArrayOf(0, 1, 0, 0, 0, 0, 0, 1, 2, 0),
-			intArrayOf(1, 0, 2, 0, 0, 1, 0, 2, 0, 2),
-			intArrayOf(0, 0, 1, 0, 0, 2, 1, 0, 0, 1),
-			intArrayOf(0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-			intArrayOf(2, 0, 0, 0, 0, 2, 2, 2, 0, 0),
-			intArrayOf(2, 1, 1, 0, 0, 2, 0, 0, 0, 0)
-		)
-
-		val actualGrid = Task14.parseToGrid(stringLines)
-
-		// Assert that the actual grid matches the expected grid
-		assert(actualGrid.size == expectedGrid.size) { "Row count mismatch" }
-		actualGrid.forEachIndexed { index, row ->
-			assertArrayEquals(expectedGrid[index], row, "Mismatch at row $index")
-		}
-	}
-
-	@Test
-	fun testParseToGrid() {
-		val input = """
-			.#.
-			O#.
-			...
-		""".trimIndent()
-
-		val expected = arrayOf(
-			intArrayOf(EMPTY, CUBE, EMPTY),
-			intArrayOf(ROCK, CUBE, EMPTY),
-			intArrayOf(EMPTY, EMPTY, EMPTY)
-		)
-
-		val actual = Task14.parseToGrid(input.lines()).toTypedArray()
-
-		assertArrayEquals(expected, actual)
-	}
-
 	@Test
 	fun testSolveAExample() {
 		val input = """

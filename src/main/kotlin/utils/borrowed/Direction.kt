@@ -1,13 +1,10 @@
-package utils
-
-import utils.LongPoint
-import utils.Point
+package utils.borrowed
 
 enum class Direction(val angle: Int) {
 	NORTH(0), EAST(90), SOUTH(180), WEST(270);
-	fun opposite() = Direction.of(angle + 180)
-	operator fun plus(other: Direction) = Direction.of((angle + other.angle) % 360)
-	operator fun minus(other: Direction) = Direction.of((angle - other.angle) % 360)
+	fun opposite() = of(angle + 180)
+	operator fun plus(other: Direction) = of((angle + other.angle) % 360)
+	operator fun minus(other: Direction) = of((angle - other.angle) % 360)
 	operator fun component1() = this.toPoint().x
 	operator fun component2() = this.toPoint().y
 

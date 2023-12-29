@@ -3,7 +3,7 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
-
+// --- Day 4: Scratchcards ---
 object Task4:Task {
 
 	override fun a():Any {
@@ -11,9 +11,7 @@ object Task4:Task {
 		val cards = lines.map { parseCardString(it) }
 		var sum = 0
 		for (card in cards) {
-			println(card)
 			val score = calculateCardScore(card)
-			println("Score: $score")
 			sum += score
 		}
 		return sum
@@ -53,7 +51,6 @@ object Task4:Task {
 				matching.add(number)
 			}
 		}
-		println(matching)
 		return score
 	}
 
@@ -73,7 +70,6 @@ object Task4:Task {
 				matching.add(number)
 			}
 		}
-		println(matching)
 		return matching.size
 	}
 
@@ -86,16 +82,10 @@ object Task4:Task {
 			copies[card.counter] = 1
 		}
 		for (card in cards) {
-			println(card)
 			val score = calculateCardScore2(card)
 			for (i in 1..score) {
-				println("Adding $i to ${card.counter}")
 				copies[card.counter + i] = copies[card.counter + i]!! + copies[card.counter]!!
 			}
-		}
-
-		for (copy in copies) {
-			println("Copy: ${copy.key} Count: ${copy.value}")
 		}
 		return copies
 	}

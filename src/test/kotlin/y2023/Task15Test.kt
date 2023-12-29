@@ -19,7 +19,7 @@ class Task15Test {
 	}
 
 	@Test
-	fun testA() {
+	fun a() {
 		val expected = 498538
 		val actual = Task15.a()
 		assertEquals(expected, actual)

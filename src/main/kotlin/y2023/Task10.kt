@@ -3,29 +3,26 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
+//--- Day 10: Pipe Maze ---
+// this one was hard, I had to look up the solution and work backwards from there using test cases to understand the logic
 object Task10:Task {
 
 	override fun a(): Int {
-		val lines = readInputAsListOfStrings("2023_10.txt")
-		val grid = parseGrid(lines)
+		val grid = readAndParseGrid("2023_10.txt")
 		val startPos = findStartPosition(grid)
-		println("Start position: $startPos")
-		val distance = traversePath(grid, startPos)
-
-		println("Longest distance from start: $distance")
-		return distance
+		return traversePathForDistance(grid, startPos)
 	}
 
 	override fun b(): Int {
-		val lines = readInputAsListOfStrings("2023_10.txt")
-		val grid = parseGrid(lines)
+		val grid = readAndParseGrid("2023_10.txt")
 		val startPos = findStartPosition(grid)
-		println("Start position: $startPos")
-		val path = traversePath2(grid, startPos)
-		val count = countInsideTiles(grid, path)
+		val path = traversePath(grid, startPos)
+		return countInsideTiles(grid, path)
+	}
 
-		println("Number of inside tiles: $count")
-		return count
+	private fun readAndParseGrid(filename: String): Array<Array<Tile>> {
+		val lines = readInputAsListOfStrings(filename)
+		return parseGrid(lines)
 	}
 
 	fun countInsideTiles(grid: Array<Array<Tile>>, path: MutableList<Position>): Int {
@@ -36,7 +33,6 @@ object Task10:Task {
 				if (!path.contains(pos)) {
 					if (insidePolygon(path, pos)) {
 						// This tile is inside the loop
-						println("found inside: x: ${pos.x} y: ${pos.y}")
 						count++
 					} else {
 						// This tile is outside the loop
@@ -47,12 +43,11 @@ object Task10:Task {
 		return count
 	}
 
-	fun traversePath2(grid: Array<Array<Tile>>, startPos: Position): MutableList<Position> {
+	fun traversePath(grid: Array<Array<Tile>>, startPos: Position): MutableList<Position> {
 		var steps = 0
 		val startTile = grid[startPos.y][startPos.x]
 		val path = mutableListOf<Position>()
 		path.add(startPos)
-		println("start x: "+startPos.x + " y:" + startPos.y + " type: " + startTile.type)
 		val (initialTile, _) = getInitialConnectedTiles(startTile)
 		steps++
 		var currentTile = initialTile ?: throw IllegalStateException("Invalid start configuration")
@@ -69,48 +64,46 @@ object Task10:Task {
 		return path
 	}
 
+	/**
+	 * Determines if a given point [p] is inside a polygon defined by a list of [polygon] vertices.
+	 *
+	 * This function implements the ray-casting algorithm: it casts a horizontal ray to the right from the point
+	 * and counts how many times it intersects with the sides of the polygon. If the count is odd, the point is inside;
+	 * if even, the point is outside. This method works for all polygons, whether they are simple or complex.
+	 *
+	 * @param polygon List of positions representing the vertices of the polygon in order.
+	 * @param p The position (point) to check.
+	 * @return Boolean indicating whether the point is inside the polygon.
+	 */
 	private fun insidePolygon(polygon: List<Position>, p: Position): Boolean {
 		var counter = 0
 		var p1 = polygon[0]
 
 		for (i in 1..polygon.size) {
 			val p2 = polygon[i % polygon.size]
-			if (p.y > minOf(p1.y, p2.y)) {
-				if (p.y <= maxOf(p1.y, p2.y)) {
-					if (p.x <= maxOf(p1.x, p2.x)) {
-						if (p1.y != p2.y) {
-							val xinters = ((p.y - p1.y) * (p2.x - p1.x).toDouble() / (p2.y - p1.y).toDouble() + p1.x).toInt()
-							if (p1.x == p2.x || p.x <= xinters) {
-								counter++
-							}
-						}
+
+			// Check if the horizontal ray intersects with a side of the polygon
+			if (p.y > minOf(p1.y, p2.y) && p.y <= maxOf(p1.y, p2.y) && p.x <= maxOf(p1.x, p2.x)) {
+				// If p1.y != p2.y, calculate the x coordinate of the point of intersection of the polygon side and the ray
+				if (p1.y != p2.y) {
+					val xIntersect = ((p.y - p1.y) * (p2.x - p1.x) / (p2.y - p1.y).toDouble() + p1.x).toInt()
+					// If the ray passes through the vertex of the polygon (p1.x == p2.x) or intersects with the side
+					if (p1.x == p2.x || p.x <= xIntersect) {
+						counter++
 					}
 				}
 			}
+
 			p1 = p2
 		}
 
+		// If the count of intersections is odd, the point is inside the polygon
 		return counter % 2 != 0
 	}
 
-	fun traversePath(grid: Array<Array<Tile>>, startPos: Position): Int {
-		var steps = 0
-		val startTile = grid[startPos.y][startPos.x]
-		val (initialTile, _) = getInitialConnectedTiles(startTile)
-		steps++
-		var currentTile = initialTile ?: throw IllegalStateException("Invalid start configuration")
-		println("initial tile: ${currentTile.type} ")
-		var previousTile: Tile? = startTile
-
-		while (currentTile.type != TileType.START) {
-			steps++
-			val nextTile = getNextTile(currentTile, previousTile)
-			println("next tile: ${nextTile!!.type} ")
-			previousTile = currentTile
-			currentTile = nextTile ?: break
-		}
-
-		return if (steps % 2 == 0) steps / 2 else (steps - 1) / 2
+	fun traversePathForDistance(grid: Array<Array<Tile>>, startPos: Position): Int {
+		val path = traversePath(grid, startPos)
+		return if (path.size % 2 == 0) path.size / 2 else (path.size - 1) / 2
 	}
 
 	class Tile(val type: TileType) {
@@ -140,7 +133,6 @@ object Task10:Task {
 
 	private fun getInitialConnectedTiles(startTile: Tile): Pair<Tile?, Tile?> {
 		val connectedTiles = listOfNotNull(startTile.up, startTile.down, startTile.left, startTile.right)
-		require(connectedTiles.size == 2) { "Start position must be connected to exactly two tiles." }
 		return Pair(connectedTiles[0], connectedTiles[1])
 	}
 
@@ -319,33 +311,6 @@ object Task10:Task {
 
 			TileType.GROUND -> null
 		}
-	}
-
-	fun printGrid(grid: Array<Array<Tile>>) {
-		for (y in grid.indices) {
-			for (x in grid[y].indices) {
-				print(
-					when (grid[y][x].type) {
-						TileType.VERTICAL -> "|"
-						TileType.HORIZONTAL -> "-"
-						TileType.BEND_L -> "L"
-						TileType.BEND_J -> "J"
-						TileType.BEND_7 -> "7"
-						TileType.BEND_F -> "F"
-						TileType.START -> "S"
-						TileType.GROUND -> "."
-					}
-				)
-			}
-			println()
-		}
-		for (y in grid.indices) {
-			for (x in grid[y].indices) {
-				println("$y $x " + grid[y][x].type + " left: " + grid[y][x].left?.type + " right: " + grid[y][x].right?.type + " up: " + grid[y][x].up?.type + " down: " + grid[y][x].down?.type)
-			}
-			println()
-		}
-
 	}
 
 }

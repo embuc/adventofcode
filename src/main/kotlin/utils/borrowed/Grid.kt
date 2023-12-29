@@ -1,9 +1,11 @@
-package utils
+package utils.borrowed
 
-import utils.Utils.abs
-import utils.Utils.p
-import utils.Point
 import kotlin.math.sign
+
+fun Int.abs() = kotlin.math.abs(this)
+fun Long.abs() = kotlin.math.abs(this)
+
+infix fun Int.p(y: Int): Point = Point(this, y)
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 data class Grid<T>(val initialRows: Int, val initialColumns: Int) : Collection<T> {

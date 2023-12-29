@@ -3,6 +3,7 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
+// --- Day 2: Cube Conundrum ---
 object Task2: Task {
 
 	override fun a(): Any {
@@ -14,8 +15,6 @@ object Task2: Task {
 
 		var sum = 0
 		lines.forEach { line ->
-			println(line)
-			println(parseGame(line))
 			sum += checkGame(parseGame(line), red, green, blue)
 		}
 		return sum
@@ -25,8 +24,6 @@ object Task2: Task {
 		val lines = readInputAsListOfStrings("2023_2.txt")
 		var sum = 0
 		lines.forEach { line ->
-			println(line)
-			println(parseGame(line))
 			sum += calculatePower(calculateMinimumCubes(parseGame(line)))
 		}
 		return sum

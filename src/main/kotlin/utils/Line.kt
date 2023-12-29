@@ -1,3 +1,4 @@
+// @author embuc
 package utils
 
 class Line(val point: PointDouble, val velocity: PointDouble, val name:String, time: Double = 1.0) {

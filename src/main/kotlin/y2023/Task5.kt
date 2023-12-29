@@ -6,6 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import utils.readInputAsListOfStrings
 
+// --- Day 5: If You Give A Seed A Fertilizer ---
 object Task5:Task {
 	const val SEED_TO_SOIL = "seed-to-soil"
 	const val SOIL_TO_FERTILIZER = "soil-to-fertilizer"
@@ -34,14 +35,12 @@ object Task5:Task {
 
 	override fun a(): Any {
 		val allMappings = parseFileToMappings("2023_5.txt")
-		println(allMappings)
 		var low = 9999999999L
 		for (num in seeds) {
 			val loc = getLocation(allMappings, num)
 			if (loc < low) {
 				low = loc
 			}
-			println("Seed: $num, Location: $loc")
 		}
 		return low
 

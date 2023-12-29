@@ -11,6 +11,16 @@ class Task10Test {
 	val task10 = Task10
 
 	@Test
+	fun a() {
+		assertEquals(7102, task10.a())
+	}
+
+	@Test
+	fun b() {
+		assertEquals(363, task10.b())
+	}
+
+	@Test
 	fun testPipeTraversal() {
 		val lines = listOf(
 			".....",
@@ -20,9 +30,8 @@ class Task10Test {
 			"....."
 		)
 		val grid = task10.parseGrid(lines)
-		task10.printGrid(grid)
 		val startPos = task10.findStartPosition(grid)
-		val distance = task10.traversePath(grid, startPos)
+		val distance = task10.traversePathForDistance(grid, startPos)
 		assertEquals(4, distance, "The longest distance from start should be 4")
 	}
 
@@ -36,9 +45,8 @@ class Task10Test {
 			"....."
 		)
 		val grid = task10.parseGrid(lines)
-		task10.printGrid(grid)
 		val startPos = task10.findStartPosition(grid)
-		val path = task10.traversePath2(grid, startPos)
+		val path = task10.traversePath(grid, startPos)
 		val count = task10.countInsideTiles(grid, path)
 		assertEquals(1, count, "Number of inside tiles")
 	}
@@ -54,7 +62,7 @@ class Task10Test {
 		)
 		val grid = task10.parseGrid(lines)
 		val startPos = task10.findStartPosition(grid)
-		val path = task10.traversePath2(grid, startPos)
+		val path = task10.traversePath(grid, startPos)
 		val count = task10.countInsideTiles(grid, path)
 		assertEquals(2, count, "Number of inside tiles")
 	}
@@ -70,7 +78,7 @@ class Task10Test {
 		)
 		val grid = task10.parseGrid(lines)
 		val startPos = task10.findStartPosition(grid)
-		val path = task10.traversePath2(grid, startPos)
+		val path = task10.traversePath(grid, startPos)
 		val count = task10.countInsideTiles(grid, path)
 		assertEquals(2, count, "Number of inside tiles")
 	}
@@ -80,7 +88,7 @@ class Task10Test {
 		val lines = readInputAsListOfStrings("Input10test.txt")
 		val grid = task10.parseGrid(lines)
 		val startPos = task10.findStartPosition(grid)
-		val path = task10.traversePath2(grid, startPos)
+		val path = task10.traversePath(grid, startPos)
 		val count = task10.countInsideTiles(grid, path)
 		assertEquals(10, count, "Number of inside tiles")
 	}
@@ -113,7 +121,6 @@ class Task10Test {
 		assertFalse(task10.canConnect(horizontalTile, bendFTile, Task10.Position(0, 0), Task10. Position(1, 0)))
 		assertFalse(task10.canConnect(horizontalTile, groundTile, Task10. Position(0, 0), Task10.Position(1, 0)))
 	}
-
 
 	@Test
 	fun testBend7Connections() {

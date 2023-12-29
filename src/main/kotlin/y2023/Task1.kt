@@ -3,6 +3,7 @@ package y2023
 import Task
 import utils.readInputAsListOfStrings
 
+// --- Day 1: Trebuchet?! ---
 object Task1: Task {
 
 	override fun a(): Any {
@@ -12,8 +13,6 @@ object Task1: Task {
 			val (firstNumber, lastNumber) = extractFirstAndLastNumber(line)
 			val combinedAsString = "$firstNumber$lastNumber"
 			val combinedAsInt = combinedAsString.toIntOrNull() ?: 0
-			println(line)
-			println(combinedAsInt)
 			sum+=combinedAsInt
 		}
 		return sum
@@ -47,7 +46,6 @@ object Task1: Task {
 			"five" to 5, "six" to 6, "seven" to 7, "eight" to 8, "nine" to 9
 		)
 		val reversedDigitMap = digitMap.mapKeys { it.key.reversed() }
-		println(reversedDigitMap)
 
 		val regexPattern = "(one|two|three|four|five|six|seven|eight|nine|\\d)"
 		val regexPatternReversed = "(enin|thgie|neves|xis|evif|ruof|eerht|owt|eno|\\d)"

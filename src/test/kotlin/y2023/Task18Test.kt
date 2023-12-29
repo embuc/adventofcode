@@ -88,14 +88,13 @@ class Task18Test {
 			U 2 (#7a21e3)
 		""".trimIndent().lines()
 		val polygonInstructions = Task18.parseToPolygonInstructions(lines, true)
-//		polygonInstructions.forEach { println(it) }
 		assertEquals(14, polygonInstructions.size)
 		val polygon = Task18.createPolygon(polygonInstructions)
 		val cubicMeters = Task18.lavaCubicMeters(polygon)
 		assertEquals(952408144115, cubicMeters)
 	}
 
-//	@Test
+//	@Test TODO enable when solved in a faster way
 	fun testSolveB() {// heap intensive
 		val result = Task18.b()
 		assertEquals(201398068194715L, result)

@@ -34,9 +34,7 @@ class Task16Test {
 			.|....-|.\
 			..//.|....
 		""".trimIndent().split("\n").map { it.toCharArray() }.toTypedArray()
-//		println(input.joinToString("\n") { it.joinToString("") })
 		val visited = Task16.solveGrid(input, Pair(0, 0), Task16.Direction.RIGHT)
-		println(Task16.printDebugGrid(input, visited))
 		val expected = 46
 		val actual = visited.sumOf { booleanArray -> booleanArray.count() { it } }
 		assertEquals(expected, actual)

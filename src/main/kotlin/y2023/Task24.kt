@@ -1,16 +1,16 @@
 package y2023
 
 import Task
-import utils.Collections.forEachPair
-import utils.Line
-import utils.PointDouble
-import utils.Utils.die
-import utils.Utils.rl
-import utils.Utils.component6
-import java.io.File
 import com.microsoft.z3.Context
 import com.microsoft.z3.Status
+import utils.*
 
+// --- Day 24: Never Tell Me The Odds ---
+// I liked this one, at least part one. Nice refresher on Linear Algebra.
+// Part two was way too hard, the solution is from user: github.com/eagely.
+// I will study this solution (Part two, that is) and try to understand it.
+// I had to use Z3 to solve it. (many other people did too according to subreddit)
+// *** Needs more work ***.
 class Task24(private val input: List<String>, private val minBoundary: Double, private val maxBoundary: Double) : Task {
 
 	override fun a(): Any {
@@ -43,7 +43,6 @@ class Task24(private val input: List<String>, private val minBoundary: Double, p
 			val intersection = line1.intersectsWith(line2)
 			if (intersection != null) {
 				if (insideBoundary(intersection, line1, line2)) {
-//					println("Intersection: $intersection between ${line1.name} and ${line2.name}")
 					intersections.add(intersection)
 				}
 			}

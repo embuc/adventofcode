@@ -1,9 +1,13 @@
 package y2023
 
 import Task
-import utils.Point2D
+import utils.borrowed.Point2D
 import utils.size
 
+//  --- Day 22: Sand Slabs ---
+// Another one that was too hard for me to solve in the given time-frame,
+// this solution is from user: github.com/clouddJR.
+// *** Needs more work ***.
 class Task22(input: List<String>):Task {
 	private val bricks = input.mapIndexed { index, line -> Brick.from(index, line) }.sortedBy { it.zRange.first }
 	private val supports = mutableMapOf<Int, MutableSet<Int>>()

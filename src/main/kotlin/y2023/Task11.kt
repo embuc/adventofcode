@@ -1,9 +1,13 @@
 package y2023
 
 import Task
+import utils.Tile
 import utils.readInputAsListOfStrings
 import kotlin.math.abs
 
+// --- Day 11: Cosmic Expansion ---
+// Solved this one first with DFS, but it was too slow, then I read discussion and everyone was using Manhattan distance
+// which is both simpler and faster -can't un-see it now :)
 object Task11:Task  {
 
 	override fun a(): Any {
@@ -15,7 +19,6 @@ object Task11:Task  {
 
 	fun findSumOfPaths(galaxyPairs: List<Pair<Tile, Tile>>): Long {
 		val shortestPaths = galaxyPairs.map {
-			//bfs(it.first, it.second, grid)
 			manhattanDistanceLong(it.first, it.second)
 		}.sumOf { it }
 		return shortestPaths
@@ -32,24 +35,6 @@ object Task11:Task  {
 		val deltaX = abs(p1.x - p2.x).toLong()
 		val deltaY = abs(p1.y - p2.y).toLong()
 		return deltaX + deltaY
-	}
-
-	fun printGrid(grid: List<List<Tile>>) {
-		for (row in grid) {
-			for (tile in row) {
-				print("$tile ")
-			}
-			println()
-		}
-	}
-
-	fun printGridCoord(grid: List<List<Tile>>) {
-		for (row in grid) {
-			for (tile in row) {
-				print("(${tile.x},${tile.y}) ")
-			}
-			println()
-		}
 	}
 
 	fun expandGrid(lines: List<String>, times: Long): List<List<Tile>> {
@@ -75,7 +60,6 @@ object Task11:Task  {
 				}
 			}
 		}
-		println("Galaxy count: ${galaxyCounter - 1}")
 
 		// Check for full rows and columns
 		for (r in 0 until rowCount) {
@@ -94,7 +78,6 @@ object Task11:Task  {
 			row.forEach { tile -> tile.x += i*(times-1) }
 			expandedRows.add(row)
 			if (fullRows[index]) {
-				println("Adding row at index $index")
 				i++
 			}
 		}
@@ -129,62 +112,13 @@ object Task11:Task  {
 		return pairs
 	}
 
-	class Tile(var x: Long, var y: Long, private val value: Char, var label: String) {
+	fun Tile.isGalaxy(): Boolean = this.value == '#'
 
-		fun isGalaxy(): Boolean {
-			return value == '#'
-		}
-		override fun toString(): String {
-			return if (isGalaxy()) label.toString() else value.toString()
-		}
+	fun Tile.customToString(): String {
+		return if (this.isGalaxy()) this.label else this.value.toString()
 	}
 
 
-//	fun bfs(start: Tile, end: Tile, grid: List<List<Tile>>): List<Tile> {
-//		val visited = mutableSetOf<Tile>()
-//		val queue = ArrayDeque<List<Tile>>()
-//		queue.add(listOf(start))
-//
-//		while (queue.isNotEmpty()) {
-//			val path = queue.removeFirst()
-//			val node = path.last()
-//
-//			if (node == end) {
-//				return path
-//			}
-//
-//			if (node in visited) {
-//				continue
-//			}
-//
-//			visited.add(node)
-//
-//			val neighbors = getNeighbors(node, grid)
-//			for (neighbor in neighbors) {
-//				if (neighbor !in visited) {
-//					val newPath = path.toMutableList()
-//					newPath.add(neighbor)
-//					queue.add(newPath)
-//				}
-//			}
-//		}
-//
-//		return emptyList()
-//	}
 
-//	fun getNeighbors(tile: Tile, grid: List<List<Tile>>): List<Tile> {
-//		val directions = listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)
-//		val neighbors = mutableListOf<Tile>()
-//
-//		for ((dx, dy) in directions) {
-//			val newX = tile.x + dx
-//			val newY = tile.y + dy
-//			if (newX in grid.indices && newY in grid[newX].indices) {
-//				neighbors.add(grid[newX][newY])
-//			}
-//		}
-//
-//		return neighbors
-//	}
 }
 

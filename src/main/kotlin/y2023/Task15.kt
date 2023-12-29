@@ -3,6 +3,7 @@ package y2023
 import Task
 import utils.readInputAsString
 
+// --- Day 15: Lens Library ---
 object Task15 : Task {
 
 	override fun a(): Any {
@@ -14,13 +15,15 @@ object Task15 : Task {
 		return solvePart2(readInputAsString("2023_15.txt").split(","))
 	}
 
-	//	Determine the ASCII code for the current character of the string.
-	//	Increase the current value by the ASCII code you just determined.
-	//	Set the current value to itself multiplied by 17.
-	//	Set the current value to the remainder of dividing itself by 256.
-	fun calcHash(s:String): Int =
-		s.toList().fold(0) { prevResult, currChar -> ((prevResult + currChar.code) * 17) % 256 }
+	/**
+	 * Calculates a hash value for a given string.
+	 * The hash is calculated by taking the ASCII value of each character, adding to the current value,
+	 * multiplying the result by 17, and taking the remainder when divided by 256.
+	 */
+	fun calcHash(s: String): Int =
+		s.fold(0) { acc, char -> (acc + char.code) * 17 % 256 }
 
+	// this one was also replaced by a more efficient solution from github.com/ClouddJR
 	fun solvePart2(steps: List<String>): Int {
 		val boxes = List(256) { mutableMapOf<String, Int>() }
 

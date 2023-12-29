@@ -1,4 +1,4 @@
-package utils
+package utils.borrowed
 
 data class Point2D(val x: Int, val y: Int) {
 	fun neighbours(): List<Point2D> {

@@ -1,3 +1,4 @@
+// @author embuc
 package utils
 
 class PointDouble(val x: Double, val y: Double) {
