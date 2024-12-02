@@ -42,14 +42,14 @@ class Task14Test {
 	@Test
 	fun testSolveA() {
 		val expected = 105784
-		val actual = Task14.solveA(readInputAsListOfStrings("2023_14.txt"))
+		val actual = Task14.solveA(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_14.txt"))
 		assertEquals(expected, actual)
 	}
 
 	@Test
 	fun testSolveB() {
 		val expected = 91286
-		val actual = Task14.solveB(readInputAsListOfStrings("2023_14.txt"))
+		val actual = Task14.solveB(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_14.txt"))
 		assertEquals(expected, actual)
 	}
 

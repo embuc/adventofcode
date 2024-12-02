@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import y2023.Task17.solvePart1
 
-@DisplayName("Task 17")
+@DisplayName("Task17Test")
 class Task17Test {
 
 	private val input = """

@@ -8,13 +8,13 @@ import utils.readInputAsListOfStrings
 object Task10:Task {
 
 	override fun a(): Int {
-		val grid = readAndParseGrid("2023_10.txt")
+		val grid = readAndParseGrid("~/git/aoc-inputs/2023/2023_10.txt")
 		val startPos = findStartPosition(grid)
 		return traversePathForDistance(grid, startPos)
 	}
 
 	override fun b(): Int {
-		val grid = readAndParseGrid("2023_10.txt")
+		val grid = readAndParseGrid("~/git/aoc-inputs/2023/2023_10.txt")
 		val startPos = findStartPosition(grid)
 		val path = traversePath(grid, startPos)
 		return countInsideTiles(grid, path)

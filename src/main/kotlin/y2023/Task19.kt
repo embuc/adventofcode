@@ -9,12 +9,12 @@ import utils.readInputAsString
 object Task19 : Task {
 
 	override fun a(): Any {
-		val input = readInputAsString("2023_19.txt")
+		val input = readInputAsString("~/git/aoc-inputs/2023/2023_19.txt")
 		return solveA(input)
 	}
 
 	override fun b(): Any {
-		val input = readInputAsString("2023_19.txt")
+		val input = readInputAsString("~/git/aoc-inputs/2023/2023_19.txt")
 		return solveB(input)
 	}
 

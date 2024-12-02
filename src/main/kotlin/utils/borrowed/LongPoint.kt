@@ -18,7 +18,7 @@ data class LongPoint(var x: Long, var y: Long) {
 	val sign: LongPoint get() = LongPoint(x.sign, y.sign)
 
 	fun isInside(maxX: Int, maxY: Int): Boolean {
-		return x in 0..<maxX && y in 0..<maxY
+		return x in 0 until maxX && y in 0 until maxY
 	}
 
 	fun getCardinalNeighbors(): Set<LongPoint> {

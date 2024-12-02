@@ -35,7 +35,7 @@ class Task25Test {
 
 		@Test
 		fun `Matches actual`() {
-			val answer = Task25(readInputAsListOfStrings("2023_25.txt")).a()
+			val answer = Task25(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_25.txt")).a()
 			assertEquals(547410, answer)
 		}
 	}

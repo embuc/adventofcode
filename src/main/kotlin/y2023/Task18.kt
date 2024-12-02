@@ -34,14 +34,14 @@ object Task18 : Task {
 	data class Instruction(val direction: String, val steps: Long)
 
 	override fun a(): Any {
-		val lines = readInputAsListOfStrings("2023_18.txt")
+		val lines = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_18.txt")
 		val polygonInstructions = parseToPolygonInstructions(lines, false)
 		val createPolygon = createPolygon(polygonInstructions)
 		return lavaCubicMeters(createPolygon)
 	}
 
 	override fun b(): Any {
-		val lines = readInputAsListOfStrings("2023_18.txt")
+		val lines = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_18.txt")
 		val polygonInstructions = parseToPolygonInstructions(lines, true)
 		val createPolygon = createPolygon(polygonInstructions)
 		return lavaCubicMeters(createPolygon)

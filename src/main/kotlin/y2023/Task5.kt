@@ -5,6 +5,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import utils.readInputAsListOfStrings
+import utils.readTestInputAsListOfStrings
 
 // --- Day 5: If You Give A Seed A Fertilizer ---
 object Task5:Task {
@@ -30,7 +31,7 @@ object Task5:Task {
 	)
 
 	val seedRanges = seeds.toList().windowed(2, 2).map { (start, length) ->
-		start..<start + length
+		start until start + length
 	}
 
 	override fun a(): Any {
@@ -43,7 +44,6 @@ object Task5:Task {
 			}
 		}
 		return low
-
 	}
 
 	override fun b(): Any {
@@ -106,8 +106,8 @@ object Task5:Task {
 	}
 
 	class MappingGroup(destinationStart: Long, sourceStart: Long, length: Long) {
-		val source: LongRange = sourceStart..<(sourceStart + length)
-		val destination: LongRange = destinationStart..<(destinationStart + length)
+		val source: LongRange = sourceStart until (sourceStart + length)
+		val destination: LongRange = destinationStart until (destinationStart + length)
 
 		fun isInSourceRange(number: Long): Boolean {
 			return number in source
@@ -123,7 +123,7 @@ object Task5:Task {
 	}
 
 	fun parseFileToMappings(fileName: String): Map<String, List<MappingGroup>> {
-		val lines = readInputAsListOfStrings(fileName)
+		val lines = readTestInputAsListOfStrings(fileName)
 		val result = mutableMapOf<String, List<MappingGroup>>()
 		var currentSection = ""
 		var mappings = mutableListOf<MappingGroup>()

@@ -25,7 +25,7 @@ class Task24Test {
 		}
 		@Test
 		fun `Matches actual`() {
-			val answer = Task24(readInputAsListOfStrings("2023_24.txt"), 200000000000000.0, 400000000000000.0).a()
+			val answer = Task24(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_24.txt"), 200000000000000.0, 400000000000000.0).a()
 			assertEquals(21785, answer)
 		}
 	}
@@ -48,7 +48,7 @@ class Task24Test {
 		@Test
 		fun `Matches actual`() {
 			setupClass()
-			val answer = Task24(readInputAsListOfStrings("2023_24.txt"), 200000000000000.0, 400000000000000.0).b()
+			val answer = Task24(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_24.txt"), 200000000000000.0, 400000000000000.0).b()
 			assertEquals(554668916217145L, answer)
 		}
 	}

@@ -29,7 +29,7 @@ class Task22Test {
 
 		@Test
 		fun `Matches actual`() {
-			val answer =Task22(readInputAsListOfStrings("2023_22.txt")).a()
+			val answer =Task22(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_22.txt")).a()
 			assertEquals(497, answer)
 		}
 	}
@@ -45,7 +45,7 @@ class Task22Test {
 
 		@Test
 		fun `Matches actual`() {
-			val answer = Task22(readInputAsListOfStrings("2023_22.txt")).b()
+			val answer = Task22(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_22.txt")).b()
 			assertEquals(67468, answer)
 		}
 	}

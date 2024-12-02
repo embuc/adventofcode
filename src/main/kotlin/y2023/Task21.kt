@@ -14,7 +14,7 @@ import java.util.ArrayDeque
 object Task21:Task {
 
 	override fun a(): Any {
-		val input = readInputAsListOfStrings("2023_21.txt")
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_21.txt")
 		return solveA(input, 64)
 	}
 
@@ -34,7 +34,7 @@ object Task21:Task {
 	}
 
 	override fun b(): Any {
-		val input = readInputAsListOfStrings("2023_21.txt")
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_21.txt")
 		return solveB(input, 26501365L)
 	}
 

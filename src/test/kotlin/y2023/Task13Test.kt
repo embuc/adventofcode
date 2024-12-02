@@ -90,7 +90,7 @@ class Task13Test {
 
 	@Test
 	fun partA() {
-		val input = readInputAsString("2023_13.txt")
+		val input = readInputAsString("~/git/aoc-inputs/2023/2023_13.txt")
 		val sum = task.parseMultipleBlocks(input).sumOf { (rows, columns) ->
 			task.findMirroredCenters(rows, 100) + task.findMirroredCenters(columns, 1)
 		}

@@ -16,7 +16,7 @@ object Task13 : Task {
 	}
 
 	override fun b(): Any {
-		val input = readInputAsString("2023_13.txt")
+		val input = readInputAsString("~/git/aoc-inputs/2023/2023_13.txt")
 
 		return parseMultipleBlocks(input)
 			.sumOf { (rows, columns) ->

@@ -177,7 +177,7 @@ data class Grid<T>(val initialRows: Int, val initialColumns: Int) : Collection<T
 					newX = if (circular) (newX + xOff) % rows else newX + xOff
 					newY = if (circular) (newY + yOff) % columns else newY + yOff
 
-					if (!circular && (newX !in 0..<rows || newY !in 0..<columns)) {
+					if (!circular && (newX !in 0 until rows || newY !in 0 until columns)) {
 						newX = point.x
 						newY = point.y
 						break
@@ -359,11 +359,11 @@ data class Grid<T>(val initialRows: Int, val initialColumns: Int) : Collection<T
 	}
 
 	fun isInside(x: Int, y: Int): Boolean {
-		return x in 0..<rows && y in 0..<columns
+		return x in 0 until rows && y in 0 until columns
 	}
 
 	fun isOutside(x: Int, y: Int): Boolean {
-		return !(x in 0..<rows && y in 0..<columns)
+		return !(x in 0 until rows && y in 0 until columns)
 	}
 
 	fun canMove(points: Set<Point>, dx: Int, dy: Int): Boolean {

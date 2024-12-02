@@ -8,6 +8,7 @@ import utils.borrowed.Point
 // I had almost a solution for part one, but I kept getting one of the longest paths but not The longest path.
 // This solution is from user github.com/eagely. Here for me to study and learn from.
 // *** Needs more work ***.
+@OptIn(kotlin.ExperimentalStdlibApi::class)
 class Task23(private val input: List<String>) : Task {
 
 	private lateinit var grid: Array<Array<Char>>

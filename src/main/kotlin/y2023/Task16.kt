@@ -19,13 +19,13 @@ object Task16 : Task {
 	}
 
 	override fun a(): Any {
-		val grid = readInputAsListOfStrings("2023_16.txt").map { it.toCharArray() }.toTypedArray()
+		val grid = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_16.txt").map { it.toCharArray() }.toTypedArray()
 
 		return evaluateGrid(solveGrid(grid, Pair(0, 0), Direction.RIGHT))
 	}
 
 	override fun b(): Any {
-		val grid = readInputAsListOfStrings("2023_16.txt").map { it.toCharArray() }.toTypedArray()
+		val grid = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_16.txt").map { it.toCharArray() }.toTypedArray()
 		var maxResult = Int.MIN_VALUE
 		//TOP
 		for(j in grid[0].indices) {

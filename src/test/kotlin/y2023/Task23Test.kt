@@ -43,7 +43,7 @@ class Task23Test {
 
 		@Test
 		fun `Matches actual`() {
-			val answer = Task23(readInputAsListOfStrings("2023_23.txt")).a()
+			val answer = Task23(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_23.txt")).a()
 			assertEquals(2318, answer)
 		}
 	}
@@ -83,7 +83,7 @@ class Task23Test {
 
 		@Test
 		fun `Matches actual`() {
-			val answer = Task23(readInputAsListOfStrings("2023_23.txt")).b()
+			val answer = Task23(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_23.txt")).b()
 			assertEquals(6426, answer)
 		}
 	}

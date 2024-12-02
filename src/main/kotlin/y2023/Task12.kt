@@ -8,7 +8,7 @@ import java.util.LinkedList
 
 // --- Day 12: Hot Springs ---
 object Task12 : Task {
-	private val input = readInputAsListOfStrings("2023_12.txt").map { line -> line.split(" ").let { (l, r) -> l to r } }
+	private val input = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_12.txt").map { line -> line.split(" ").let { (l, r) -> l to r } }
 	private data class Input(val condition: String, val groups: List<Int>)
 
 	private val memoizationMap = mutableMapOf<Input, Long>()

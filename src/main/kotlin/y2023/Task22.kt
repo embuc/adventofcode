@@ -19,7 +19,7 @@ class Task22(input: List<String>):Task {
 		for (brick in bricks) {
 			val points = brick.points2D()
 			val maxZ = points.map { maxes.getValue(it) }.maxOf { it.second }
-			brick.zRange = maxZ + 1..<maxZ + 1 + brick.zRange.size()
+			brick.zRange = maxZ + 1 until maxZ + 1 + brick.zRange.size()
 
 			for (point in points) {
 				val (id, z) = maxes.getValue(point)

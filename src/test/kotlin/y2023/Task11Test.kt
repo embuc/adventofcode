@@ -39,7 +39,7 @@ class Task11Test {
 
 	@Test
 	fun findAllGalaxyPairsWhole() {
-		val input = readInputAsListOfStrings("2023_11.txt")
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_11.txt")
 		val expandedGrid = task11.expandGrid(input, 1_000_000)
 		val galaxyPairs = task11.findAllGalaxyPairs(expandedGrid)
 		assertEquals(96141, galaxyPairs.size)

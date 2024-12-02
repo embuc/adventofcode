@@ -8,11 +8,11 @@ import utils.readInputAsListOfStrings
 // --- Day 20: Pulse Propagation ---
 // This one was too hard for me to solve in the given time-frame, this solution is from user: github.com/clouddjr.
 // for part one and part two is solution by user: github.com/eagely.
-// I'll circle back to this one later (Iß think this one was hardest this year).
+// I'll circle back to this one later (I think this one was hardest this year).
 // *** Needs more work ***.
 object Task20:Task {
 
-	private val input = readInputAsListOfStrings("2023_20.txt")
+	private val input = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_20.txt")
 
 	override fun a(): Any {
 		return solveA(input)

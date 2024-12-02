@@ -12,11 +12,11 @@ object Task14 : Task {
 	const val CUBE = 2  // #
 
 	override fun a(): Any {
-		return solveA(readInputAsListOfStrings("2023_14.txt"))
+		return solveA(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_14.txt"))
 	}
 
 	override fun b(): Any {
-		return solveB(readInputAsListOfStrings("2023_14.txt"))
+		return solveB(readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_14.txt"))
 	}
 
 	fun solveA(list: List<String>): Any {
@@ -65,7 +65,7 @@ object Task14 : Task {
 
 	private fun rollNorth(grid: List<IntArray>) {
 		for (max in grid.size downTo 1)
-			for (i in 1..<max)
+			for (i in 1 until max)
 				for (j in grid[0].indices) {
 					if (grid[i][j] == ROCK && grid[i - 1][j] == EMPTY) {
 						grid[i][j] = EMPTY
@@ -76,7 +76,7 @@ object Task14 : Task {
 
 	private fun rollWest(grid: List<IntArray>) {
 		for (max in grid[0].size downTo 1)
-			for (j in 1..<max)
+			for (j in 1 until max)
 				for (i in grid.indices) {
 					if (grid[i][j] == ROCK && grid[i][j - 1] == EMPTY) {
 						grid[i][j] = EMPTY

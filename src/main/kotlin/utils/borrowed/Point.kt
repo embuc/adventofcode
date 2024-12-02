@@ -19,7 +19,7 @@ data class Point(var x: Int, var y: Int) {
     val sign: Point get() = Point(x.sign, y.sign)
 
     fun isInside(maxX: Int, maxY: Int): Boolean {
-        return x in 0..<maxX && y in 0..<maxY
+        return x in 0 until maxX && y in 0 until maxY
     }
 
     fun getCardinalNeighbors(): Set<Point> {
@@ -86,8 +86,8 @@ data class Point(var x: Int, var y: Int) {
     }
     infix fun pm(other: Point) = this % other
     fun manhattanDistance(other: Point) = abs(x - other.x) + abs(y - other.y)
-    fun gridPlus(other: Direction) = this + other.toPointOnGrid()
-    fun gridMinus(other: Direction) = this - other.toPointOnGrid()
+    fun gridPlus(other: Direction) = this + other.toPoint()
+    fun gridMinus(other: Direction) = this - other.toPoint()
     operator fun plus(other: Point) = Point(x + other.x, y + other.y)
     operator fun plus(other: Direction) = this + other.toPoint()
     operator fun unaryPlus() = Point(+x, +y)

@@ -7,7 +7,7 @@ import utils.readInputAsListOfStrings
 object Task1: Task {
 
 	override fun a(): Any {
-		val lines = readInputAsListOfStrings("2023_1.txt")
+		val lines = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_1.txt")
 		var sum = 0
 		lines.forEach { line ->
 			val (firstNumber, lastNumber) = extractFirstAndLastNumber(line)
@@ -19,7 +19,7 @@ object Task1: Task {
 	}
 
 	override fun b(): Any {
-		val lines = readInputAsListOfStrings("2023_1.txt")
+		val lines = readInputAsListOfStrings("~/git/aoc-inputs/2023/2023_1.txt")
 		var sum = 0
 		lines.forEach { line ->
 			val (firstNumber, lastNumber) = extractFirstAndLastDigit(line)

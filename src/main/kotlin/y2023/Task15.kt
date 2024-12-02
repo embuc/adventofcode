@@ -7,12 +7,12 @@ import utils.readInputAsString
 object Task15 : Task {
 
 	override fun a(): Any {
-		val strings = readInputAsString("2023_15.txt").split(",")
+		val strings = readInputAsString("~/git/aoc-inputs/2023/2023_15.txt").split(",")
 		return strings.sumOf {s-> calcHash(s) }
 	}
 
 	override fun b(): Any {
-		return solvePart2(readInputAsString("2023_15.txt").split(","))
+		return solvePart2(readInputAsString("~/git/aoc-inputs/2023/2023_15.txt").split(","))
 	}
 
 	/**
