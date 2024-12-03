@@ -41,49 +41,32 @@ class Task2(val input:List<String>):Task {
 	private fun isDecreasing(list: List<Int>, allowedFailures: Int): Boolean {
 		var failures = 0
 		var prev = list[0]
-		var next = list[1]
 		for (i in 1 until list.size) {
-			if ((next >= prev) || (prev - next > 3)) {
+			val next = list[i]
+			if (next >= prev || prev - next > 3) {
 				failures++
-				if (i + 1 < list.size) {
-					next = list[i + 1]
-				} else {
-					break
-				}
+				if (failures > allowedFailures) return false
 			}else {
 				prev = next
-				if (i + 1 < list.size) {
-					next = list[i + 1]
-				} else {
-					break
-				}
 			}
 		}
-		return failures <= allowedFailures
+		return true
 	}
 
 	private fun isIncreasing(list: List<Int>, allowedFailures: Int): Boolean {
 		var failures = 0
 		var prev = list[0]
-		var next = list[1]
+
 		for (i in 1 until list.size) {
-			if ((next <= prev) || (next - prev > 3)) {
+			val next = list[i]
+			if (next <= prev || next - prev > 3) {
 				failures++
-				if (i + 1 < list.size) {
-					next = list[i + 1]
-				} else {
-					break
-				}
+				if (failures > allowedFailures) return false
 			} else {
 				prev = next
-				if (i + 1 < list.size) {
-					next = list[i + 1]
-				} else {
-					break
-				}
 			}
 		}
-		return failures <= allowedFailures
+		return true
 	}
 
 }
