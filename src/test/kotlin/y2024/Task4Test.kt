@@ -46,7 +46,6 @@ class Task4Test {
 	fun b() {
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_4.txt")
 		val task = Task4(input)
-		//1936 not correct :(
-		assertEquals(0, task.b())
+		assertEquals(1978, task.b())
 	}
 }

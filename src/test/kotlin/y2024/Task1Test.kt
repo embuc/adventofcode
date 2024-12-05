@@ -25,9 +25,6 @@ class Task1Test {
 		val lines = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_1.txt")
 		val task = Task1(lines)
 		assertEquals(1530215, task.a())
-		for (line in lines) {
-			println(line)
-		}
 	}
 
 	@Test

@@ -32,6 +32,6 @@ class Task3Test {
 	fun b() {
 		val input = readInputAsString("~/git/aoc-inputs/2024/2024_3.txt")
 		val Task = Task3(input)
-		assertEquals(181345782, Task.b())
+		assertEquals(98729041, Task.b())
 	}
 }
