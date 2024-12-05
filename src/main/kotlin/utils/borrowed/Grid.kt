@@ -32,7 +32,6 @@ data class Grid<T>(val initialRows: Int, val initialColumns: Int) : Collection<T
 		points.forEach { point ->
 			data.putIfAbsent(point, value)
 		}
-
 	}
 
 	operator fun set(row: Int, column: Int, value: T) = set(Point(row, column), value)
@@ -314,7 +313,6 @@ data class Grid<T>(val initialRows: Int, val initialColumns: Int) : Collection<T
 
 		return newGrid
 	}
-
 
 	fun invertRows(): Grid<T> {
 		val newGrid = Grid<T>(rows, columns)
