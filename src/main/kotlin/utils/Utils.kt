@@ -23,7 +23,7 @@ fun readInputAsListOfStrings(fileName: String): List<String> {
 fun readTestInputAsListOfStrings(fileName: String): List<String> {
 	val inputStream = Thread.currentThread().contextClassLoader.getResourceAsStream(fileName)
 		?: throw IllegalArgumentException("File not found")
-	return inputStream.bufferedReader().use { it.readLines() }
+	return inputStream.bufferedReader().use { it.readLines() }.map { it.trim() }
 }
 
 fun <T> Collection<T>.allEquals(value: T): Boolean {
