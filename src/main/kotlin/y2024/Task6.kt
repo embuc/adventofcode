@@ -12,7 +12,7 @@ class Task6(val input: List<String>) : Task {
 		val startPoint = findStart(grid)
 		val startTile = grid[startPoint.first][startPoint.second]
 		startTile.markVisited(0) // Mark the starting point as visited from the initial direction (up)
-		val startState = TraverseState(1, startTile, 0)
+		val startState = TraverseState(startTile, 0)
 		return traverse(startState).size
 	}
 
@@ -20,16 +20,15 @@ class Task6(val input: List<String>) : Task {
 		val startPoint = findStart(grid)
 		val startTile = grid[startPoint.first][startPoint.second]
 		startTile.markVisited(0)
-		val startState = TraverseState(0, startTile, 0)
+		val startState = TraverseState(startTile, 0)
 		val path = traverse(startState)
 		resetGrid()
 		var counter = 0
 
 		for ((i, j) in path) {
 			if (grid[i][j].type == '^') continue
-
-			grid[i][j].type = '#'
 			resetGrid()
+			grid[i][j].type = '#'
 			if (traverseForLoop(startState, grid)) counter++
 			grid[i][j].type = '.'
 		}
@@ -37,105 +36,53 @@ class Task6(val input: List<String>) : Task {
 	}
 
 	private fun traverse(initialState: TraverseState): MutableSet<Pair<Int, Int>> {
-		var (sum, currentTile, direction) = initialState
-
-		val path = mutableSetOf<Pair<Int, Int>>()
-		path.add(Pair(currentTile.i, currentTile.j))
+		var (currentTile, direction) = initialState
+		val path = mutableSetOf(Pair(currentTile.i, currentTile.j))
 
 		while (true) {
-			val (i, j, type) = currentTile
+			val (i, j) = currentTile
 			if (exitingGrid(i, j, direction)) {
 				path.add(Pair(i, j))
 				return path
 			}
-			when (direction) {
-				0 -> if (i > 0 && grid[i - 1][j].type != '#') { // Move up
-					val nextTile = grid[i - 1][j]
-					sum = if (!nextTile.hasBeenVisited) sum + 1 else sum
-					nextTile.markVisited(0)
-					currentTile = nextTile
-					path.add(Pair(i, j))
-					continue
-				}
-				1 -> if (j + 1 < grid[i].size && grid[i][j + 1].type != '#') { // Move right
-					val nextTile = grid[i][j + 1]
-					sum = if (!nextTile.hasBeenVisited) sum + 1 else sum
-					nextTile.markVisited(1)
-					currentTile = nextTile
-					path.add(Pair(i, j))
-					continue
-				}
-				2 -> if (i + 1 < grid.size && grid[i + 1][j].type != '#') { // Move down
-					val nextTile = grid[i + 1][j]
-					sum = if (!nextTile.hasBeenVisited) sum + 1 else sum
-					nextTile.markVisited(2)
-					currentTile = nextTile
-					path.add(Pair(i, j))
-					continue
-				}
-				3 -> if (j > 0 && grid[i][j - 1].type != '#') { // Move left
-					val nextTile = grid[i][j - 1]
-					sum = if (!nextTile.hasBeenVisited) sum + 1 else sum
-					nextTile.markVisited(3)
-					currentTile = nextTile
-					path.add(Pair(i, j))
-					continue
-				}
+			val nextTile = when (direction) {
+				0 -> if (i > 0 && grid[i - 1][j].type != '#') grid[i - 1][j] else null // Move up
+				1 -> if (j + 1 < grid[i].size && grid[i][j + 1].type != '#') grid[i][j + 1] else null // Move right
+				2 -> if (i + 1 < grid.size && grid[i + 1][j].type != '#') grid[i + 1][j] else null // Move down
+				3 -> if (j > 0 && grid[i][j - 1].type != '#') grid[i][j - 1] else null // Move left
+				else -> null
 			}
-			// If the move in the current direction is invalid, turn 90 degrees right
-			direction = (direction + 1) % 4
+			if (nextTile != null) {
+				nextTile.markVisited(direction)
+				currentTile = nextTile
+				path.add(Pair(i, j))
+			} else {
+				direction = (direction + 1) % 4
+			}
 		}
 	}
 
-
 	private fun traverseForLoop(initialState: TraverseState, grid: Array<Array<Tile>>): Boolean {
-		var (_, currentTile, direction) = initialState
-		currentTile.markVisited(direction)
+		var (currentTile, direction) = initialState
 		while (true) {
-			val (i, j, _) = currentTile
-			if (exitingGrid(i, j, direction)) {
-				return false
+			val (i, j) = currentTile
+			if (exitingGrid(i, j, direction)) return false
+
+			val nextTile = when (direction) {
+				0 -> if (i > 0 && grid[i - 1][j].type != '#') grid[i - 1][j] else null // Move up
+				1 -> if (j + 1 < grid[i].size && grid[i][j + 1].type != '#') grid[i][j + 1] else null // Move right
+				2 -> if (i + 1 < grid.size && grid[i + 1][j].type != '#') grid[i + 1][j] else null // Move down
+				3 -> if (j > 0 && grid[i][j - 1].type != '#') grid[i][j - 1] else null // Move left
+				else -> null
 			}
-			when (direction) {
-				0 -> if (i > 0 && grid[i - 1][j].type != '#') { // Move up
-					val nextTile = grid[i - 1][j]
-					if (nextTile.isVisitedFrom(direction)) {
-						return true
-					}
-					nextTile.markVisited(0)
-					currentTile = nextTile
-					continue
-				}
-				1 -> if (j + 1 < grid[i].size && grid[i][j + 1].type != '#') { // Move right
-					val nextTile = grid[i][j + 1]
-					if (nextTile.isVisitedFrom(direction)) {
-						return true
-					}
-					nextTile.markVisited(1)
-					currentTile = nextTile
-					continue
-				}
-				2 -> if (i + 1 < grid.size && grid[i + 1][j].type != '#') { // Move down
-					val nextTile = grid[i + 1][j]
-					if (nextTile.isVisitedFrom(direction)) {
-						return true
-					}
-					nextTile.markVisited(2)
-					currentTile = nextTile
-					continue
-				}
-				3 -> if (j > 0 && grid[i][j - 1].type != '#') { // Move left
-					val nextTile = grid[i][j - 1]
-					if (nextTile.isVisitedFrom(direction)) {
-						return true
-					}
-					nextTile.markVisited(3)
-					currentTile = nextTile
-					continue
-				}
+
+			if (nextTile != null) {
+				if (nextTile.isVisitedFrom(direction)) return true
+				nextTile.markVisited(direction)
+				currentTile = nextTile
+			} else {
+				direction = (direction + 1) % 4
 			}
-			direction = (direction + 1) % 4
-			currentTile.markVisited(direction)
 		}
 	}
 
@@ -152,11 +99,11 @@ class Task6(val input: List<String>) : Task {
 			hasBeenVisited = true
 		}
 
-		override fun toString(): String = "Tile(i=$i, j=$j, type=$type, visited=${visited.contentToString()}, hasBeenVisited=$hasBeenVisited)"
+		override fun toString(): String =
+			"Tile(i=$i, j=$j, type=$type, visited=${visited.contentToString()}, hasBeenVisited=$hasBeenVisited)"
 	}
 
-	private data class TraverseState (
-		val sum: Int,
+	private data class TraverseState(
 		val currentTile: Tile,
 		val direction: Int // Current direction (0 = up, 1 = right, 2 = down, 3 = left)
 	)
