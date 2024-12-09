@@ -2,7 +2,6 @@ package y2024
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import utils.readInputAsListOfStrings
-import utils.readTestInputAsListOfStrings
 import kotlin.test.Test
 
 class Task7Test {
@@ -37,18 +36,19 @@ class Task7Test {
 
 	@Test
 	fun a_small_input() {
-		assertEquals(190, Task7(small_input.split("\n").map { it.trim() }).a())
-		assertEquals(29, Task7(small_input2.split("\n").map { it.trim() }).a())
-		assertEquals(219, Task7(small_input3.split("\n").map { it.trim() }).a())
-		assertEquals(3267, Task7(small_input4.split("\n").map { it.trim() }).a())
-		assertEquals(292, Task7(small_input5.split("\n").map { it.trim() }).a())
+		assertEquals(190L, Task7(small_input.split("\n").map { it.trim() }).a())
+		assertEquals(29L, Task7(small_input2.split("\n").map { it.trim() }).a())
+		assertEquals(219L, Task7(small_input3.split("\n").map { it.trim() }).a())
+		assertEquals(3267L, Task7(small_input4.split("\n").map { it.trim() }).a())
+		assertEquals(292L, Task7(small_input5.split("\n").map { it.trim() }).a())
 	}
 
 	@Test
 	fun a_test_input() {
 		val task = Task7(test_input.split("\n").map { it.trim() })
-		assertEquals(3749, task.a())
+		assertEquals(3749L, task.a())
 	}
+
 	@Test
 	fun a() {
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_7.txt")
@@ -58,11 +58,14 @@ class Task7Test {
 
 	@Test
 	fun b_test_input() {
-		assertEquals(11387, Task7(test_input.split("\n").map { it.trim() }).b())
+		assertEquals(11387L, Task7(test_input.split("\n").map { it.trim() }).b())
 	}
 
 	@Test
 	fun b() {
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_7.txt")
+		val task = Task7(input)
+		assertEquals(264184041398847, task.b())
 	}
 }
 

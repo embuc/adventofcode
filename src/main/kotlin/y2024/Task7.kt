@@ -2,48 +2,49 @@ package y2024
 
 import Task
 
-/* --- Day 7: Bridge Repair --- */
+/* --- Day 7: Bridge Repair ---
+* Sort of brute force solutioon here. */
 class Task7(val input:List<String>) : Task {
 
-	val operators = listOf("+", "*")
-
 	override fun a(): Any {
-		var sum = 0L
-		for (line in input) {
-			val (result, terms) = parseLine(line);
-			for (list in combineLists(terms, operators)) {
-				val res = evaluateTokensLeftToRight(list)
-				if(res == result) {
-					sum += result
-					break
-				}
-			}
+		return input.sumOf { line ->
+			val (expectedResult, terms) = parseLine(line)
+			val operators = listOf("+", "*")
+			if (combineLists(terms, operators).any { evaluateTokensLeftToRight(expectedResult, it) == expectedResult }) expectedResult else 0L
 		}
-		return sum
 	}
 
-	fun evaluateTokensLeftToRight(tokens: List<String>): Long {
+	override fun b(): Any {
+		val operators = listOf("+", "*")
+		val operatorsExt = listOf("+", "*", "||")
+		return input.sumOf { line ->
+			val (expectedResult, terms) = parseLine(line)
+			if (combineLists(terms, operators).any { evaluateTokensLeftToRight(expectedResult, it) == expectedResult }) {
+				expectedResult
+			} else {
+				if (combineLists(terms, operatorsExt).any { evaluateTokensLeftToRight(expectedResult, it) == expectedResult }) expectedResult else 0L
+			}
+		}
+	}
+
+	fun evaluateTokensLeftToRight(expectedResult: Long, tokens: List<String>): Long {
 		// Start with the first number
 		var result = tokens[0].toLong()
 
-		// Iterate over the tokens
 		for (i in 1 until tokens.size step 2) {
-			val operator = tokens[i] // Current operator (e.g., * or +)
+			val operator = tokens[i] // Current operator (e.g., * or + or ||)
 			val nextOperand = tokens[i + 1] // Next number
+			if (result>expectedResult) return 0L // Optimization
 
-			// Apply the operator
 			when (operator) {
-				"*" -> result *= nextOperand.toLong() // Multiply
-				"+" -> result += nextOperand.toLong() // Add
+				"*" -> result *= nextOperand.toLong()
+				"+" -> result += nextOperand.toLong()
+				"||" -> result = (result.toString() + nextOperand).toLong()
 				else -> throw IllegalArgumentException("Unsupported operator: $operator")
 			}
 		}
 
 		return result
-	}
-
-	override fun b(): Any {
-		return 2
 	}
 
 	fun combineLists(list1: List<String>, list2: List<String>): List<List<String>> {
@@ -79,7 +80,6 @@ class Task7(val input:List<String>) : Task {
 		}
 		return results
 	}
-
 
 	private fun parseLine(line: String): Pair<Long, List<String>> {
 		val parts = line.split(":")
