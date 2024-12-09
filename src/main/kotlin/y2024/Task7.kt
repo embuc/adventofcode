@@ -7,27 +7,18 @@ import Task
 class Task7(val input: List<String>) : Task {
 
 	override fun a(): Any {
+		val operators = listOf("+", "*")
 		return input.parallelStream().mapToLong { line ->
 			val (expectedResult, terms) = parseLine(line)
-			val operators = listOf("+", "*")
-			// Directly evaluate while generating combinations
 			if (combineAndEvaluate(terms, operators, expectedResult)) expectedResult else 0L
 		}.sum()
 	}
 
 	override fun b(): Any {
-		val operators = listOf("+", "*")
-		val operatorsExt = listOf("+", "*", "||")
-
+		val operators = listOf("+", "*", "||")
 		return input.parallelStream().mapToLong { line ->
 			val (expectedResult, terms) = parseLine(line)
-			if (combineAndEvaluate(terms, operators, expectedResult) ||
-				combineAndEvaluate(terms, operatorsExt, expectedResult)
-			) {
-				expectedResult
-			} else {
-				0L
-			}
+			if (combineAndEvaluate(terms, operators, expectedResult)) expectedResult else 0L
 		}.sum()
 	}
 
@@ -82,22 +73,18 @@ class Task7(val input: List<String>) : Task {
 					result *= nextOperand
 				}
 
-				"+" -> {
-					result += nextOperand
-				}
+				"+" -> { result += nextOperand }
 
 				"||" -> {
 					val concatenated = result.toString() + nextOperand.toString()
 					if (concatenated.length > expectedResult.toString().length) return 0L // Stop early
 					result = concatenated.toLong()
 				}
-
 				else -> throw IllegalArgumentException("Unsupported operator: $operator")
 			}
 
 			if (result > expectedResult) return 0L // Stop further computation
 		}
-
 		return result
 	}
 
