@@ -1,0 +1,69 @@
+package y2024
+
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+class Task8Test {
+
+	val small_input = """
+		..........
+		..........
+		..........
+		....a.....
+		..........
+		.....a....
+		..........
+		..........
+		..........
+		..........
+	""".trimIndent();
+
+	val test_input = """
+		............
+		........0...
+		.....0......
+		.......0....
+		....0.......
+		......A.....
+		............
+		............
+		........A...
+		.........A..
+		............
+		............
+	""".trimIndent();
+
+	@Test
+	fun a_test_input() {
+		assertEquals(14, Task8(test_input.split("\n").map { it.trim() }).a())
+	}
+
+	@Test
+	fun a_small_input() {
+		assertEquals(2, Task8(small_input.split("\n").map { it.trim() }).a())
+	}
+
+	@Test
+	fun a() {
+		val input = utils.readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_8.txt")
+		val task = Task8(input)
+		assertEquals(320, task.a())
+	}
+
+	@Test
+	fun b_small_input() {
+		assertEquals(3, Task8(small_input.split("\n").map { it.trim() }).b())
+	}
+
+	@Test
+	fun b_test_input() {
+		assertEquals(34, Task8(test_input.split("\n").map { it.trim() }).b())
+	}
+
+	@Test
+	fun b() {
+		val input = utils.readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_8.txt")
+		val task = Task8(input)
+		assertEquals(1157, task.b())
+	}
+}
