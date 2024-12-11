@@ -60,7 +60,11 @@ class Task9Test {
 	fun b_test_input() {
 		assertEquals(2858L, Task9(test_input).b())
 	}
+	
 	@Test
 	fun b() {
+		val input = utils.readInputAsString("~/git/aoc-inputs/2024/2024_9.txt")
+		val task = Task9(input)
+		assertEquals(6373055193464L, task.b())
 	}
 }
