@@ -16,39 +16,32 @@ class Task11(val input: String) : Task {
 
 	fun countStoneBlinks(stone: Long, times: Int): Long {
 		val key = StoneBlinkKey(stone, times)
-		if (cache2.containsKey(key)) {
-			return cache2[key]!!
-		}
-		val once = blinkOnce(stone)
+		cache2[key]?.let { return it }
+
+		val (first, second) = blinkOnce(stone)
 		if (times == 1) {
-			if (once.second == -1L) {
-				return 1
-			} else {
-				return 2
-			}
-		} else {
-			var sum = countStoneBlinks(once.first, times - 1)
-			if (once.second != -1L) {
-				sum += countStoneBlinks(once.second, times - 1)
-			}
-			cache2[key] = sum
-			return sum
+			return if(second == -1L) 1L else 2L
 		}
+
+		val sum = countStoneBlinks(first, times - 1) +
+				(if (second != -1L) countStoneBlinks(second, times - 1) else 0)
+
+		cache2[key] = sum
+		return sum
 	}
 
 	private fun blinkOnce(it: Long): Pair<Long, Long> {
-		if (cache1.containsKey(it)) {
-			return cache1[it]!!
-		}
+		cache1[it]?.let {return it}
 		val stone = it.toString()
-		val stonePair: Pair<Long, Long>
-		if (stone == "0") {
-			stonePair = Pair(1, -1)
-		} else if (stone.length % 2 == 0) {
-			val half = stone.length / 2
-			stonePair = Pair(stone.substring(0, half).toLong(), stone.substring(half).toLong())
-		} else {
-			stonePair = Pair(it * 2024, -1)
+		val stonePair = when {
+			stone == "0" -> Pair(1L, -1L)
+			stone.length % 2 == 0 -> {
+				val half = stone.length / 2
+				Pair(stone.substring(0, half).toLong(), stone.substring(half).toLong())
+			}
+			else -> {
+				Pair(it * 2024, -1L)
+			}
 		}
 		cache1[it] = stonePair
 		return stonePair
