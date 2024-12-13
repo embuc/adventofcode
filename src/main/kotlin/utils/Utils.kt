@@ -60,6 +60,7 @@ operator fun <T> List<T>.component6(): T {
 	return this[5]
 }
 
+//my grid stuff
 fun toGrid(input: List<String>): Array<Array<Triple<Int, Int, Char>>> {
 	return Array(input.size) { i ->
 			Array(input[i].length) { j ->
