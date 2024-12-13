@@ -11,7 +11,7 @@ class Task10(val input: List<String>) : Task {
 		val grid = Array(input.size) { i -> input[i].map { it.toChar() }.toTypedArray() }
 		val paths = findAllPaths(grid)
 		val filtered = prunePaths(paths)
-		visualizePaths(grid, paths)
+//		visualizePaths(grid, paths)
 		return  filtered.size
 	}
 
@@ -21,14 +21,14 @@ class Task10(val input: List<String>) : Task {
 
 		for (path in paths) {
 			if (path.isNotEmpty()) {
-				val start = path.first() // Start point of the path
-				val end = path.last() // End point of the path
+				val start = path.first()
+				val end = path.last()
 				val pair = Pair(start, end)
 
 				// Only add the path if the start-to-end pair is unique
 				if (pair !in usedStartEndPairs) {
 					uniquePaths.add(path)
-					usedStartEndPairs.add(pair) // Mark this start-to-end pair as used
+					usedStartEndPairs.add(pair)
 				}
 			}
 		}

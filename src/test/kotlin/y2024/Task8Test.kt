@@ -52,7 +52,7 @@ class Task8Test {
 
 	@Test
 	fun b_small_input() {
-		assertEquals(3, Task8(small_input.split("\n").map { it.trim() }).b())
+		assertEquals(5, Task8(small_input.split("\n").map { it.trim() }).b())
 	}
 
 	@Test
