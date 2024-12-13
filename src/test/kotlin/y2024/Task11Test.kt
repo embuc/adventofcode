@@ -1,8 +1,7 @@
 package y2024
 
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-
+import org.junit.jupiter.api.Assertions.assertEquals
 class Task11Test {
 
 	val small_input = "0 1 10 99 999"
