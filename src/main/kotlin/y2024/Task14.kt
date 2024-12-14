@@ -98,7 +98,7 @@ class Task14(val input: List<String>) : Task {
 			seconds++
 		}
 	}
-	
+
 	private fun printPurgedGrid(grid: Array<IntArray>) {
 		grid.forEach { row ->
 			row.forEach { print(if (it != 0) it else ' ') }
