@@ -60,6 +60,30 @@ operator fun <T> List<T>.component6(): T {
 	return this[5]
 }
 
+fun solveLinearEquations2x2(
+	a1: Double, b1: Double, c1: Double,
+	a2: Double, b2: Double, c2: Double
+): Pair<Long, Long>? {
+	// Calculate the determinant of the coefficient matrix
+	val det = a1 * b2 - a2 * b1
+
+	// If the determinant is zero, the system has no unique solution
+	if (det == 0.0) return null
+
+	val detX = c1 * b2 - c2 * b1
+	val detY = a1 * c2 - a2 * c1
+
+	val x = detX / det
+	val y = detY / det
+	// Check if x and y are positive integers
+	if (x > 0 && y > 0 && x % 1 == 0.0 && y % 1 == 0.0) {
+		return x.toLong() to y.toLong()
+	}
+
+	// If x or y is not a positive integer, return no solution
+	return null
+}
+
 //my grid stuff
 fun toGrid(input: List<String>): Array<Array<Triple<Int, Int, Char>>> {
 	return Array(input.size) { i ->
