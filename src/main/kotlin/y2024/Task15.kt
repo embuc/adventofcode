@@ -6,60 +6,25 @@ import Task
 class Task15(val input: List<String>) : Task {
 
 	override fun a(): Any {
-		// parse input to grid and instructions
 		val grid = input.subList(0, input.indexOf("")).map { it.toCharArray() }
-//		printGrid(grid)
 		val instructions = input
-			.dropWhile { it.isNotEmpty() } // Skip all lines until the first empty line
-			.drop(1) // Skip the empty line itself
-			.joinToString("") // Combine everything after into a single continuous string
+			.dropWhile { it.isNotEmpty() }
+			.drop(1)
+			.joinToString("") 
 			.split("").filter { it.isNotEmpty() }
 		var player = grid.mapIndexed { i, row -> Pair(i, row.indexOf('@')) }.filter { it.second != -1 }.first()
-		for (i in instructions) {
-//			println("Before instruction: $i")
-//			println()
+		for (direction in instructions) {
+//			println("\nBefore instruction: $i \n")
 //			printGrid(grid)
-//			println()
-			when (i) {
-				"v" -> {
-					if (!wall(grid, player, "v")) {
-						val emptySpace = findEmptySpaceToMoveIn(grid, player, "v")
-						if (emptySpace.first != -1) {
-							player = movePlayerAndBoxes(grid, player, "v", emptySpace)
-						}
-					}
-				}
-				"^" -> {
-					if (!wall(grid, player, "^")) {
-						val emptySpace = findEmptySpaceToMoveIn(grid, player, "^")
-						if (emptySpace.first != -1){
-							player = movePlayerAndBoxes(grid, player, "^", emptySpace)
-						}
-					}
-				}
-				">" -> {
-					if (!wall(grid, player, ">")) {
-						val emptySpace = findEmptySpaceToMoveIn(grid, player, ">")
-						if (emptySpace.first != -1) {
-							player = movePlayerAndBoxes(grid, player, ">", emptySpace)
-						}
-					}
-				}
-				"<" -> {
-					if (!wall(grid, player, "<")){
-						val emptySpace = findEmptySpaceToMoveIn(grid, player, "<")
-						if (emptySpace.first != -1) {
-							player = movePlayerAndBoxes(grid, player, "<", emptySpace)
-						}
-					}
+			if (!wall(grid, player, direction)) {
+				val emptySpace = findEmptySpaceToMoveIn(grid, player, direction)
+				if (emptySpace.first != -1) {
+					player = movePlayerAndBoxes(grid, player, direction, emptySpace)
 				}
 			}
-//			println("After instruction: $i")
-//			println()
+//			println("\nAfter instruction: $i \n")
 //			printGrid(grid)
-//			println()
 		}
-//		println(player)
 		return calculateSumOfGpsCoordinates(grid)
 	}
 
@@ -76,9 +41,9 @@ class Task15(val input: List<String>) : Task {
 	}
 
 	private fun movePlayerAndBoxes(grid: List<CharArray>, player: Pair<Int, Int>, s: String, emptySpace:Pair<Int, Int>): Pair<Int, Int> {
+		grid[player.first][player.second] = '.'
 		when (s) {
 			"v" -> {
-				grid[player.first][player.second] = '.'
 				for (i in player.first + 2 .. emptySpace.first) {
 					grid[i][player.second] = 'O'
 				}
@@ -86,7 +51,6 @@ class Task15(val input: List<String>) : Task {
 				return player.copy(first = player.first + 1)
 			}
 			"^" -> {
-				grid[player.first][player.second] = '.'
 				for (i in player.first - 2 downTo emptySpace.first) {
 					grid[i][player.second] = 'O'
 				}
@@ -94,7 +58,6 @@ class Task15(val input: List<String>) : Task {
 				return player.copy(first = player.first - 1)
 			}
 			">" -> {
-				grid[player.first][player.second] = '.'
 				for (i in player.second + 2 .. emptySpace.second) {
 					grid[player.first][i] = 'O'
 				}
@@ -102,7 +65,6 @@ class Task15(val input: List<String>) : Task {
 				return player.copy(second = player.second + 1)
 			}
 			"<" -> {
-				grid[player.first][player.second] = '.'
 				for (i in player.second - 2 downTo emptySpace.second) {
 					grid[player.first][i] = 'O'
 				}
@@ -114,57 +76,33 @@ class Task15(val input: List<String>) : Task {
 	}
 
 	private fun findEmptySpaceToMoveIn(grid: List<CharArray>, player: Pair<Int, Int>, s: String): Pair<Int, Int> {
-		return when (s) {
-			"v" -> {
-				for (i in player.first + 1 until grid.size) {
-					when (grid[i][player.second]) {
-						'.' -> return Pair(i, player.second)
-						'O' -> continue
-						'#' -> break
-					}
-				}
-				Pair(-1, -1)
-			}
-			"^" -> {
-				for (i in player.first - 1 downTo 0) {
-					when (grid[i][player.second]) {
-						'.' -> return Pair(i, player.second)
-						'O' -> continue
-						'#' -> break
-					}
-				}
-				Pair(-1, -1)
-			}
-			">" -> {
-				for (i in player.second + 1 until grid.size) {
-					when (grid[player.first][i]) {
-						'.' -> return Pair(player.first, i)
-						'O' -> continue
-						'#' -> break
-					}
-				}
-				Pair(-1, -1)
-			}
-			"<" -> {
-				for (i in player.second - 1 downTo 0) {
-					when (grid[player.first][i]) {
-						'.' -> return Pair(player.first, i)
-						'O' -> continue
-						'#' -> break
-					}
-				}
-				Pair(-1, -1)
-			}
-			else -> Pair(-1, -1)
+		val (row, col) = player
+		val directions = when (s) {
+			"v" -> row + 1 until grid.size to { i: Int -> Pair(i, col) }
+			"^" -> row - 1 downTo 0 to { i: Int -> Pair(i, col) }
+			">" -> col + 1 until grid[row].size to { i: Int -> Pair(row, i) }
+			"<" -> col - 1 downTo 0 to { i: Int -> Pair(row, i) }
+			else -> return Pair(-1, -1)
 		}
+
+		for (i in directions.first) {
+			val (newRow, newCol) = directions.second(i)
+			when (grid[newRow][newCol]) {
+				'.' -> return Pair(newRow, newCol)
+				'O' -> continue
+				'#' -> break
+			}
+		}
+		return Pair(-1, -1)
 	}
 
-	private fun wall(grid: List<CharArray>, player: Pair<Int, Int>, s: String): Boolean {
-		return when (s) {
-			"v" -> grid[player.first + 1][player.second] == '#'
-			"^" -> grid[player.first - 1][player.second] == '#'
-			">" -> grid[player.first][player.second + 1] == '#'
-			"<" -> grid[player.first][player.second - 1] == '#'
+	private fun wall(grid: List<CharArray>, player: Pair<Int, Int>, direction: String): Boolean {
+		val (x, y) = player
+		return when (direction) {
+			"v" -> grid[x + 1][y] == '#'
+			"^" -> grid[x - 1][y] == '#'
+			">" -> grid[x][y + 1] == '#'
+			"<" -> grid[x][y - 1] == '#'
 			else -> false
 		}
 	}
