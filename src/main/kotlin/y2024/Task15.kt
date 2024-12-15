@@ -1,7 +1,6 @@
 package y2024
 
 import Task
-import sun.security.util.PropertyExpander.expand
 
 /*--- Day 15: Warehouse Woes ---*/
 class Task15(val input: List<String>) : Task {
@@ -25,7 +24,7 @@ class Task15(val input: List<String>) : Task {
 		return calculateSumOfGpsCoordinates(grid, 'O')
 	}
 
-	private fun calculateSumOfGpsCoordinates(grid: List<CharArray>, char:Char): Long {
+	private fun calculateSumOfGpsCoordinates(grid: List<CharArray>, char: Char): Long {
 		var sum = 0L
 		grid.forEachIndexed { i, row ->
 			row.forEachIndexed { j, c ->
@@ -37,7 +36,7 @@ class Task15(val input: List<String>) : Task {
 		return sum
 	}
 
-	private fun movePlayerAndBoxes(grid: List<CharArray>,player: Pair<Int, Int>,s: String,emptySpace: Pair<Int, Int>): Pair<Int, Int> {
+	private fun movePlayerAndBoxes(grid: List<CharArray>, player: Pair<Int, Int>, s: String, emptySpace: Pair<Int, Int>): Pair<Int, Int> {
 		grid[player.first][player.second] = '.'
 		when (s) {
 			"v" -> {
@@ -116,7 +115,6 @@ class Task15(val input: List<String>) : Task {
 
 	override fun b(): Any {
 		val grid = expand(input.subList(0, input.indexOf("")).map { it.toCharArray() })
-//		printGrid(grid)
 		val instructions = input
 			.dropWhile { it.isNotEmpty() }
 			.drop(1)
@@ -124,25 +122,26 @@ class Task15(val input: List<String>) : Task {
 			.split("").filter { it.isNotEmpty() }
 		var player = grid.mapIndexed { i, row -> Pair(i, row.indexOf('@')) }.filter { it.second != -1 }.first()
 		for (direction in instructions) {
-//			println("\nBefore instruction: $direction \n")
-//			printGrid(grid)
 			if (!wall(grid, player, direction)) {
 				when (direction) {
 					"v" -> {
 						if (canMoveBoxesUPDown(grid, player.first, player.second, direction)) {
-							player = movePlayerAndBoxesUPDown(grid,  player.first, player.second, direction)
+							player = movePlayerAndBoxesUPDown(grid, player.first, player.second, direction)
 						}
 					}
+
 					"^" -> {
 						if (canMoveBoxesUPDown(grid, player.first, player.second, direction)) {
-							player = movePlayerAndBoxesUPDown(grid,  player.first, player.second, direction)
+							player = movePlayerAndBoxesUPDown(grid, player.first, player.second, direction)
 						}
 					}
+
 					">" -> {
 						if (canMoveBoxesLeftRight(grid, player, direction)) {
 							player = movePlayerAndBoxesLeftRight(grid, player, direction)
 						}
 					}
+
 					"<" -> {
 						if (canMoveBoxesLeftRight(grid, player, direction)) {
 							player = movePlayerAndBoxesLeftRight(grid, player, direction)
@@ -150,9 +149,6 @@ class Task15(val input: List<String>) : Task {
 					}
 				}
 			}
-//			println("\nAfter instruction: $direction \n")
-//			printGrid(grid)
-//			println()
 		}
 		return calculateSumOfGpsCoordinates(grid, '[')
 	}
@@ -160,9 +156,9 @@ class Task15(val input: List<String>) : Task {
 	private fun canMoveBoxesLeftRight(grid: List<CharArray>, player: Pair<Int, Int>, direction: String): Boolean {
 		val (x, y) = player
 		val (dx, dy) = when (direction) {
-			">" -> y + 1 until grid[0].size to {j:Int -> Pair(x, j)} // Right
+			">" -> y + 1 until grid[0].size to { j: Int -> Pair(x, j) } // Right
 
-			"<" -> y -1 downTo 0 to {j: Int -> Pair(x, j)} // Left
+			"<" -> y - 1 downTo 0 to { j: Int -> Pair(x, j) } // Left
 			else -> return false
 		}
 
@@ -176,11 +172,11 @@ class Task15(val input: List<String>) : Task {
 		return false
 	}
 
-	private fun movePlayerAndBoxesLeftRight(grid: List<CharArray>,player: Pair<Int, Int>,direction: String): Pair<Int, Int> {
+	private fun movePlayerAndBoxesLeftRight(grid: List<CharArray>, player: Pair<Int, Int>, direction: String): Pair<Int, Int> {
 		val (x, y) = player
 		val (dx, dy) = when (direction) {
-			">" -> y + 1 until grid[0].size to {j:Int -> Pair(x, j)} // Right
-			"<" -> y -1 downTo 0 to {j: Int -> Pair(x, j)} // Left
+			">" -> y + 1 until grid[0].size to { j: Int -> Pair(x, j) } // Right
+			"<" -> y - 1 downTo 0 to { j: Int -> Pair(x, j) } // Left
 			else -> return player
 		}
 
@@ -196,30 +192,32 @@ class Task15(val input: List<String>) : Task {
 			}
 		}
 		// fill all tiles with double boxes between the player and the empty space (i.e. player minus one space )
-		when(direction) {
+		when (direction) {
 			">" -> {
-				for (i in y + 2 .. emptySpace.second step 2) {
+				for (i in y + 2..emptySpace.second step 2) {
 					grid[x][i] = '['
-					grid[x][i +1] = ']'
+					grid[x][i + 1] = ']'
 				}
 				grid[x][y + 1] = '@'
 				grid[x][y] = '.'
 				return player.copy(second = y + 1)
 			}
+
 			"<" -> {
 				for (i in y - 2 downTo emptySpace.second step 2) {
 					grid[x][i] = ']'
-					grid[x][i-1] = '['
+					grid[x][i - 1] = '['
 				}
 				grid[x][y - 1] = '@'
 				grid[x][y] = '.'
 				return player.copy(second = y - 1)
 			}
+
 			else -> return player
 		}
 	}
 
-	private fun canMoveBoxesUPDown(grid: List<CharArray>,x: Int,y: Int,direction: String): Boolean {
+	private fun canMoveBoxesUPDown(grid: List<CharArray>, x: Int, y: Int, direction: String): Boolean {
 
 		// Get the next position based on direction
 		val (dx, dy) = when (direction) {
@@ -237,13 +235,14 @@ class Task15(val input: List<String>) : Task {
 			'.' -> return true // Found an empty space, move is possible
 			'#' -> return false // Hit a wall
 			'[' -> {
-				val left = canMoveBoxesUPDown(grid, nextX, nextY, direction )
-				val right = canMoveBoxesUPDown(grid, nextX, nextY+1, direction)
+				val left = canMoveBoxesUPDown(grid, nextX, nextY, direction)
+				val right = canMoveBoxesUPDown(grid, nextX, nextY + 1, direction)
 				return left && right
 			}
+
 			']' -> {
 				val left = canMoveBoxesUPDown(grid, nextX, nextY, direction)
-				val right = canMoveBoxesUPDown(grid, nextX, nextY-1, direction)
+				val right = canMoveBoxesUPDown(grid, nextX, nextY - 1, direction)
 				return left && right
 			}
 		}
@@ -251,7 +250,7 @@ class Task15(val input: List<String>) : Task {
 		return true
 	}
 
-	private fun movePlayerAndBoxesUPDown(grid: List<CharArray>,x: Int, y: Int,direction: String) : Pair<Int, Int> {
+	private fun movePlayerAndBoxesUPDown(grid: List<CharArray>, x: Int, y: Int, direction: String): Pair<Int, Int> {
 		val (dx, dy) = when (direction) {
 			"v" -> Pair(1, 0) // Down
 			"^" -> Pair(-1, 0) // Up
@@ -264,20 +263,22 @@ class Task15(val input: List<String>) : Task {
 		// Base cases: if next is wall, return false, or if another box is in the way, fire of 2xrecursion
 		when (grid[nextX][nextY]) {
 			'.' -> {
-					// Found an empty space, move is possible
-					grid[nextX][nextY] = grid[x][y]
-					grid[x][y] = '.'
-					return Pair(nextX, nextY)
-				}
+				// Found an empty space, move is possible
+				grid[nextX][nextY] = grid[x][y]
+				grid[x][y] = '.'
+				return Pair(nextX, nextY)
+			}
+
 			'[' -> {
 				movePlayerAndBoxesUPDown(grid, nextX, nextY, direction)
-				movePlayerAndBoxesUPDown(grid, nextX, nextY+1, direction)
+				movePlayerAndBoxesUPDown(grid, nextX, nextY + 1, direction)
 				grid[nextX][nextY] = grid[x][y]
 				grid[x][y] = '.'
 			}
+
 			']' -> {
 				movePlayerAndBoxesUPDown(grid, nextX, nextY, direction)
-				movePlayerAndBoxesUPDown(grid, nextX, nextY-1, direction)
+				movePlayerAndBoxesUPDown(grid, nextX, nextY - 1, direction)
 				grid[nextX][nextY] = grid[x][y]
 				grid[x][y] = '.'
 			}
