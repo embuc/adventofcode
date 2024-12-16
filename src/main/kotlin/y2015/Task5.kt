@@ -11,12 +11,19 @@ class Task5(val input: List<String>) : Task {
 		val p2 = Regex("(.)\\1")
 		val p3 = Regex("^(?!.*(ab|cd|pq|xy)).*$")
 		for (s in input) {
-			count += if(p1.containsMatchIn(s) && p2.containsMatchIn(s) && p3.containsMatchIn(s)) 1 else 0
+			count += if (p1.containsMatchIn(s) && p2.containsMatchIn(s) && p3.containsMatchIn(s)) 1 else 0
 		}
 		return count
 	}
 
 	override fun b(): Any {
-		TODO("Not yet implemented")
+		var count = 0
+		val p1 = Regex("(.{2}).*\\1")
+		val p2 = Regex("(.).\\1")
+		for (s in input) {
+			count += if (p1.containsMatchIn(s) && p2.containsMatchIn(s)) 1 else 0
+		}
+
+		return count
 	}
 }
