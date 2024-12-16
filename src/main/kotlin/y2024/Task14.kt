@@ -6,15 +6,6 @@ import Task
 class Task14(val input: List<String>) : Task {
 
 	override fun a(): Long {
-		// parse input into a list of pairs of positions and velocities
-		// for each second, move each position by the velocity with % width and height respectively in order to wrap
-		// around the grid
-		// robots can be more than one on a tile
-		// after 100 seconds chack 4 quadrnats (divided by the center of the grid) - thats why the grid is odd
-		// of rows and columns, discard the middle part and any robots there
-		// count the number of robots in each quadrant
-		// multiply in all 4 quadrants and return the result
-		//TODO optimization idea: get the position after X seconds: pos = (pos + time*velocity) mod width (or height)
 		return a(101, 103)
 	}
 

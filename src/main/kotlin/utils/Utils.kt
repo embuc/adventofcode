@@ -102,6 +102,12 @@ fun printGrid(grid: Array<Array<Triple<Int, Int, Char>>>) {
 	}
 }
 
+fun printGrid(grid: List<CharArray>) {
+	grid.forEach {
+		println(it)
+	}
+}
+
 fun resetGrid(grid: Array<Array<Triple<Int, Int, Char>>>) {
 	for (i in grid.indices) {
 		for (j in grid[i].indices) {

@@ -107,12 +107,6 @@ class Task15(val input: List<String>) : Task {
 		}
 	}
 
-	private fun printGrid(grid: List<CharArray>) {
-		grid.forEach {
-			println(it)
-		}
-	}
-
 	override fun b(): Any {
 		val grid = expand(input.subList(0, input.indexOf("")).map { it.toCharArray() })
 		val instructions = input
