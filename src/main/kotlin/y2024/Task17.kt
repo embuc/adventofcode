@@ -7,24 +7,12 @@ import kotlin.math.pow
 class Task17(val input: List<String>) : Task {
 
 	override fun a(): Any {
-		// parse input
-//		Register A: 729
-//		Register B: 0
-//		Register C: 0
-//
-//		Program: 0,1,5,4,3,0
 		var regA = input[0].split(": ")[1].toLong()
 		var regB = input[1].split(": ")[1].toLong()
 		var regC = input[2].split(": ")[1].toLong()
 		val program = input[4].replace("Program:", "").split(",").map { it.trim().toInt() }
-//		println(regA)
-//		println(regB)
-//		println(regC)
-//		println(program)
 		val output = mutableListOf<Long>()
-//		for (j in program.indices step 2) {
 		var index = 0
-
 		while (index < program.size) {
 			val i = program[index]
 			val ii = program[index + 1].toLong()
@@ -59,7 +47,6 @@ class Task17(val input: List<String>) : Task {
 				}
 				else -> 0
 			}
-//			output.add(res)
 			index += 2
 		}
 		return output.joinToString(",")
