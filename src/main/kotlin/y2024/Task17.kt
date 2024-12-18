@@ -7,18 +7,17 @@ import kotlin.math.pow
 class Task17(val input: List<String>) : Task {
 
 	override fun a(): Any {
-		var regA = input[0].split(": ")[1].toLong()
-		var regB = input[1].split(": ")[1].toLong()
-		var regC = input[2].split(": ")[1].toLong()
+		val regA = input[0].split(": ")[1].toLong()
+		val regB = input[1].split(": ")[1].toLong()
+		val regC = input[2].split(": ")[1].toLong()
 		val program = input[4].replace("Program:", "").split(",").map { it.trim().toLong() }
 		return runOnce(program, regA, regB, regC)
 	}
 
-	private fun runOnce(programm: List<Long>, regAA: Long, regBB: Long, regCC: Long): String {
+	private fun runOnce(program: List<Long>, regAA: Long, regBB: Long, regCC: Long): String {
 		var regA = regAA
 		var regB = regBB
 		var regC = regCC
-		val program = programm
 		val output = mutableListOf<Long>()
 		var index = 0
 		while (index < program.size) {
@@ -52,7 +51,6 @@ class Task17(val input: List<String>) : Task {
 				7L -> {
 					regC = cdv(ii, regA, regB, regC)
 				}
-				else -> 0
 			}
 			index += 2
 		}
@@ -100,7 +98,7 @@ class Task17(val input: List<String>) : Task {
 	fun dfs_backtrack(program: List<Long>, cur: Long = 0L, pos: Int = 0): Long {
 		// 1. Base Case: If we have reached the end of the program (all positions filled)
 		if (pos == program.size) {
-			println("Success: $cur")
+//			println("Success: $cur")
 			return cur // The current number `cur` is one of valid solutions
 		}
 
@@ -110,15 +108,15 @@ class Task17(val input: List<String>) : Task {
 		for (i in 0..7) {
 			// Generate the next number by appending `i` (shift left and add `i`)
 			val nextNum = (cur shl 3) + i
-			println("program: $program")
-			println("pos: $pos")
-			println("cur: $cur")
-			println("nextNum: $nextNum")
+//			println("program: $program")
+//			println("pos: $pos")
+//			println("cur: $cur")
+//			println("nextNum: $nextNum")
 
 			// Simulate running the program with the candidate number (`nextNum`)
 			val execResult = runOnce(program, nextNum, 0L, 0L).split(",").map { it.toLong() }
-			println("execResult: $execResult")
-			println("program.subList(program.size - pos - 1, program.size): ${program.subList(program.size - pos - 1, program.size)}")
+//			println("execResult: $execResult")
+//			println("program.subList(program.size - pos - 1, program.size): ${program.subList(program.size - pos - 1, program.size)}")
 
 			// 3. Pruning: Check if the result matches the expected sublist of the program
 			if (execResult == program.subList(program.size - pos - 1, program.size)) {
