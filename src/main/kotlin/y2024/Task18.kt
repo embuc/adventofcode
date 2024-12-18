@@ -2,13 +2,11 @@ package y2024
 
 import Task
 import other.MinimalBFS
-import utils.printGrid
 
 /*--- Day 18: RAM Run ---*/
 class Task18(val input : List<String>, val fallen:Int):Task {
 
 	override fun a(): Any {
-		//read input
 		val list = mutableListOf<List<Int>>()
 		for (line in input) {
 			list.add(line.split(",").map {it.toInt()})
@@ -24,15 +22,14 @@ class Task18(val input : List<String>, val fallen:Int):Task {
 //		printGrid(grid)
 
 		// bfs path from 0, 0 to x, h
-		// print path
 		val findShortestPath = MinimalBFS.findShortestPath(grid)
-		var i=1
-		for ((first, second) in findShortestPath) {
-			grid[first][second] = 'X'
-			println("Step $i: $first, $second")
-			i++
-		}
-		printGrid(grid)
+//		var i=1
+//		for ((first, second) in findShortestPath) {
+//			grid[first][second] = 'X'
+//			println("Step $i: $first, $second")
+//			i++
+//		}
+//		printGrid(grid)
 		return findShortestPath.size -1 //it seems that the first step is not counted
 	}
 
@@ -63,22 +60,11 @@ class Task18(val input : List<String>, val fallen:Int):Task {
 		}
 		grid[0][0] = 'S'
 		grid[x-1][h-1] = 'E'
-//		printGrid(grid)
-
-		// bfs path from 0, 0 to x, h
-		// print path
 		for(c in fallen until list.size) {
 			val (i, j) = list[c]
 			grid[j][i] = '#'
 			MinimalBFS.findShortestPath(grid) ?: return "$i,$j"
 		}
-//		var i=1
-//		for ((first, second) in findShortestPath) {
-//			grid[first][second] = 'X'
-//			println("Step $i: $first, $second")
-//			i++
-//		}
-//		printGrid(grid)
 		return ":/"
 	}
 }
