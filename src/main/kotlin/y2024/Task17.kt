@@ -10,40 +10,47 @@ class Task17(val input: List<String>) : Task {
 		var regA = input[0].split(": ")[1].toLong()
 		var regB = input[1].split(": ")[1].toLong()
 		var regC = input[2].split(": ")[1].toLong()
-		val program = input[4].replace("Program:", "").split(",").map { it.trim().toInt() }
+		val program = input[4].replace("Program:", "").split(",").map { it.trim().toLong() }
+		return runOnce(program, regA, regB, regC)
+	}
+
+	private fun runOnce(programm: List<Long>, regAA: Long, regBB: Long, regCC: Long): String {
+		var regA = regAA
+		var regB = regBB
+		var regC = regCC
+		val program = programm
 		val output = mutableListOf<Long>()
 		var index = 0
 		while (index < program.size) {
 			val i = program[index]
 			val ii = program[index + 1].toLong()
 			when (i) {
-				0 -> {
-					regA = adv(ii, regA, regB, regC).toInt().toLong()
+				0L -> {
+					regA = adv(ii, regA, regB, regC).toLong()
 				}
-				1 -> {
+				1L -> {
 					regB = bxl(ii, regA, regB, regC)
 				}
-				2 -> {
+				2L -> {
 					regB = bst(ii, regA, regB, regC)
 				}
-				3 -> {
+				3L -> {
 					if(regA != 0L) {
-						val jump = jnz(ii, regA, regB, regC).toInt()
-						index = jump
+						index = ii.toInt()
 						continue
 					}
 				}
-				4 -> {
+				4L -> {
 					regB = bxc(ii, regA, regB, regC)
 				}
-				5 -> {
+				5L -> {
 					output.add(out(ii, regA, regB, regC))
 				}
-				6 -> {
-					regB = bdv(ii, regA, regB, regC).toInt().toLong()
+				6L -> {
+					regB = bdv(ii, regA, regB, regC)
 				}
-				7 -> {
-					regC = cdv(ii, regA, regB, regC).toInt().toLong()
+				7L -> {
+					regC = cdv(ii, regA, regB, regC)
 				}
 				else -> 0
 			}
@@ -64,9 +71,6 @@ class Task17(val input: List<String>) : Task {
 	private fun bst(i: Long, regA: Long, regB:Long, regC: Long): Long {
 		return expandOp(i,regA, regB, regC) % 8
 	}
-	private fun jnz(i: Long, regA: Long, regB:Long, regC: Long): Long {
-		return i
-	}
 	private fun bxc(i: Long, regA: Long, regB:Long, regC: Long): Long {
 		return regB xor regC
 	}
@@ -79,7 +83,6 @@ class Task17(val input: List<String>) : Task {
 	private fun cdv(i: Long, regA: Long, regB:Long, regC: Long): Long {
 		return adv(i,regA, regB, regC)
 	}
-
 	private fun expandOp(operand: Long, regA: Long, regB:Long, regC: Long): Long {
 		return when (operand) {
 			4L -> regA
@@ -90,7 +93,44 @@ class Task17(val input: List<String>) : Task {
 	}
 
 	override fun b(): Any {
-		return 0
+		val program = input[4].replace("Program:", "").split(",").map { it.trim().toLong() }
+		return dfs_backtrack(program.map { it.toLong() }, 0L, 0)
 	}
 
+	fun dfs_backtrack(program: List<Long>, cur: Long = 0L, pos: Int = 0): Long {
+		// 1. Base Case: If we have reached the end of the program (all positions filled)
+		if (pos == program.size) {
+			println("Success: $cur")
+			return cur // The current number `cur` is one of valid solutions
+		}
+
+		var minValidResult = Long.MAX_VALUE
+
+		// 2. Candidate Generation: Loop through all possible candidates (0 to 7)
+		for (i in 0..7) {
+			// Generate the next number by appending `i` (shift left and add `i`)
+			val nextNum = (cur shl 3) + i
+			println("program: $program")
+			println("pos: $pos")
+			println("cur: $cur")
+			println("nextNum: $nextNum")
+
+			// Simulate running the program with the candidate number (`nextNum`)
+			val execResult = runOnce(program, nextNum, 0L, 0L).split(",").map { it.toLong() }
+			println("execResult: $execResult")
+			println("program.subList(program.size - pos - 1, program.size): ${program.subList(program.size - pos - 1, program.size)}")
+
+			// 3. Pruning: Check if the result matches the expected sublist of the program
+			if (execResult == program.subList(program.size - pos - 1, program.size)) {
+				// If valid, recursively explore further with the updated number and position
+				val result = dfs_backtrack(program, nextNum, pos + 1)
+//				Once the recursion completes for one branch, the algorithm "backtracks" by simply continuing the loop to try the next candidate.
+				// 4. Backtracking: Update the minimum successful result from recursive calls
+				minValidResult = minOf(minValidResult, result)
+			}
+		}
+
+		// Return the smallest valid solution found at this level of recursion
+		return minValidResult
+	}
 }
