@@ -4,24 +4,15 @@ import Task
 
 /*--- Day 19: Linen Layout ---*/
 class Task19(val input: List<String>) : Task {
+	val towels = input[0].split(", ")
+	val designs = input.drop(2).map { it.trim() }
+
 	override fun a(): Any {
-		val towels = input[0].split(", ")
-		val designs = input.drop(2).map { it.trim() }
-		println("towels: ${towels.size}")
-		println("designs: ${designs.size}")
-		var count = 0
-		var i = 0
-		for (d in designs) {
-			println("Design: $d  $i")
-			if (canFormQuery(d, towels)) {
-				count++
-			}
-		}
-		return count
+		return designs.count { canFormQuery(it, towels) }
 	}
 
 	/* dp */
-	fun canFormQuery(query: String, towels: List<String>): Boolean {
+	private fun canFormQuery(query: String, towels: List<String>): Boolean {
 		val dp = BooleanArray(query.length + 1)
 		dp[0] = true  // base case: empty string can always be formed
 
@@ -35,7 +26,6 @@ class Task19(val input: List<String>) : Task {
 				}
 			}
 		}
-
 		return dp[query.length]
 	}
 
@@ -72,6 +62,50 @@ class Task19(val input: List<String>) : Task {
 	}
 
 	override fun b(): Any {
-		return 0
+		var count = 0L
+		for (design in designs) {
+			val combinations = countCombinations(design, towels)
+			count+= combinations
+		}
+		return count
 	}
+
+	fun countCombinations(query: String, towels: List<String>): Long {
+		// DP array to store counts of ways to form each substring of 'query'
+		val dp = LongArray(query.length + 1)
+		dp[0] = 1L  // There is one way to form the empty string: by using no towels
+
+		for (i in 1..query.length) {
+			for (towel in towels) {
+				val start = i - towel.length
+				if (start >= 0 && query.substring(start, i) == towel) {
+					dp[i] += dp[start]  // Increment count by the number of ways to form the string ending just before this towel
+				}
+			}
+		}
+
+		return dp[query.length]  // The total count of ways to form the entire query string
+	}
+
+	fun findAllCombinations(query: String, towels: List<String>): List<List<String>> {
+		// DP array where each element is a mutable list of mutable lists of strings
+		val dp = Array<MutableList<MutableList<String>>>(query.length + 1) { mutableListOf() }
+		dp[0].add(mutableListOf())  // Base case: one way to form the empty string
+
+		for (i in 1..query.length) {
+			for (towel in towels) {
+				val start = i - towel.length
+				if (start >= 0 && query.substring(start, i) == towel) {
+					for (combination in dp[start]) {
+						val newCombination = combination.toMutableList()
+						newCombination.add(towel)
+						dp[i].add(newCombination)
+					}
+				}
+			}
+		}
+
+		return dp[query.length]
+	}
+
 }
