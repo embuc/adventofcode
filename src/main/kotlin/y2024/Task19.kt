@@ -5,66 +5,61 @@ import Task
 /*--- Day 19: Linen Layout ---*/
 class Task19(val input: List<String>) : Task {
 	override fun a(): Any {
-//		r, wr, b, g, bwu, rb, gb, br
-//
-//		brwrr
-//		bggr
-//		gbbr
-//		rrbgbr
-//		ubwu
-//		bwurrg
-//		brgr
-//		bbrgwb
-
-//		brwrr can be made with a br towel, then a wr towel, and then finally an r towel.
-//		bggr can be made with a b towel, two g towels, and then an r towel.
-//		gbbr can be made with a gb towel and then a br towel.
-//		rrbgbr can be made with r, rb, g, and br.
-//		ubwu is impossible.
-//		bwurrg can be made with bwu, r, r, and g.
-//		brgr can be made with br, g, and r.
-//		bbrgwb is impossible.
 		val towels = input[0].split(", ")
 		val designs = input.drop(2).map { it.trim() }
-//		println("towels: $towels")
-//		println("designs: $designs")
+		println("towels: ${towels.size}")
+		println("designs: ${designs.size}")
 		var count = 0
+		var i = 0
 		for (d in designs) {
-//			println("Design: $d")
-			val result = combineTowels(d, towels)
-//			println("Result: $result")
-			if (result.isNotEmpty()) {
+			println("Design: $d  $i")
+			if (canFormQuery(d, towels)) {
 				count++
 			}
 		}
 		return count
 	}
 
-	
+	/* dp */
+	fun canFormQuery(query: String, towels: List<String>): Boolean {
+		val dp = BooleanArray(query.length + 1)
+		dp[0] = true  // base case: empty string can always be formed
 
+		for (i in 1..query.length) {
+			for (towel in towels) {
+				if (i >= towel.length && dp[i - towel.length]) {
+					if (query.substring(i - towel.length, i) == towel) {
+						dp[i] = true
+						break
+					}
+				}
+			}
+		}
+
+		return dp[query.length]
+	}
+
+	/* backtracking, works nicely on smaller inputs but fails miserably on larger inputs */
 	fun combineTowels(
 		query: String,
 		towels: List<String>,
 		current: MutableList<String> = mutableListOf(),
 		results: MutableList<List<String>> = mutableListOf()
 	): MutableList<List<String>> {
-		// Convert current MutableList to String and check if it matches the query
 		val currentString = current.joinToString("")
 
-		// Base case: if currentString matches query, print and return
+		// Base case: If the current string matches the query, add it to the results
 		if (currentString == query) {
-//			println("Match found: $current")
 			results.add(current.toList())
 			return results
 		}
 
-		// If current string length exceeds query length, return to avoid unnecessary processing
-		// Stop if the current string length exceeds the query length
+		// Cutoff: Stop if the current string length exceeds the query length
 		if (currentString.length > query.length) {
 			return results
 		}
 
-		// Iterate through each towel allowing reuse of towels
+		// Iterate through each towel allowing *reuse* of towels
 		for (towel in towels) {
 			// Include the current towel and recurse
 			current.add(towel)
