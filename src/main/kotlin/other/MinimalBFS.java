@@ -11,12 +11,12 @@ import java.util.Queue;
 public class MinimalBFS {
 
 	// Node class to store x and y coordinates and path (via parent)
-	static class Node {
-		int x;
-		int y;
-		Node parent;
+	public static class Node {
+		public int x;
+		public int y;
+		public Node parent;
 
-		Node(int x, int y, Node parent) {
+		public Node(int x, int y, Node parent) {
 			this.x = x;
 			this.y = y;
 			this.parent = parent;
@@ -86,7 +86,7 @@ public class MinimalBFS {
 	}
 
 	//Helper method to get coordinates of a char in the grid
-	private static int[] findChar(char[][] grid, char target) {
+	public static int[] findChar(char[][] grid, char target) {
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
 				if (grid[i][j] == target) {
@@ -110,11 +110,7 @@ public class MinimalBFS {
 		int[][] shortestPath = findShortestPath(grid);
 		if (shortestPath != null) {
 			System.out.println("Shortest Path:");
-			int[] s = findChar(grid, 'S');
-			Node start = new Node(s[0], s[1], null);
-			int[] e = findChar(grid, 'E');
-			Node end = new Node(e[0], e[1], null);
-			printPath(grid, shortestPath, start, end);
+			printPath(grid, shortestPath);
 //			for(int[] coords : shortestPath) {
 //				System.out.println("x: " + coords[0] + ", y: " + coords[1]);
 //			}
@@ -123,13 +119,18 @@ public class MinimalBFS {
 		}
 	}
 
-	private static void printPath(char[][] grid, int[][] shortestPath, Node start, Node stop) {
+	public static void printPath(char[][] grid, int[][] shortestPath) {
+		int[] s = findChar(grid, 'S');
+		Node start = new Node(s[0], s[1], null);
+		int[] e = findChar(grid, 'E');
+		Node stop = new Node(e[0], e[1], null);
+
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
 				if (i == start.x && j == start.y) {
-					System.out.print("S ");
+					System.out.print("S");
 				} else if (i == stop.x && j == stop.y) {
-					System.out.print("E ");
+					System.out.print("E");
 				} else {
 					boolean isPath = false;
 					for (int[] coords : shortestPath) {
@@ -138,10 +139,12 @@ public class MinimalBFS {
 							break;
 						}
 					}
-					if (isPath) {
-						System.out.print("* ");
+					if (grid[i][j] == '#') {
+						System.out.print("#");
+					} else if (isPath) {
+						System.out.print("|");
 					} else {
-						System.out.print(grid[i][j] + " ");
+						System.out.print(grid[i][j] + ".");
 					}
 				}
 			}
