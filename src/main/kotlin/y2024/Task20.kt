@@ -1,29 +1,24 @@
 package y2024
 
 import Task
-import other.MinimalBFS
 import other.MinimalBFS.findChar
-import java.util.*
 
 
 /*--- Day 20: Race Condition ---*/
-class Task20(val input: List<String>, val limit:Int) : Task {
+class Task20(val input: List<String>, val limit: Int) : Task {
 
+	// Base idea, find walls with at least 2 neighbors on the original path, then check what would shorting this wall
+	// result in the path reduction
 	override fun a(): Any {
-		val grid2 = input.map { it.toCharArray() }.toTypedArray()
-		val grid = input
-		val start = findChar(grid2, 'S').let { Point(it[0], it[1]) }
-		val end = findChar(grid2, 'E').let { Point(it[0], it[1]) }
+		val grid = input.map { it.toCharArray() }.toTypedArray()
+		val start = findChar(grid, 'S').let { Point(it[0], it[1]) }
+		val end = findChar(grid, 'E').let { Point(it[0], it[1]) }
 
 		val basePath = findBasePath(grid, start, end)
 
 		val cheatWalls = findCheatWalls(grid, basePath)
-//		println("Number of cheat walls: ${cheatWalls.size}")
-//		println("Cheat walls: $cheatWalls")
 
-		val result = calculateCheats(grid, basePath, cheatWalls, limit)
-//		println("Number of valid cheats that save at least $limit picoseconds: $result")
-		return result
+		return calculateCheats(basePath, cheatWalls, limit)
 	}
 
 	data class Point(val x: Int, val y: Int) {
@@ -35,9 +30,9 @@ class Task20(val input: List<String>, val limit:Int) : Task {
 		)
 	}
 
-	fun findBasePath(grid: List<String>, start: Point, end: Point): List<Point> {
+	fun findBasePath(grid: Array<CharArray>, start: Point, end: Point): List<Point> {
 		val rows = grid.size
-		val cols = grid[0].length
+		val cols = grid[0].size
 		val visited = mutableSetOf<Point>()
 		val path = mutableListOf<Point>()
 		val stack = mutableListOf(start)
@@ -62,7 +57,7 @@ class Task20(val input: List<String>, val limit:Int) : Task {
 		return path
 	}
 
-	fun findCheatWalls(grid: List<String>, path: List<Point>): List<Point> {
+	fun findCheatWalls(grid: Array<CharArray>, path: List<Point>): List<Point> {
 		val pathSet = path.toSet()
 		val walls = mutableListOf<Point>()
 
@@ -81,18 +76,17 @@ class Task20(val input: List<String>, val limit:Int) : Task {
 		return walls
 	}
 
-	fun calculateCheats(grid: List<String>, path: List<Point>, cheatWalls: List<Point>, limit: Int): Int {
+	fun calculateCheats(path: List<Point>, cheatWalls: List<Point>, limit: Int): Int {
 		val pathIndex = path.withIndex().associate { it.value to it.index }
-		val processedWalls = mutableSetOf<Point>()  // Track processed walls
+		val processedWalls = mutableSetOf<Point>()  // Track processed walls (duplicates not interesting)
 		var validCheatCount = 0
 
 		for (wall in cheatWalls) {
-			if (wall in processedWalls) continue  // Skip if the wall has already been processed
-			processedWalls.add(wall)  // Mark the wall as processed
+			if (wall in processedWalls) continue
+			processedWalls.add(wall)
 
 			val wallNeighbors = wall.neighbors().filter { it in pathIndex }
 
-			if (wallNeighbors.size < 2) continue  // Ensure the wall connects at least two path points
 
 			val (pointA, pointB) = wallNeighbors
 			val indexA = pathIndex[pointA]!!
@@ -103,7 +97,6 @@ class Task20(val input: List<String>, val limit:Int) : Task {
 			if (segmentLength > 2) {
 				val timeSaved = segmentLength - 2  // Time saved by crossing the wall
 				if (timeSaved >= limit) {
-//					println("Valid cheat: $wall connects $pointA and $pointB, saves $timeSaved")
 					validCheatCount++
 				}
 			}
@@ -112,8 +105,42 @@ class Task20(val input: List<String>, val limit:Int) : Task {
 		return validCheatCount
 	}
 
+	// The Basic idea here is to calculate the Manhattan distance (t) and path distance (dt) between each pair of points
+	// on the original path, and if the Manhattan distance is less than or equal to the maxCheatLength and the
+	// shortening of path is greater than limit we have a valid cheat. This solution works even for part I, but it's not
+	// as efficient as the solution checking neighbors
 	override fun b(): Any {
-		return 2
+		val grid = input.map { it.toCharArray() }.toTypedArray()
+		val start = findChar(grid, 'S').let { Point(it[0], it[1]) }
+		val end = findChar(grid, 'E').let { Point(it[0], it[1]) }
+
+		val basePath = findBasePath(grid, start, end)
+
+		val maxCheatLength = 20
+		return findMoveCheatsB(basePath, maxCheatLength, limit)
 	}
 
+	fun findMoveCheatsB(path: List<Point>, maxCheatLength: Int, limit: Int): Int {
+		var validCheatCount = 0
+
+		for (i in path.indices) {
+			for (j in i + 1 until path.size) {
+				val pointA = path[i]
+				val pointB = path[j]
+
+				// Calculate Manhattan distance (t) and path distance (dt)
+				val t = kotlin.math.abs(pointB.x - pointA.x) + kotlin.math.abs(pointB.y - pointA.y)
+				val dt = j - i
+
+				if (t <= maxCheatLength && dt > t) {
+					val timeSaved = dt - t + 1
+					if (timeSaved >= limit) {
+						validCheatCount++
+					}
+				}
+			}
+		}
+
+		return validCheatCount
+	}
 }
