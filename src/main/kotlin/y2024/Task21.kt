@@ -21,49 +21,21 @@ class Task21(val input: List<String>) : Task {
 //	+---+---+---+
 
 	override fun a(): Any {
-		//the strategy is to find the shortest path from the start to the end for me, then find the shortest path from the
-		//start to the end for each robot, then calculate the complexity
 		var sum = 0L
-
-//		val targetSequence = "029A"
-//			279A
-//			341A
-//			459A
-//			540A
-//			085A
-//		val targetSequence = "279A"
-//		val targetSequence = "379A"
-
-//		Processing sequence: 279A, Result of dfs: 72, Multiplied: 20088
-//		Processing sequence: 341A, Result of dfs: 72, Multiplied: 24552
-//		Processing sequence: 459A, Result of dfs: 74, Multiplied: 33966
-//		Processing sequence: 540A, Result of dfs: 72, Multiplied: 38880
-//		Processing sequence: 085A, Result of dfs: 66, Multiplied: 5610
-//		Part 1: 123096
-//		val inputSequence = listOf(
-//			"341A"
-//			,
-//			"459A"
-//			,
-//			"540A"
-//			,
-//			"085A"
-//		)
 		val inputSequence = input
 
 		for (targetSequence in inputSequence) {
-			// Map all robot moves
-			val (robot1Path, robot2Path, robot3Path) = mapAllRobotMoves(targetSequence)
+			val paths = mapAllRobotMoves(targetSequence, 2)
 
 			println("sequence: $targetSequence")
-			println("Robot 1 Path: $robot1Path")
-			println("path1 length: ${robot1Path.length}")
-			println("Robot 2 Path: $robot2Path")
-			println("path2 length: ${robot2Path.length}")
-			println("Robot 3 Path: $robot3Path")
-			println("path3 length: ${robot3Path.length}")
-			println("multiplied: ${robot3Path.length * getNumericCode(targetSequence)}")
-			sum += robot3Path.length * getNumericCode(targetSequence)
+			println("Robot 1 Path: ${paths[0]}")
+			println("path1 length: ${paths[0].length}")
+			println("Robot 2 Path: ${paths[1]}")
+			println("path2 length: ${paths[1].length}")
+			println("Robot 3 Path: ${paths[2]}")
+			println("path3 length: ${paths[2].length}")
+			println("multiplied: ${paths[2].length * getNumericCode(targetSequence)}")
+			sum += paths[2].length * getNumericCode(targetSequence)
 		}
 		return sum
 	}
@@ -72,91 +44,190 @@ class Task21(val input: List<String>) : Task {
 		return code.filter { it.isDigit() }.toInt()
 	}
 
-	fun mapAllRobotMoves(
-		targetSequence: String
-	): Triple<String, String, String> {
-		var robot1Path = ""
-		var robot2Path = ""
-		var robot3Path = ""
+	fun mapAllRobotMoves(targetSequence: String, robots: Int): List<String> {
+		val paths = MutableList(robots + 1) { "" } // Paths for all robots
+		val currentKeys = MutableList(robots + 1) { 'A' } // Track each robot's current key ('A' initially)
 
-		// Robot 1 starts at 'A' on the numerical keypad
-		var robot1CurrentKey = 'A'
-
-		// Map Robot 1's moves on the numerical keypad
+		// Robot 1 maps its moves on the numerical keypad
 		for (targetKey in targetSequence) {
-			val move = numericalBestMoves[robot1CurrentKey to targetKey]
-				?: error("No precomputed path for Robot 1 from $robot1CurrentKey to $targetKey")
-			robot1Path += move
-			robot1CurrentKey = targetKey // Update the current key
+			val move = numericalBestMoves[currentKeys[0] to targetKey]
+				?: error("No precomputed path for Robot 1 from ${currentKeys[0]} to $targetKey")
+			paths[0] += move
+			currentKeys[0] = targetKey
 		}
 
-		// Robot 2 starts at 'A' on the directional keypad
-		var robot2CurrentKey = 'A'
-
-		// Map Robot 2's moves on the directional keypad (based on Robot 1's path)
-		for (move in robot1Path) {
-			val step = directionalBestMoves[robot2CurrentKey to move]
-				?: error("No precomputed path for Robot 2 from $robot2CurrentKey to $move")
-			robot2Path += step
-			robot2CurrentKey = move // Update the current key
+		// Robots 2 to N map their moves based on the previous robot's path
+		for (robot in 1..robots) {
+			for (move in paths[robot - 1]) { // Use the path of the previous robot
+				val step = directionalBestMoves[currentKeys[robot] to move]
+					?: error("No precomputed path for Robot $robot from ${currentKeys[robot]} to $move")
+				paths[robot] += step
+				currentKeys[robot] = move
+			}
 		}
 
-		// Robot 3 starts at 'A' on the directional keypad
-		var robot3CurrentKey = 'A'
+		return paths
+	}
 
-		// Map Robot 3's moves on the directional keypad (based on Robot 2's path)
-		for (move in robot2Path) {
-			val step = directionalBestMoves[robot3CurrentKey to move]
-				?: error("No precomputed path for Robot 3 from $robot3CurrentKey to $move")
-			robot3Path += step
-			robot3CurrentKey = move // Update the current key
+	fun calculateTotalPathLength(targetSequence: String, robots:Int): Long {
+		val memo = mutableMapOf<Triple<Pair<Char, Char>, Int, Int>, Long>()
+
+		fun calculatePathLength(transition: Pair<Char, Char>, robot: Int, position: Int): Long {
+			// Base cases
+			if (position >= targetSequence.length) return 0
+			if (robot >= robots) return 0
+
+			// Create memo key that includes current transition, robot, and position
+			val memoKey = Triple(transition, robot, position)
+			if (memoKey in memo) return memo[memoKey]!!
+
+			// Get appropriate move map based on robot type
+			val bestMoveMap = if (robot == 0) numericalBestMoves else directionalBestMoves
+
+			// Get path for this transition
+			val subPath = bestMoveMap[transition]!!
+			var subSum = subPath.length.toLong() // Add current path length
+
+			// Calculate next character to transition from
+			val nextStartChar = transition.second
+
+			// If there are more characters in the sequence, calculate next transitions
+			if (position + 1 < targetSequence.length) {
+				val nextTransition = Pair(nextStartChar, targetSequence[position + 1])
+				// Recursive call for next position with same robot
+				subSum += calculatePathLength(nextTransition, robot, position + 1)
+			}
+
+			// Calculate path for next robot at current position
+			if (robot + 1 < robots) {
+				val nextRobotTransition = Pair('A', targetSequence[position])
+				subSum += calculatePathLength(nextRobotTransition, robot + 1, position)
+			}
+
+			memo[memoKey] = subSum
+			return subSum
 		}
 
-		return Triple(robot1Path, robot2Path, robot3Path)
+		// Start the calculation with the first transition
+		if (targetSequence.isEmpty()) return 0
+		val initialTransition = Pair('A', targetSequence[0])
+		return calculatePathLength(initialTransition, 0, 0)
+	}
+
+	fun findOptimalPathLength_org(targetSequence: String, robots: Int): Long {
+		val memo = mutableMapOf<Pair<Char, Char>, Long>()
+		var totalCost = 0L
+
+		fun calculatePathLength(currentKey: Pair<Char, Char>, robot: Int): Long {
+			if (robot==robots) return 0 // Base case: Last robot
+
+			if (currentKey in memo) return memo[currentKey]!!
+
+			//we continue in similar fashion as before we entered recursion
+			val bestMoveMap = if (robot == 0) numericalBestMoves else directionalBestMoves
+			//get path for this transition
+			val subPath = bestMoveMap[currentKey]!!
+
+			var subSum = 0L
+			//add only if last level
+			if (robot == robots - 1) subSum += subPath.length
+			//transform path to transitions, first one always from A
+			var x = 'A'
+			val list = mutableListOf<Pair<Char, Char>>()
+			for (c in subPath){
+				list.add(Pair(x, c))
+				x = c
+			}
+
+			for(m in list){
+				subSum += calculatePathLength(m, robot + 1)
+			}
+			return subSum
+		}
+
+		//transform path to transitions, first one always from A
+		var x = 'A'
+		val list = mutableListOf<Pair<Char, Char>>()
+		for (c in targetSequence){
+			list.add(Pair(x, c))
+			x = c
+		}
+
+		for(m in list){
+			totalCost += calculatePathLength(m, 0)
+		}
+
+		return totalCost
+	}
+
+
+	fun findOptimalPathLength(targetSequence: String, robots: Int): Long {
+		// Memoization: Key is (current transition, robot level)
+		val memo = mutableMapOf<Triple<Char, Char, Int>, Long>()
+
+		fun calculatePathLength(currentTransition: Pair<Char, Char>, robot: Int): Long {
+			// Base case: Last robot processes no further levels
+			if (robot == robots) return 0L
+
+			val state = Triple(currentTransition.first, currentTransition.second, robot)
+			if (state in memo) return memo[state]!!
+
+			val bestMoveMap = if (robot == 0) numericalBestMoves else directionalBestMoves
+
+			// Get the subPath for this transition
+			val subPath = bestMoveMap[currentTransition]!!
+
+			var subSum = 0L
+
+			// Add the path length directly if this is the last robot
+			if (robot == robots - 1) subSum += subPath.length
+
+			// Transform the subPath into individual transitions
+			var startKey = 'A'
+			val transitions = mutableListOf<Pair<Char, Char>>()
+			for (c in subPath) {
+				transitions.add(startKey to c)
+				startKey = c
+			}
+
+			for (transition in transitions) {
+				subSum += calculatePathLength(transition, robot + 1)
+			}
+
+			memo[state] = subSum
+			return subSum
+		}
+
+		// Transform the target sequence into transitions (starting from 'A')
+		var startKey = 'A'
+		val transitions = mutableListOf<Pair<Char, Char>>()
+		for (c in targetSequence) {
+			transitions.add(startKey to c)
+			startKey = c
+		}
+
+		// Calculate the total cost starting with Robot 1 (robot = 0)
+		var totalCost = 0L
+		for (transition in transitions) {
+			totalCost += calculatePathLength(transition, 0)
+		}
+
+		return totalCost
 	}
 
 	override fun b(): Any {
 		var sum = 0L
 
-//		val targetSequence = "029A"
-//			279A
-//			341A
-//			459A
-//			540A
-//			085A
-//		val targetSequence = "279A"
-//		val targetSequence = "379A"
-
-//		Processing sequence: 279A, Result of dfs: 72, Multiplied: 20088
-//		Processing sequence: 341A, Result of dfs: 72, Multiplied: 24552
-//		Processing sequence: 459A, Result of dfs: 74, Multiplied: 33966
-//		Processing sequence: 540A, Result of dfs: 72, Multiplied: 38880
-//		Processing sequence: 085A, Result of dfs: 66, Multiplied: 5610
-//		Part 1: 123096
-//		val inputSequence = listOf(
-//			"341A"
-//			,
-//			"459A"
-//			,
-//			"540A"
-//			,
-//			"085A"
-//		)
+//		val inputSequence = listOf("029A")
 		val inputSequence = input
 
+		val robots = 26
 		for (targetSequence in inputSequence) {
-			// Map all robot moves
-			val (robot1Path, robot2Path, robot3Path) = mapAllRobotMoves(targetSequence)
+			val paths = findOptimalPathLength(targetSequence, robots)
 
-			println("sequence: $targetSequence")
-			println("Robot 1 Path: $robot1Path")
-			println("path1 length: ${robot1Path.length}")
-			println("Robot 2 Path: $robot2Path")
-			println("path2 length: ${robot2Path.length}")
-			println("Robot 3 Path: $robot3Path")
-			println("path3 length: ${robot3Path.length}")
-			println("multiplied: ${robot3Path.length * getNumericCode(targetSequence)}")
-			sum += robot3Path.length * getNumericCode(targetSequence)
+//			println("sequence: $targetSequence")
+//			println("Robots Path length: $paths")
+			sum += paths * getNumericCode(targetSequence)
 		}
 		return sum
 	}
@@ -169,7 +240,7 @@ class Task21(val input: List<String>) : Task {
 //	+---+---+---+
 
 //	Least turns (this becomes important when escaping the missing cell in both numeric and directional pads).
-//	moving > over ^ over v over <.
+//	moving < over v over ^ over >.
 
 	val directionalBestMoves = mapOf(
 		// From '^'
@@ -177,13 +248,13 @@ class Task21(val input: List<String>) : Task {
 		'^' to 'A' to ">A",
 		'^' to '<' to "v<A",
 		'^' to 'v' to "vA",
-		'^' to '>' to ">vA",
+		'^' to '>' to "v>A",
 
 		// From 'A'
 		'A' to '^' to "<A",
 		'A' to 'A' to "A",
 		'A' to '<' to "v<<A",
-		'A' to 'v' to "v<A",
+		'A' to 'v' to "<vA",
 		'A' to '>' to "vA",
 
 		// From '<'
@@ -195,13 +266,13 @@ class Task21(val input: List<String>) : Task {
 
 		// From 'v'
 		'v' to '^' to "^A",
-		'v' to 'A' to ">^A",
+		'v' to 'A' to "^>A",
 		'v' to '<' to "<A",
 		'v' to 'v' to "A",
 		'v' to '>' to ">A",
 
 		// From '>'
-		'>' to '^' to "^<A",
+		'>' to '^' to "<^A",
 		'>' to 'A' to "^A",
 		'>' to '<' to "<<A",
 		'>' to 'v' to "<A",
