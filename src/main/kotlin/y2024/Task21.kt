@@ -26,15 +26,6 @@ class Task21(val input: List<String>) : Task {
 
 		for (targetSequence in inputSequence) {
 			val paths = mapAllRobotMoves(targetSequence, 2)
-
-			println("sequence: $targetSequence")
-			println("Robot 1 Path: ${paths[0]}")
-			println("path1 length: ${paths[0].length}")
-			println("Robot 2 Path: ${paths[1]}")
-			println("path2 length: ${paths[1].length}")
-			println("Robot 3 Path: ${paths[2]}")
-			println("path3 length: ${paths[2].length}")
-			println("multiplied: ${paths[2].length * getNumericCode(targetSequence)}")
 			sum += paths[2].length * getNumericCode(targetSequence)
 		}
 		return sum
@@ -44,6 +35,7 @@ class Task21(val input: List<String>) : Task {
 		return code.filter { it.isDigit() }.toInt()
 	}
 
+	// my first implementation, nice but slow for part II
 	fun mapAllRobotMoves(targetSequence: String, robots: Int): List<String> {
 		val paths = MutableList(robots + 1) { "" } // Paths for all robots
 		val currentKeys = MutableList(robots + 1) { 'A' } // Track each robot's current key ('A' initially)
@@ -69,100 +61,8 @@ class Task21(val input: List<String>) : Task {
 		return paths
 	}
 
-	fun calculateTotalPathLength(targetSequence: String, robots:Int): Long {
-		val memo = mutableMapOf<Triple<Pair<Char, Char>, Int, Int>, Long>()
-
-		fun calculatePathLength(transition: Pair<Char, Char>, robot: Int, position: Int): Long {
-			// Base cases
-			if (position >= targetSequence.length) return 0
-			if (robot >= robots) return 0
-
-			// Create memo key that includes current transition, robot, and position
-			val memoKey = Triple(transition, robot, position)
-			if (memoKey in memo) return memo[memoKey]!!
-
-			// Get appropriate move map based on robot type
-			val bestMoveMap = if (robot == 0) numericalBestMoves else directionalBestMoves
-
-			// Get path for this transition
-			val subPath = bestMoveMap[transition]!!
-			var subSum = subPath.length.toLong() // Add current path length
-
-			// Calculate next character to transition from
-			val nextStartChar = transition.second
-
-			// If there are more characters in the sequence, calculate next transitions
-			if (position + 1 < targetSequence.length) {
-				val nextTransition = Pair(nextStartChar, targetSequence[position + 1])
-				// Recursive call for next position with same robot
-				subSum += calculatePathLength(nextTransition, robot, position + 1)
-			}
-
-			// Calculate path for next robot at current position
-			if (robot + 1 < robots) {
-				val nextRobotTransition = Pair('A', targetSequence[position])
-				subSum += calculatePathLength(nextRobotTransition, robot + 1, position)
-			}
-
-			memo[memoKey] = subSum
-			return subSum
-		}
-
-		// Start the calculation with the first transition
-		if (targetSequence.isEmpty()) return 0
-		val initialTransition = Pair('A', targetSequence[0])
-		return calculatePathLength(initialTransition, 0, 0)
-	}
-
-	fun findOptimalPathLength_org(targetSequence: String, robots: Int): Long {
-		val memo = mutableMapOf<Pair<Char, Char>, Long>()
-		var totalCost = 0L
-
-		fun calculatePathLength(currentKey: Pair<Char, Char>, robot: Int): Long {
-			if (robot==robots) return 0 // Base case: Last robot
-
-			if (currentKey in memo) return memo[currentKey]!!
-
-			//we continue in similar fashion as before we entered recursion
-			val bestMoveMap = if (robot == 0) numericalBestMoves else directionalBestMoves
-			//get path for this transition
-			val subPath = bestMoveMap[currentKey]!!
-
-			var subSum = 0L
-			//add only if last level
-			if (robot == robots - 1) subSum += subPath.length
-			//transform path to transitions, first one always from A
-			var x = 'A'
-			val list = mutableListOf<Pair<Char, Char>>()
-			for (c in subPath){
-				list.add(Pair(x, c))
-				x = c
-			}
-
-			for(m in list){
-				subSum += calculatePathLength(m, robot + 1)
-			}
-			return subSum
-		}
-
-		//transform path to transitions, first one always from A
-		var x = 'A'
-		val list = mutableListOf<Pair<Char, Char>>()
-		for (c in targetSequence){
-			list.add(Pair(x, c))
-			x = c
-		}
-
-		for(m in list){
-			totalCost += calculatePathLength(m, 0)
-		}
-
-		return totalCost
-	}
-
-
 	fun findOptimalPathLength(targetSequence: String, robots: Int): Long {
-		// Memoization: Key is (current transition, robot level)
+		// Memoization: Key is (current transition, robot level), using robot as part of the state was crucial
 		val memo = mutableMapOf<Triple<Char, Char, Int>, Long>()
 
 		fun calculatePathLength(currentTransition: Pair<Char, Char>, robot: Int): Long {
@@ -205,8 +105,6 @@ class Task21(val input: List<String>) : Task {
 			transitions.add(startKey to c)
 			startKey = c
 		}
-
-		// Calculate the total cost starting with Robot 1 (robot = 0)
 		var totalCost = 0L
 		for (transition in transitions) {
 			totalCost += calculatePathLength(transition, 0)
@@ -217,61 +115,41 @@ class Task21(val input: List<String>) : Task {
 
 	override fun b(): Any {
 		var sum = 0L
-
-//		val inputSequence = listOf("029A")
 		val inputSequence = input
 
-		val robots = 26
+		val robots = 26 // 25 directional and one numerical
 		for (targetSequence in inputSequence) {
 			val paths = findOptimalPathLength(targetSequence, robots)
-
-//			println("sequence: $targetSequence")
-//			println("Robots Path length: $paths")
 			sum += paths * getNumericCode(targetSequence)
 		}
 		return sum
 	}
 
-
-//  	+---+---+
-//  	| ^ | A |
-//	+---+---+---+
-//	| < | v | > |
-//	+---+---+---+
-
-//	Least turns (this becomes important when escaping the missing cell in both numeric and directional pads).
-//	moving < over v over ^ over >.
-
 	val directionalBestMoves = mapOf(
-		// From '^'
 		'^' to '^' to "A",
 		'^' to 'A' to ">A",
 		'^' to '<' to "v<A",
 		'^' to 'v' to "vA",
 		'^' to '>' to "v>A",
 
-		// From 'A'
 		'A' to '^' to "<A",
 		'A' to 'A' to "A",
 		'A' to '<' to "v<<A",
 		'A' to 'v' to "<vA",
 		'A' to '>' to "vA",
 
-		// From '<'
 		'<' to '^' to ">^A",
 		'<' to 'A' to ">>^A",
 		'<' to '<' to "A",
 		'<' to 'v' to ">A",
 		'<' to '>' to ">>A",
 
-		// From 'v'
 		'v' to '^' to "^A",
 		'v' to 'A' to "^>A",
 		'v' to '<' to "<A",
 		'v' to 'v' to "A",
 		'v' to '>' to ">A",
 
-		// From '>'
 		'>' to '^' to "<^A",
 		'>' to 'A' to "^A",
 		'>' to '<' to "<<A",
@@ -279,19 +157,7 @@ class Task21(val input: List<String>) : Task {
 		'>' to '>' to "A"
 	)
 
-	//	moving < over ^ over v over >.
-//	+---+---+---+
-//	| 7 | 8 | 9 |
-//	+---+---+---+
-//	| 4 | 5 | 6 |
-//	+---+---+---+
-//	| 1 | 2 | 3 |
-//	+---+---+---+
-//      | 0 | A |
-//      +---+---+
-
 	val numericalBestMoves = mapOf(
-		// From '7'
 		'7' to '7' to "A",
 		'7' to '8' to ">A",
 		'7' to '9' to ">>A",
@@ -304,7 +170,6 @@ class Task21(val input: List<String>) : Task {
 		'7' to '0' to ">vvvA",
 		'7' to 'A' to ">>vvvA",
 
-		// From '8'
 		'8' to '7' to "<A",
 		'8' to '8' to "A",
 		'8' to '9' to ">A",
@@ -317,7 +182,6 @@ class Task21(val input: List<String>) : Task {
 		'8' to '0' to "vvvA",
 		'8' to 'A' to "vvv>A",
 
-		// From '9'
 		'9' to '7' to "<<A",
 		'9' to '8' to "<A",
 		'9' to '9' to "A",
@@ -330,7 +194,6 @@ class Task21(val input: List<String>) : Task {
 		'9' to '0' to "<vvvA",
 		'9' to 'A' to "vvvA",
 
-		// From '4'
 		'4' to '7' to "^A",
 		'4' to '8' to "^>A",
 		'4' to '9' to "^>>A",
@@ -343,7 +206,6 @@ class Task21(val input: List<String>) : Task {
 		'4' to '0' to ">vvA",
 		'4' to 'A' to ">>vvA",
 
-		// From '5'
 		'5' to '7' to "<^A",
 		'5' to '8' to "^A",
 		'5' to '9' to "^>A",
@@ -356,7 +218,6 @@ class Task21(val input: List<String>) : Task {
 		'5' to '0' to "vvA",
 		'5' to 'A' to "vv>A",
 
-		// From '6'
 		'6' to '7' to "<<^A",
 		'6' to '8' to "<^A",
 		'6' to '9' to "^A",
@@ -369,7 +230,6 @@ class Task21(val input: List<String>) : Task {
 		'6' to '0' to "<vvA",
 		'6' to 'A' to "vvA",
 
-		// From '1'
 		'1' to '7' to "^^A",
 		'1' to '8' to "^^>A",
 		'1' to '9' to "^^>>A",
@@ -382,7 +242,6 @@ class Task21(val input: List<String>) : Task {
 		'1' to '0' to ">vA",
 		'1' to 'A' to ">>vA",
 
-		// From '2'
 		'2' to '7' to "<^^A",
 		'2' to '8' to "^^A",
 		'2' to '9' to ">^^A",
@@ -395,7 +254,6 @@ class Task21(val input: List<String>) : Task {
 		'2' to '0' to "vA",
 		'2' to 'A' to "v>A",
 
-		// From '3'
 		'3' to '7' to "<<^^A",
 		'3' to '8' to "<^^A",
 		'3' to '9' to "^^A",
@@ -408,7 +266,6 @@ class Task21(val input: List<String>) : Task {
 		'3' to '0' to "<vA",
 		'3' to 'A' to "vA",
 
-		// From '0'
 		'0' to '7' to "^^^<A",
 		'0' to '8' to "^^^A",
 		'0' to '9' to "^^^>A",
@@ -421,7 +278,6 @@ class Task21(val input: List<String>) : Task {
 		'0' to '0' to "A",
 		'0' to 'A' to ">A",
 
-		// From 'A'
 		'A' to '7' to "^^^<<A",
 		'A' to '8' to "<^^^A",
 		'A' to '9' to "^^^A",
