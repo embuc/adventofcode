@@ -1,6 +1,7 @@
 package y2024
 
 import org.junit.jupiter.api.Test
+import utils.readInputAsListOfStrings
 import kotlin.test.assertEquals
 
 class Task21Test {
@@ -16,6 +17,8 @@ class Task21Test {
 	@Test
 	fun a() {
 		assertEquals(126384, Task21(test_input).a())
+//		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_21.txt")
+//		assertEquals(0, Task21(input).a())
 	}
 
 	@Test
