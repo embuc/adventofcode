@@ -70,6 +70,7 @@ class Task21(val input: List<String>) : Task {
 		println("length of robot 4 path: ${robot4Path.length}")
 		return 0
 	}
+
 	// Keypads for all robots
 	val numericKeypad = listOf(
 		listOf('7', '8', '9'),
@@ -92,7 +93,7 @@ class Task21(val input: List<String>) : Task {
 	)
 	val directionKeys = listOf('^', 'v', '<', '>')
 
-	// Generalized BFS function
+	// Generalized BFS function (ensures shortest path is found)
 	fun bfsPath(keypad: List<List<Char>>, start: Pair<Int, Int>, target: Char): String {
 		val queue = LinkedList<Triple<Pair<Int, Int>, String, Set<Pair<Int, Int>>>>()
 		queue.add(Triple(start, "", setOf(start))) // (current position, path so far, visited positions)
@@ -143,13 +144,6 @@ class Task21(val input: List<String>) : Task {
 
 		for (action in previousRobotPath) {
 			if (action in directionKeys || action == 'A') {
-				// If stuck at 'A' and need a direction, move down first
-				if (currentPosition == findKeyPosition(currentKeypad, 'A') && (action == '<' || action == '>' || action == '^')) {
-					val pathToAdjust = bfsPath(currentKeypad, currentPosition, 'v') // Move down
-					result.append(pathToAdjust)
-					currentPosition = findKeyPosition(currentKeypad, 'v')
-				}
-
 				// Find the shortest path to the action
 				val pathToAction = bfsPath(currentKeypad, currentPosition, action)
 				result.append(pathToAction)
