@@ -16,12 +16,14 @@ class Task21Test {
 
 	@Test
 	fun a() {
-		assertEquals(126384, Task21(test_input).a())
-//		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_21.txt")
-//		assertEquals(0, Task21(input).a())
+//		assertEquals(126384L, Task21(test_input).a())
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_21.txt")
+		assertEquals(123096L, Task21(input).a())
 	}
 
 	@Test
 	fun b() {
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_21.txt")
+		assertEquals(154517692795352L, Task21(input).b())
 	}
 }

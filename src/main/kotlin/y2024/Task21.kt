@@ -23,7 +23,7 @@ class Task21(val input: List<String>) : Task {
 	override fun a(): Any {
 		//the strategy is to find the shortest path from the start to the end for me, then find the shortest path from the
 		//start to the end for each robot, then calculate the complexity
-		var sum = 0
+		var sum = 0L
 
 //		val targetSequence = "029A"
 //			279A
@@ -34,7 +34,21 @@ class Task21(val input: List<String>) : Task {
 //		val targetSequence = "279A"
 //		val targetSequence = "379A"
 
-//		val inputSequence = listOf("279A")
+//		Processing sequence: 279A, Result of dfs: 72, Multiplied: 20088
+//		Processing sequence: 341A, Result of dfs: 72, Multiplied: 24552
+//		Processing sequence: 459A, Result of dfs: 74, Multiplied: 33966
+//		Processing sequence: 540A, Result of dfs: 72, Multiplied: 38880
+//		Processing sequence: 085A, Result of dfs: 66, Multiplied: 5610
+//		Part 1: 123096
+//		val inputSequence = listOf(
+//			"341A"
+//			,
+//			"459A"
+//			,
+//			"540A"
+//			,
+//			"085A"
+//		)
 		val inputSequence = input
 
 		for (targetSequence in inputSequence) {
@@ -48,6 +62,7 @@ class Task21(val input: List<String>) : Task {
 			println("path2 length: ${robot2Path.length}")
 			println("Robot 3 Path: $robot3Path")
 			println("path3 length: ${robot3Path.length}")
+			println("multiplied: ${robot3Path.length * getNumericCode(targetSequence)}")
 			sum += robot3Path.length * getNumericCode(targetSequence)
 		}
 		return sum
@@ -101,7 +116,49 @@ class Task21(val input: List<String>) : Task {
 	}
 
 	override fun b(): Any {
-		return 0
+		var sum = 0L
+
+//		val targetSequence = "029A"
+//			279A
+//			341A
+//			459A
+//			540A
+//			085A
+//		val targetSequence = "279A"
+//		val targetSequence = "379A"
+
+//		Processing sequence: 279A, Result of dfs: 72, Multiplied: 20088
+//		Processing sequence: 341A, Result of dfs: 72, Multiplied: 24552
+//		Processing sequence: 459A, Result of dfs: 74, Multiplied: 33966
+//		Processing sequence: 540A, Result of dfs: 72, Multiplied: 38880
+//		Processing sequence: 085A, Result of dfs: 66, Multiplied: 5610
+//		Part 1: 123096
+//		val inputSequence = listOf(
+//			"341A"
+//			,
+//			"459A"
+//			,
+//			"540A"
+//			,
+//			"085A"
+//		)
+		val inputSequence = input
+
+		for (targetSequence in inputSequence) {
+			// Map all robot moves
+			val (robot1Path, robot2Path, robot3Path) = mapAllRobotMoves(targetSequence)
+
+			println("sequence: $targetSequence")
+			println("Robot 1 Path: $robot1Path")
+			println("path1 length: ${robot1Path.length}")
+			println("Robot 2 Path: $robot2Path")
+			println("path2 length: ${robot2Path.length}")
+			println("Robot 3 Path: $robot3Path")
+			println("path3 length: ${robot3Path.length}")
+			println("multiplied: ${robot3Path.length * getNumericCode(targetSequence)}")
+			sum += robot3Path.length * getNumericCode(targetSequence)
+		}
+		return sum
 	}
 
 
@@ -112,21 +169,21 @@ class Task21(val input: List<String>) : Task {
 //	+---+---+---+
 
 //	Least turns (this becomes important when escaping the missing cell in both numeric and directional pads).
-//	moving < over ^ over v over >.
+//	moving > over ^ over v over <.
 
 	val directionalBestMoves = mapOf(
 		// From '^'
 		'^' to '^' to "A",
 		'^' to 'A' to ">A",
-		'^' to '<' to "<vA",
+		'^' to '<' to "v<A",
 		'^' to 'v' to "vA",
-		'^' to '>' to "v>A",
+		'^' to '>' to ">vA",
 
 		// From 'A'
 		'A' to '^' to "<A",
 		'A' to 'A' to "A",
 		'A' to '<' to "v<<A",
-		'A' to 'v' to "<vA",
+		'A' to 'v' to "v<A",
 		'A' to '>' to "vA",
 
 		// From '<'
@@ -138,13 +195,13 @@ class Task21(val input: List<String>) : Task {
 
 		// From 'v'
 		'v' to '^' to "^A",
-		'v' to 'A' to "^>A",
+		'v' to 'A' to ">^A",
 		'v' to '<' to "<A",
 		'v' to 'v' to "A",
 		'v' to '>' to ">A",
 
 		// From '>'
-		'>' to '^' to "<^A",
+		'>' to '^' to "^<A",
 		'>' to 'A' to "^A",
 		'>' to '<' to "<<A",
 		'>' to 'v' to "<A",
@@ -161,7 +218,7 @@ class Task21(val input: List<String>) : Task {
 //	+---+---+---+
 //      | 0 | A |
 //      +---+---+
-	
+
 	val numericalBestMoves = mapOf(
 		// From '7'
 		'7' to '7' to "A",
@@ -252,7 +309,7 @@ class Task21(val input: List<String>) : Task {
 		'1' to '2' to ">A",
 		'1' to '3' to ">>A",
 		'1' to '0' to ">vA",
-		'1' to 'A' to "v>>A",
+		'1' to 'A' to ">>vA",
 
 		// From '2'
 		'2' to '7' to "<^^A",
