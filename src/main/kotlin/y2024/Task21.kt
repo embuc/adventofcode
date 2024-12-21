@@ -39,17 +39,51 @@ class Task21(val input: List<String>) : Task {
 //		The numeric part of the code (ignoring leading zeroes); for 029A, this would be 29.
 //		In the above example, complexity of the five codes can be found by calculating 68 * 29, 60 * 980, 68 * 179, 64 * 456, and 64 * 379. Adding these together produces 126384.
 
-	val numeric_keypad = listOf(
+	override fun a(): Any {
+		//strategy is to find the shortest path from the start to the end for me, then find the shortest path from the
+		//start to the end for each robot, then calculate the complexity
+		val codes = input.map { it.split("\n") }
+		codes.forEach {
+			println(it)
+		}
+		// Example usage
+		val code = "029A"
+
+		// Step 1: Generate Robot 1's path to type the numeric code
+		val robot1Path = generateRobot1Path(code)
+		println("Robot 1's path: $robot1Path")
+		println("length of robot 1 path: ${robot1Path.length}")
+
+		// Step 2: Generate Robot 2's path to control Robot 1
+		val robot2Path = generateRobotPath(directionalKeypad, robot1Path)
+		println("Robot 2's path: $robot2Path")
+		println("length of robot 2 path: ${robot2Path.length}")
+
+		// Step 3: Generate Robot 3's path to control Robot 2
+		val robot3Path = generateRobotPath(directionalKeypad, robot2Path)
+		println("Robot 3's path: $robot3Path")
+		println("length of robot 3 path: ${robot3Path.length}")
+
+		// Step 4: Generate Robot 4's path to control Robot 3
+		val robot4Path = generateRobotPath(directionalKeypad, robot3Path)
+		println("Robot 4's path: $robot4Path")
+		println("length of robot 4 path: ${robot4Path.length}")
+		return 0
+	}
+	// Keypads for all robots
+	val numericKeypad = listOf(
 		listOf('7', '8', '9'),
 		listOf('4', '5', '6'),
 		listOf('1', '2', '3'),
 		listOf('#', '0', 'A')
 	)
-	val directional_keypad = listOf(
+
+	val directionalKeypad = listOf(
 		listOf('#', '^', 'A'),
-		listOf('<', 'v', '>'),
+		listOf('<', 'v', '>')
 	)
-	// Directional keypad representation
+
+	// Directions common to all keypads
 	val directions = listOf(
 		Pair(-1, 0), // ^ (up)
 		Pair(1, 0),  // v (down)
@@ -58,20 +92,8 @@ class Task21(val input: List<String>) : Task {
 	)
 	val directionKeys = listOf('^', 'v', '<', '>')
 
-	override fun a(): Any {
-		//strategy is to find the shortest path from the start to the end for me, then find the shortest path from the
-		//start to the end for each robot, then calculate the complexity
-		val codes = input.map { it.split("\n") }
-		codes.forEach {
-			println(it)
-		}
-		val code = "029A"
-		val sequence = findPathToType(code)
-		println("Directional sequence to type $code: $sequence")
-		return 0
-	}
-
-	fun bfsPath(start: Pair<Int, Int>, target: Char): String {
+	// Generalized BFS function
+	fun bfsPath(keypad: List<List<Char>>, start: Pair<Int, Int>, target: Char): String {
 		val queue = LinkedList<Triple<Pair<Int, Int>, String, Set<Pair<Int, Int>>>>()
 		queue.add(Triple(start, "", setOf(start))) // (current position, path so far, visited positions)
 
@@ -80,7 +102,7 @@ class Task21(val input: List<String>) : Task {
 			val (x, y) = current
 
 			// If we've found the target key
-			if (numeric_keypad[x][y] == target) {
+			if (keypad[x][y] == target) {
 				return path + "A" // Append 'A' to indicate a button press
 			}
 
@@ -90,7 +112,7 @@ class Task21(val input: List<String>) : Task {
 				val newY = y + direction.second
 
 				// Check bounds and avoid revisiting
-				if (newX in numeric_keypad.indices && newY in numeric_keypad[newX].indices && (newX to newY) !in visited) {
+				if (newX in keypad.indices && newY in keypad[newX].indices && (newX to newY) !in visited) {
 					queue.add(Triple(newX to newY, path + directionKeys[i], visited + (newX to newY)))
 				}
 			}
@@ -99,20 +121,47 @@ class Task21(val input: List<String>) : Task {
 		throw IllegalArgumentException("Target $target cannot be reached from $start")
 	}
 
-	fun findPathToType(code: String): String {
-		var currentPosition = 3 to 2 // Start at 'A' on the numeric keypad
+	// Function to generate the path for Robot 1 to type a numeric code
+	fun generateRobot1Path(code: String): String {
+		var currentPosition = findKeyPosition(numericKeypad, 'A') // Start at 'A'
 		val result = StringBuilder()
 
 		for (digit in code) {
-			val pathToDigit = bfsPath(currentPosition, digit)
+			val pathToDigit = bfsPath(numericKeypad, currentPosition, digit)
 			result.append(pathToDigit)
-			// Update the current position to the digit's location
-			currentPosition = findKeyPosition(numeric_keypad, digit)
+			// Update current position after moving to the digit
+			currentPosition = findKeyPosition(numericKeypad, digit)
 		}
 
 		return result.toString()
 	}
 
+	// Function to generate the path for any robot based on a previous robot's path
+	fun generateRobotPath(currentKeypad: List<List<Char>>, previousRobotPath: String): String {
+		var currentPosition = findKeyPosition(currentKeypad, 'A') // Start at 'A'
+		val result = StringBuilder()
+
+		for (action in previousRobotPath) {
+			if (action in directionKeys || action == 'A') {
+				// If stuck at 'A' and need a direction, move down first
+				if (currentPosition == findKeyPosition(currentKeypad, 'A') && (action == '<' || action == '>' || action == '^')) {
+					val pathToAdjust = bfsPath(currentKeypad, currentPosition, 'v') // Move down
+					result.append(pathToAdjust)
+					currentPosition = findKeyPosition(currentKeypad, 'v')
+				}
+
+				// Find the shortest path to the action
+				val pathToAction = bfsPath(currentKeypad, currentPosition, action)
+				result.append(pathToAction)
+				// Update current position after the action
+				currentPosition = findKeyPosition(currentKeypad, action)
+			}
+		}
+
+		return result.toString()
+	}
+
+	// Helper function to find the position of a key on a keypad
 	fun findKeyPosition(keypad: List<List<Char>>, key: Char): Pair<Int, Int> {
 		for (i in keypad.indices) {
 			for (j in keypad[i].indices) {
@@ -123,7 +172,6 @@ class Task21(val input: List<String>) : Task {
 		}
 		throw IllegalArgumentException("Key $key not found on the keypad")
 	}
-
 	override fun b(): Any {
 		return 0
 	}
