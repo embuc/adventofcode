@@ -13,16 +13,23 @@ class Task22Test {
         2024
     """.trimIndent().lines()
 
+	val test_input_b = """
+		1
+        2
+        3
+        2024
+    """.trimIndent().lines()
+
 	@Test
 	fun a() {
-		assertEquals(37327623L, Task22(test_input).a())
+		assertEquals(37327623, Task22(test_input).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_22.txt")
 		assertEquals(14476723788L, Task22(input).a())
 	}
 
 	@Test
 	fun b() {
-//		assertEquals(1630L, Task22(test_input).b())
+		assertEquals(23L, Task22(test_input_b).b())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_22.txt")
 		assertEquals(1630L, Task22(input).b())
 	}
