@@ -46,6 +46,6 @@ class Task19Test {
 		assertEquals(0L, Task19(small_input2).b())
 		assertEquals(16L, Task19(test_input).b())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_19.txt")
-		assertEquals(304L, Task19(input).b())
+		assertEquals(705756472327497L, Task19(input).b())
 	}
 }

@@ -1,6 +1,7 @@
 package y2024
 
 import Task
+import kotlin.math.max
 
 //--- Day 22: Monkey Market ---
 class Task22(val input: List<String>) : Task {
@@ -17,6 +18,7 @@ class Task22(val input: List<String>) : Task {
 		return sum
 	}
 
+
 	fun transform(secret: Long): Long {
 		var mix = secret xor (secret * 64)
 		var pruned = mix % 16777216
@@ -30,10 +32,10 @@ class Task22(val input: List<String>) : Task {
 
 	override fun b(): Long {
 		val dict = mutableMapOf<List<Long>, Long>()
-		val seen = mutableSetOf<Pair<List<Long>, String>>() // seen per pattern and line/buyer
+		val seen = mutableSetOf<Pair<List<Long>, String>>()
 		for (line in input) {
 			var secret = line.trim().toLong()
-			val pattern = mutableListOf<Long>()
+			val pattern = ArrayList<Long>(4)
 			repeat(2000) {
 				val newSecret = transform(secret)
 				val relativeDiff = (newSecret % 10) - (secret % 10)
@@ -43,22 +45,19 @@ class Task22(val input: List<String>) : Task {
 				pattern.add(relativeDiff)
 
 				if (pattern.size == 4) {
+					val immutablePattern = pattern.toList()
 					val price = newSecret % 10
-					if (!seen.contains(Pair(pattern, line))) {
-						val p2 = pattern.toList()
-						val number = dict.getOrDefault(p2, 0)
-						dict[p2] = number + price
-						seen.add(Pair(p2, line))
+
+					if (seen.add(Pair(immutablePattern, line))) {
+						val number = dict.getOrDefault(immutablePattern, 0)
+						dict[immutablePattern] = number + price
 					}
 				}
 				secret = newSecret
 			}
 		}
-		val maxEntry = dict.maxBy { it.value }
-		val (keyPair, value) = maxEntry
-		println("Max entry: Key = ${keyPair}, Value = $value.  ")
-
-		return  value
+		val maxValue = dict.maxOf { it.value }
+		return maxValue
 	}
 
 }
