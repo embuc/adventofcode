@@ -21,7 +21,8 @@ class Task4(val input: String) : Task {
 
 	override fun b(): Any {
 //		return simpleAndClearB();
-		return parallelB();
+		return simpleAndClearB_2();
+//		return parallelB();
 	}
 
 	private fun parallelB(): Any {
@@ -76,6 +77,21 @@ class Task4(val input: String) : Task {
 		return if (result.get() == -1) 0 else result.get()
 	}
 
+	fun simpleAndClearB_2(): Any {
+		val md = MessageDigest.getInstance("MD5")
+		var i = 0
+		var array: ByteArray
+		while (true) {
+			array = md.digest(("yzbqklnj" + (i++).toString()).toByteArray()) // Put input here
+			if (array[0].toInt() == 0 && array[1].toInt() == 0 && (array[2].toInt() shr 4 and 0xf) == 0) {
+				if (array[2].toInt() == 0)  // Comment out to do part 1.
+					break
+			}
+		}
+		println("Lowest value needed: " + (i - 1))
+		return i - 1
+	}
+
 	private fun simpleAndClearB(): Any {
 		val md = MessageDigest.getInstance("MD5")
 		for (i in 0..10_000_000) {
@@ -86,4 +102,5 @@ class Task4(val input: String) : Task {
 		}
 		return 0
 	}
+
 }
