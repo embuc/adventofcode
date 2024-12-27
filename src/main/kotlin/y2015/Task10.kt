@@ -6,18 +6,18 @@ import Task
 class Task10(val input: Pair<String, Int>) : Task {
 
 	override fun a(): Any {
-		return transformDigits(input.first, input.second, 1).length;
+		return transformDigits(input.first, input.second, 1).length
 	}
 
 	private fun transformDigits(input: String, times: Int, i: Int): String {
-		if(i > times) return input
-		var transformed = StringBuilder()
+		if (i > times) return input
+		val transformed = StringBuilder()
 		var count = 0
-		var curr:Char
-		for(ix in input.indices) {
+		var curr: Char
+		for (ix in input.indices) {
 			curr = input[ix]
 			count++
-			if(ix + 1 < input.length && input[ix+1] != curr || ix + 1 == input.length){
+			if (ix + 1 < input.length && input[ix + 1] != curr || ix + 1 == input.length) {
 				transformed.append("$count$curr")
 				count = 0
 			}
@@ -26,7 +26,8 @@ class Task10(val input: Pair<String, Int>) : Task {
 	}
 
 	override fun b(): Any {
-		TODO("Not yet implemented")
+		// not needed
+		return 0
 	}
 
 
