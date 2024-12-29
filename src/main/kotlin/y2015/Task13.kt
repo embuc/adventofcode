@@ -6,53 +6,50 @@ import Task
 class Task13(val input: List<String>) : Task {
 
 	override fun a(): Any {
-		val dict = mutableMapOf<Pair<String, String>, Int>()
-		val persons = mutableSetOf<String>()
+		val happinessMap = mutableMapOf<Pair<String, String>, Int>()
+		val people = mutableSetOf<String>()
+
+		// Parse input and build the happiness map
 		for (line in input) {
-			val strings = line.split(" ")
-			val person1 = strings[0].trim()
-			val person2 = strings[10].substring(0, strings[10].length - 1).trim()
-			val happiness = if (strings[2] == "gain") strings[3].toInt() else -strings[3].toInt()
-			dict[person1 to person2] = happiness
-			persons.add(person1)
+			val parts = line.split(" ")
+			val person1 = parts[0].trim()
+			val person2 = parts[10].removeSuffix(".").trim()
+			val happinessChange = if (parts[2] == "gain") parts[3].toInt() else -parts[3].toInt()
+
+			happinessMap[person1 to person2] = happinessChange
+			people.add(person1)
 		}
-		var max = Int.MIN_VALUE
-		generateCircularPermutations(persons.toList()).forEach {
-			val happiness = checkHappiness(it, dict)
-			if (happiness > max) {
-				max = happiness
-			}
-		}
-		return max
+
+		// Find the maximum happiness for all circular seating arrangements
+		val maxHappiness = generateCircularPermutations(people.toList())
+			.maxOf { calculateHappiness(it, happinessMap) }
+
+		return maxHappiness
 	}
 
-	private fun checkHappiness(it: List<String>, dict: MutableMap<Pair<String, String>, Int>): Int {
-		var happiness = 0
-		for (i in it.indices) {
-			val person1 = it[i]
-			val person2 = it[(i + 1) % it.size]
-			happiness += dict[person1 to person2]!!
-			happiness += dict[person2 to person1]!!
+	// Calculate the total happiness for a given seating arrangement
+	private fun calculateHappiness(arrangement: List<String>, happinessMap: Map<Pair<String, String>, Int>): Int {
+		return arrangement.indices.sumOf { i ->
+			val person1 = arrangement[i]
+			val person2 = arrangement[(i + 1) % arrangement.size]
+			(happinessMap[person1 to person2] ?: 0) + (happinessMap[person2 to person1] ?: 0)
 		}
-		return happiness
 	}
 
-	fun generateCircularPermutations(input: List<String>): List<List<String>> {
-		if (input.isEmpty()) return emptyList()
+	// Generate all circular permutations of the input list
+	private fun generateCircularPermutations(people: List<String>): List<List<String>> {
+		if (people.isEmpty()) return emptyList()
 
-		val result = mutableListOf<List<String>>()
-		// Fix the first person in one position
-		val fixedPerson = input[0]
-		val remainingPeople = input.subList(1, input.size)
+		val fixedPerson = people.first()
+		val permutations = mutableListOf<List<String>>()
 
-		// Generate permutations of the remaining people
-		generatePermutationsRecursive(remainingPeople.toMutableList(), mutableListOf(fixedPerson), result)
-
-		return result
+		generatePermutationsRecursive(people.drop(1), mutableListOf(fixedPerson), permutations)
+		return permutations
 	}
 
+	// Recursive helper function to generate permutations
 	private fun generatePermutationsRecursive(
-		remaining: MutableList<String>,
+		remaining: List<String>,
 		current: MutableList<String>,
 		result: MutableList<List<String>>
 	) {
@@ -62,12 +59,13 @@ class Task13(val input: List<String>) : Task {
 		}
 
 		for (i in remaining.indices) {
-			// Create a new list excluding the current element
-			val newRemaining = remaining.toMutableList().apply { removeAt(i) }
-			// Add the current element to the current permutation
-			generatePermutationsRecursive(newRemaining, current.apply { add(remaining[i]) }, result)
-			// Backtrack: remove the last added element
-			current.removeAt(current.size - 1)
+			val nextPerson = remaining[i]
+			generatePermutationsRecursive(
+				remaining.filterIndexed { index, _ -> index != i },
+				current.apply { add(nextPerson) },
+				result
+			)
+			current.removeAt(current.lastIndex) // Backtrack
 		}
 	}
 
