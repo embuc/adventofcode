@@ -82,4 +82,10 @@ class Task14(val input: List<String>, val time: Int) : Task {
 		}
 		return leaders
 	}
+
+
+
+
+
+
 }
