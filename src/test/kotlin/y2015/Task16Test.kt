@@ -14,5 +14,7 @@ class Task16Test {
 
 	@Test
 	fun b() {
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2015/2015_16.txt")
+		assertEquals(241, Task16(input).b())
 	}
 }
