@@ -2,6 +2,7 @@ package y2015
 
 import Task
 
+
 //--- Day 17: No Such Thing as Too Much ---
 class Task17(val input: List<String>, val target: Int) : Task {
 
@@ -38,6 +39,11 @@ class Task17(val input: List<String>, val target: Int) : Task {
 	}
 
 	override fun b(): Any {
-		TODO("Not yet implemented")
+		val containers = input.map { it.trim().toInt() }
+		val combinations = mutableListOf<List<Int>>()
+		fillEggnog(containers, target, 0, combinations)
+		val min = combinations.minBy { it.size }
+		return combinations.filter { it.size == min.size }.size
 	}
+
 }
