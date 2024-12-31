@@ -1,13 +1,12 @@
 package y2024
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import utils.readInputAsListOfStrings
 
 class Task4Test {
 
-	val small_input =
+	val smallInput =
 		"""
 		MMMSXXMASM
 		MSAMXMSMSA
@@ -19,11 +18,11 @@ class Task4Test {
 		SAXAMASAAA
 		MAMMMXMMMM
 		MXMXAXMASX
-		""";
+		"""
 
 	@Test
-	fun a_small_input() {
-		val input = small_input.split("\n")
+	fun a_smallInput() {
+		val input = smallInput.split("\n")
 		val task = Task4(input)
 		assertEquals(18, task.a())
 	}
@@ -36,8 +35,8 @@ class Task4Test {
 	}
 
 	@Test
-	fun b_small_input() {
-		val input = small_input.split("\n")
+	fun b_smallInput() {
+		val input = smallInput.split("\n")
 		val task = Task4(input)
 		assertEquals(9, task.b())
 	}

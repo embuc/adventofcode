@@ -1,14 +1,13 @@
 package y2024
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import utils.readInputAsListOfStrings
 
 class Task1Test {
 
 	@Test
-	fun a_small_input() {
+	fun a_smallInput() {
 		val inputStr = "3   4\n" +
 						"4   3\n" +
 						"2   5\n" +
@@ -28,7 +27,7 @@ class Task1Test {
 	}
 
 	@Test
-	fun b_small_input() {
+	fun b_smallInput() {
 		val inputStr = "3   4\n" +
 						"4   3\n" +
 						"2   5\n" +

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.*
 
 class Task14Test {
 
-	val test_input = """
+	val testInput = """
 		p=0,4 v=3,-3
 		p=6,3 v=-1,-3
 		p=10,3 v=-1,2
@@ -24,7 +24,7 @@ class Task14Test {
 	@Test
 	fun a() {
 		// test input 11 wide 7 tall
-		assertEquals(12L, Task14(test_input).a(11,7))
+		assertEquals(12L, Task14(testInput).a(11,7))
 		//real input 101 wide 103 tall
 		val input = utils.readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_14.txt")
 		assertEquals(215987200L, Task14(input).a())

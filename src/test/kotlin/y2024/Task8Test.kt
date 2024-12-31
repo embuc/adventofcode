@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 class Task8Test {
 
-	val small_input = """
+	val smallInput = """
 		..........
 		..........
 		..........
@@ -16,9 +16,9 @@ class Task8Test {
 		..........
 		..........
 		..........
-	""".trimIndent();
+	""".trimIndent()
 
-	val test_input = """
+	val testInput = """
 		............
 		........0...
 		.....0......
@@ -31,16 +31,16 @@ class Task8Test {
 		.........A..
 		............
 		............
-	""".trimIndent();
+	""".trimIndent()
 
 	@Test
-	fun a_test_input() {
-		assertEquals(14, Task8(test_input.split("\n").map { it.trim() }).a())
+	fun a_testInput() {
+		assertEquals(14, Task8(testInput.split("\n").map { it.trim() }).a())
 	}
 
 	@Test
-	fun a_small_input() {
-		assertEquals(2, Task8(small_input.split("\n").map { it.trim() }).a())
+	fun a_smallInput() {
+		assertEquals(2, Task8(smallInput.split("\n").map { it.trim() }).a())
 	}
 
 	@Test
@@ -51,13 +51,13 @@ class Task8Test {
 	}
 
 	@Test
-	fun b_small_input() {
-		assertEquals(5, Task8(small_input.split("\n").map { it.trim() }).b())
+	fun b_smallInput() {
+		assertEquals(5, Task8(smallInput.split("\n").map { it.trim() }).b())
 	}
 
 	@Test
-	fun b_test_input() {
-		assertEquals(34, Task8(test_input.split("\n").map { it.trim() }).b())
+	fun b_testInput() {
+		assertEquals(34, Task8(testInput.split("\n").map { it.trim() }).b())
 	}
 
 	@Test

@@ -1,13 +1,12 @@
 package y2024
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import utils.readInputAsListOfStrings
 
 class Task6Test {
 
-	val small_input = """
+	val smallInput = """
 		....#.....
 		.........#
 		..........
@@ -18,125 +17,125 @@ class Task6Test {
 		........#.
 		#.........
 		......#...
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input2 = """
+	val smallInput2 = """
 		....#.....
 		...#.#....
 		.#..^.....
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input3 = """
+	val smallInput3 = """
 		.....
 		..#..
 		..^.#
 		...#.
 		.....
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input4 = """
+	val smallInput4 = """
 		....#
 		...#.
 		..^..
 		.....
 		..#..
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input5 = """
+	val smallInput5 = """
 		.....
 		..#..
 		#.^..
 		.....
 		.....
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input6 = """
+	val smallInput6 = """
 		########
 		#......#
 		...^...#
 		########
-	""".trimIndent();
-	val small_input7 = """
+	""".trimIndent()
+	val smallInput7 = """
 		##..
 		...#
 		....
 		^.#.
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input8 = """
+	val smallInput8 = """
 		.#...
 		....#
 		.....
 		.^.#.
 		#....
 		..#..
-	""".trimIndent();
-	val small_input9 = """
+	""".trimIndent()
+	val smallInput9 = """
 		.#.
 		..#
 		#^.
 		...
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input10 = """
+	val smallInput10 = """
 		.#.
 		#.#
 		#^.
 		...
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input11 = """
+	val smallInput11 = """
 		###
 		#.#
 		.^#
 		###
-	""".trimIndent();
+	""".trimIndent()
 
-	val small_input12 = """
+	val smallInput12 = """
 		#.....
 		.....#
 		^.#..#
 		....#.
-	""".trimIndent();
+	""".trimIndent()
 
 	@Test
-	fun a_small_input() {
-		val input = small_input.split("\n")
+	fun a_smallInput() {
+		val input = smallInput.split("\n")
 		val task = Task6(input)
 		assertEquals(41, task.a())
 	}
 
 	@Test
-	fun a_small_input2() {
-		val input = small_input2.split("\n")
+	fun a_smallInput2() {
+		val input = smallInput2.split("\n")
 		val task = Task6(input)
 		assertEquals(2, task.a())
 	}
 
 	@Test
-	fun a_small_input3() {
-		val input = small_input3.split("\n")
+	fun a_smallInput3() {
+		val input = smallInput3.split("\n")
 		val task = Task6(input)
 		assertEquals(4, task.a())
 	}
 
 	@Test
-	fun a_small_input4() {
-		val input = small_input4.split("\n")
+	fun a_smallInput4() {
+		val input = smallInput4.split("\n")
 		val task = Task6(input)
 		assertEquals(3, task.a())
 	}
 
 	@Test
-	fun a_small_input5() {
-		val input = small_input5.split("\n")
+	fun a_smallInput5() {
+		val input = smallInput5.split("\n")
 		val task = Task6(input)
 		assertEquals(3, task.a())
 	}
 
 	@Test
-	fun a_small_input6() {
-		val input = small_input6.split("\n")
+	fun a_smallInput6() {
+		val input = smallInput6.split("\n")
 		val task = Task6(input)
 		assertEquals(11, task.a())
 	}
@@ -149,57 +148,57 @@ class Task6Test {
 	}
 
 	@Test
-	fun b_small_input() {
-		val input = small_input.split("\n")
+	fun b_smallInput() {
+		val input = smallInput.split("\n")
 		val task = Task6(input)
 		assertEquals(6, task.b())
 	}
 
 	@Test
-	fun b_small_input6() {
-		val input = small_input6.split("\n")
+	fun b_smallInput6() {
+		val input = smallInput6.split("\n")
 		val task = Task6(input)
 		assertEquals(6, task.b())
 	}
 
 	@Test
-	fun b_small_input7() {
-		val input = small_input7.split("\n")
+	fun b_smallInput7() {
+		val input = smallInput7.split("\n")
 		val task = Task6(input)
 		assertEquals(0, task.b())
 	}
 
 	@Test
-	fun b_small_input8() {
-		val input = small_input8.split("\n")
+	fun b_smallInput8() {
+		val input = smallInput8.split("\n")
 		val task = Task6(input)
 		assertEquals(3, task.b())
 	}
 
 	@Test
-	fun b_small_input9() {
-		val input = small_input9.split("\n")
+	fun b_smallInput9() {
+		val input = smallInput9.split("\n")
 		val task = Task6(input)
 		assertEquals(1, task.b())
 	}
 
 	@Test
-	fun b_small_input10() {
-		val input = small_input10.split("\n")
+	fun b_smallInput10() {
+		val input = smallInput10.split("\n")
 		val task = Task6(input)
 		assertEquals(1, task.b())
 	}
 
 	@Test
-	fun b_small_input11() {
-		val input = small_input11.split("\n")
+	fun b_smallInput11() {
+		val input = smallInput11.split("\n")
 		val task = Task6(input)
 		assertEquals(1, task.b())
 	}
 
 	@Test
-	fun b_small_input12() {
-		val input = small_input12.split("\n")
+	fun b_smallInput12() {
+		val input = smallInput12.split("\n")
 		val task = Task6(input)
 		assertEquals(1, task.b())
 	}

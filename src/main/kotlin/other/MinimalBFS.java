@@ -9,6 +9,24 @@ import java.util.Queue;
  * where 'S' denotes the start, 'E' denotes the end, '#' denotes a wall, and '.' denotes a walkable cell.
  */
 public class MinimalBFS {
+//  Pseudocode:
+//	function BFS(startNode, targetNode):
+//	create a queue
+//	enqueue startNode into the queue
+//	mark startNode as visited
+//
+//    while queue is not empty:
+//	currentNode = dequeue from the queue
+//
+//        if currentNode == targetNode:
+//			return "Target Found"  // or return the node, path, etc.
+//
+//			for each neighbor in neighbors of currentNode:
+//			if neighbor is not visited:
+//	mark neighbor as visited
+//	enqueue neighbor into the queue
+//
+//    return "Target Not Found"  // or appropriate failure message
 
 	// Node class to store x and y coordinates and path (via parent)
 	public static class Node {

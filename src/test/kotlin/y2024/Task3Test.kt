@@ -1,17 +1,16 @@
 package y2024
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import utils.readInputAsString
 
 class Task3Test {
-	val small_input = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-	val small_input_2 = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
+	val smallInput = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
+	val smallInput_2 = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
 
 	@Test
-	fun a_small_input() {
-		val Task = Task3(small_input)
+	fun a_smallInput() {
+		val Task = Task3(smallInput)
 		assertEquals(161, Task.a())
 	}
 
@@ -23,8 +22,8 @@ class Task3Test {
 	}
 
 	@Test
-	fun b_small_input2() {
-		val Task = Task3(small_input_2)
+	fun b_smallInput2() {
+		val Task = Task3(smallInput_2)
 		assertEquals(48, Task.b())
 	}
 

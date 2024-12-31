@@ -6,23 +6,23 @@ import kotlin.test.Test
 
 class Task7Test {
 
-	val small_input = """
+	val smallInput = """
 		190: 10 19
-	""".trimIndent();
-	val small_input2 = """
+	""".trimIndent()
+	val smallInput2 = """
 		29: 10 19
-		""".trimIndent();
-	val small_input3 = """
+		""".trimIndent()
+	val smallInput3 = """
 		190: 10 19
 		29: 10 19
-	""".trimIndent();
-	val small_input4 = """
+	""".trimIndent()
+	val smallInput4 = """
 		3267: 81 40 27
-	""".trimIndent();
-	val small_input5 = """
+	""".trimIndent()
+	val smallInput5 = """
 		292: 11 6 16 20
-	""".trimIndent();
-	val test_input = """
+	""".trimIndent()
+	val testInput = """
 		190: 10 19
 		3267: 81 40 27
 		83: 17 5
@@ -32,20 +32,20 @@ class Task7Test {
 		192: 17 8 14
 		21037: 9 7 18 13
 		292: 11 6 16 20
-	""".trimIndent();
+	""".trimIndent()
 
 	@Test
-	fun a_small_input() {
-		assertEquals(190L, Task7(small_input.split("\n").map { it.trim() }).a())
-		assertEquals(29L, Task7(small_input2.split("\n").map { it.trim() }).a())
-		assertEquals(219L, Task7(small_input3.split("\n").map { it.trim() }).a())
-		assertEquals(3267L, Task7(small_input4.split("\n").map { it.trim() }).a())
-		assertEquals(292L, Task7(small_input5.split("\n").map { it.trim() }).a())
+	fun a_smallInput() {
+		assertEquals(190L, Task7(smallInput.split("\n").map { it.trim() }).a())
+		assertEquals(29L, Task7(smallInput2.split("\n").map { it.trim() }).a())
+		assertEquals(219L, Task7(smallInput3.split("\n").map { it.trim() }).a())
+		assertEquals(3267L, Task7(smallInput4.split("\n").map { it.trim() }).a())
+		assertEquals(292L, Task7(smallInput5.split("\n").map { it.trim() }).a())
 	}
 
 	@Test
-	fun a_test_input() {
-		val task = Task7(test_input.split("\n").map { it.trim() })
+	fun a_testInput() {
+		val task = Task7(testInput.split("\n").map { it.trim() })
 		assertEquals(3749L, task.a())
 	}
 
@@ -57,8 +57,8 @@ class Task7Test {
 	}
 
 	@Test
-	fun b_test_input() {
-		assertEquals(11387L, Task7(test_input.split("\n").map { it.trim() }).b())
+	fun b_testInput() {
+		assertEquals(11387L, Task7(testInput.split("\n").map { it.trim() }).b())
 	}
 
 	@Test

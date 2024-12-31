@@ -7,7 +7,7 @@ import utils.readInputAsListOfStrings
 
 class Task7Test {
 
-	val test_input = """
+	val testInput = """
 		123 -> x
 		456 -> y
 		x AND y -> d
@@ -20,7 +20,7 @@ class Task7Test {
 
 	@Test
 	fun a() {
-		assertEquals(65079, Task7(test_input).processInstructions(test_input, "i"))
+		assertEquals(65079, Task7(testInput).processInstructions(testInput, "i"))
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2015/2015_7.txt")
 		assertEquals(956, Task7(input).a())
 	}

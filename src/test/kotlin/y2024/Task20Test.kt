@@ -6,7 +6,7 @@ import utils.readInputAsListOfStrings
 
 class Task20Test {
 
-	val test_input = """
+	val testInput = """
 		###############
 		#...#...#.....#
 		#.#.#.#.#.###.#
@@ -37,7 +37,7 @@ class Task20Test {
 //	There is one cheat that saves 64 picoseconds.
 	@Test
 	fun a() {
-		assertEquals(5, Task20(test_input, 20).a())
+		assertEquals(5, Task20(testInput, 20).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_20.txt")
 		assertEquals(1452, Task20(input, 100).a())
 	}
@@ -58,7 +58,7 @@ class Task20Test {
 //	There are 3 cheats that save 76 picoseconds.
 	@Test
 	fun b() {
-		assertEquals(7, Task20(test_input, 74).b())
+		assertEquals(7, Task20(testInput, 74).b())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_20.txt")
 		assertEquals(999556, Task20(input, 100).b())
 	}

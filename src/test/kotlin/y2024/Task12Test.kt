@@ -1,18 +1,18 @@
 package y2024
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class Task12Test {
 
-	val small_input = """
+	val smallInput = """
 		AAAA
 		BBCD
 		BBCC
 		EEEC
 	""".trimIndent().lines()
 
-	val small_input2 = """
+	val smallInput2 = """
 		OOOOO
 		OXOXO
 		OOOOO
@@ -20,7 +20,7 @@ class Task12Test {
 		OOOOO
 	""".trimIndent().lines()
 
-	val small_input_E_formed = """
+	val smallInput_E_formed = """
 		EEEEE
 		EXXXX
 		EEEEE
@@ -28,7 +28,7 @@ class Task12Test {
 		EEEEE
 	""".trimIndent().lines()
 
-	val test_input = """
+	val testInput = """
 		RRRRIICCFF
 		RRRRIICCCF
 		VVRRRCCFFF
@@ -41,7 +41,7 @@ class Task12Test {
 		MMMISSJEEE
 	""".trimIndent().lines()
 
-	val test_input_b = """
+	val testInput_b = """
 		AAAAAA
 		AAABBA
 		AAABBA
@@ -50,13 +50,13 @@ class Task12Test {
 		AAAAAA
 	""".trimIndent().lines()
 
-	val small_input_b = """
+	val smallInput_b = """
 		OOOOO
 		OXOXO
 		OXXXO
 	""".trimIndent().lines()
 
-	val small_input_b2 = """
+	val smallInput_b2 = """
 		.....
 		.AAA.
 		.A.A.
@@ -66,13 +66,13 @@ class Task12Test {
 		.....
 	""".trimIndent().lines()
 
-	val small_input_b3 = """
+	val smallInput_b3 = """
 		LDDDDDDXXX
 		LLLDDVDXXX
 		LLLDDDXXXX
 	""".trimIndent().lines()
 
-	val test_input_b2 = """
+	val testInput_b2 = """
 		AAAEAAAAAA
 		FFAEAADAAA
 		FFAAAADACA
@@ -83,7 +83,7 @@ class Task12Test {
 		FAGAABBBBB
 	""".trimIndent().lines()
 
-	val small_input_b4 = """
+	val smallInput_b4 = """
 		BBBBBC
 		BAAABC
 		BABABC
@@ -92,14 +92,14 @@ class Task12Test {
 		BAAABC
 	""".trimIndent().lines()
 
-	val small_input_b5 = """
+	val smallInput_b5 = """
 		AAAAA
 		ABABA
 		ABBBA
 		ABABA
 	""".trimIndent().lines()
 
-	val test_input_b3 = """
+	val testInput_b3 = """
 		VVVVVCRRCCCCCCCYYC
 		CVCCVCCCCCCCCCCYCC
 		CCCCCCCCCCCCCCCCCC
@@ -110,7 +110,7 @@ class Task12Test {
 		QQQQQQQQKKKKKKKCYY
 	""".trimIndent().lines()
 
-	val small_input_b6 = """
+	val smallInput_b6 = """
 		----
 		OOO-
 		O-O-
@@ -118,7 +118,7 @@ class Task12Test {
 		OOO-
 	""".trimIndent().lines()
 
-	val small_input_b7 = """
+	val smallInput_b7 = """
 		----
 		-OOO
 		-O-O
@@ -126,7 +126,7 @@ class Task12Test {
 		-OOO
 	""".trimIndent().lines()
 
-	val test_input_b4 = """
+	val testInput_b4 = """
 		AAAAAAAA
 		AACBBDDA
 		AACBBAAA
@@ -136,7 +136,7 @@ class Task12Test {
 		AAAAAAAA
 	""".trimIndent().lines()
 
-	val small_input_b8 = """
+	val smallInput_b8 = """
 		AAAAA
 		A...A
 		A.A.A
@@ -145,9 +145,9 @@ class Task12Test {
 
 	@Test
 	fun a() {
-		assertEquals(140, Task12(small_input).a())
-		assertEquals(772, Task12(small_input2).a())
-		assertEquals(1930, Task12(test_input).a())
+		assertEquals(140, Task12(smallInput).a())
+		assertEquals(772, Task12(smallInput2).a())
+		assertEquals(1930, Task12(testInput).a())
 		val input = utils.readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_12.txt")
 		val task = Task12(input)
 		assertEquals(1573474, task.a())
@@ -155,22 +155,22 @@ class Task12Test {
 
 	@Test
 	fun b() {
-		assertEquals(80, Task12(small_input).b())
-		assertEquals(436, Task12(small_input2).b())
-		assertEquals(236, Task12(small_input_E_formed).b())
-		assertEquals(368, Task12(test_input_b).b())
-		assertEquals(1206, Task12(test_input).b())
-		assertEquals(160, Task12(small_input_b).b())
-		assertEquals(452, Task12(small_input_b2).b())
-		assertEquals(250, Task12(small_input_b3).b())
-		assertEquals(1992, Task12(test_input_b2).b())
-		assertEquals(492, Task12(small_input_b4).b())
-		assertEquals(232, Task12(small_input_b5).b())
-		assertEquals(4614, Task12(test_input_b3).b())
-		assertEquals(180, Task12(small_input_b6).b())
-		assertEquals(180, Task12(small_input_b7).b())
-		assertEquals(220, Task12(small_input_b8).b())
-		assertEquals(946, Task12(test_input_b4).b())
+		assertEquals(80, Task12(smallInput).b())
+		assertEquals(436, Task12(smallInput2).b())
+		assertEquals(236, Task12(smallInput_E_formed).b())
+		assertEquals(368, Task12(testInput_b).b())
+		assertEquals(1206, Task12(testInput).b())
+		assertEquals(160, Task12(smallInput_b).b())
+		assertEquals(452, Task12(smallInput_b2).b())
+		assertEquals(250, Task12(smallInput_b3).b())
+		assertEquals(1992, Task12(testInput_b2).b())
+		assertEquals(492, Task12(smallInput_b4).b())
+		assertEquals(232, Task12(smallInput_b5).b())
+		assertEquals(4614, Task12(testInput_b3).b())
+		assertEquals(180, Task12(smallInput_b6).b())
+		assertEquals(180, Task12(smallInput_b7).b())
+		assertEquals(220, Task12(smallInput_b8).b())
+		assertEquals(946, Task12(testInput_b4).b())
 		val input = utils.readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_12.txt")
 		val task = Task12(input)
 		assertEquals(966476, task.b())

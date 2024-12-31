@@ -6,7 +6,7 @@ import utils.readInputAsListOfStrings
 
 class Task9Test {
 
-	val test_input = """
+	val testInput = """
 		London to Dublin = 464
         London to Belfast = 518
         Dublin to Belfast = 141
@@ -14,14 +14,14 @@ class Task9Test {
 
 	@Test
 	fun a() {
-        assertEquals(605, Task9(test_input).a())
+        assertEquals(605, Task9(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2015/2015_9.txt")
 		assertEquals(207, Task9(input).a())
 	}
 
 	@Test
 	fun b() {
-		assertEquals(982, Task9(test_input).b())
+		assertEquals(982, Task9(testInput).b())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2015/2015_9.txt")
 		assertEquals(804, Task9(input).b())
 	}

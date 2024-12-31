@@ -1,12 +1,11 @@
 package y2024
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 class Task10Test {
 
-	val small_input = """
+	val smallInput = """
 		...0...
 		...1...
 		...2...
@@ -16,7 +15,7 @@ class Task10Test {
 		9.....9
 	""".trimIndent().lines()
 
-	val small_input2 = """
+	val smallInput2 = """
 		..90..9
 		...1.98
 		...2..7
@@ -26,7 +25,7 @@ class Task10Test {
 		987....
 	""".trimIndent().lines()
 
-	val test_input = """
+	val testInput = """
 		89010123
 		78121874
 		87430965
@@ -38,18 +37,18 @@ class Task10Test {
 	""".trimIndent().lines()
 
 	@Test
-	fun a_small_input() {
-		assertEquals(2, Task10(small_input).a())
+	fun a_smallInput() {
+		assertEquals(2, Task10(smallInput).a())
 	}
 
 	@Test
-	fun a_small_input2() {
-		assertEquals(4, Task10(small_input2).a())
+	fun a_smallInput2() {
+		assertEquals(4, Task10(smallInput2).a())
 	}
 
 	@Test
-	fun a_test_input() {
-		assertEquals(36, Task10(test_input).a())
+	fun a_testInput() {
+		assertEquals(36, Task10(testInput).a())
 	}
 
 	@Test

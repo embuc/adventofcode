@@ -1,12 +1,11 @@
 package y2024
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 class Task9Test {
 
-	var small_input = "12345" //expanded 0..111....22222
+	var smallInput = "12345" //expanded 0..111....22222
 
 //	So, a disk map like 12345 would represent a one-block file,
 //	two blocks of free space, a three-block file, four blocks of free space, and then a five-block file.
@@ -37,16 +36,16 @@ class Task9Test {
 //	0*0 + 2*1 + 2*2 + 1*3 + 1*4 + 1*5 + 2*6 + 2*7 + 2*8 = 60
 
 
-	var test_input = "2333133121414131402"
+	var testInput = "2333133121414131402"
 
 	@Test
-	fun a_small_input() {
-		assertEquals(60L, Task9(small_input).a())
+	fun a_smallInput() {
+		assertEquals(60L, Task9(smallInput).a())
 	}
 
 	@Test
-	fun a_test_input() {
-		assertEquals(1928L, Task9(test_input).a())
+	fun a_testInput() {
+		assertEquals(1928L, Task9(testInput).a())
 	}
 
 	@Test
@@ -57,8 +56,8 @@ class Task9Test {
 	}
 
 	@Test
-	fun b_test_input() {
-		assertEquals(2858L, Task9(test_input).b())
+	fun b_testInput() {
+		assertEquals(2858L, Task9(testInput).b())
 	}
 
 	@Test

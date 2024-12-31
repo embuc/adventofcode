@@ -7,7 +7,7 @@ import utils.readInputAsListOfStrings
 
 class Task16Test {
 
-	val test_input = """
+	val testInput = """
 		###############
 		#.......#....E#
 		#.#.###.#.###.#
@@ -26,7 +26,7 @@ class Task16Test {
 	""".trimIndent().lines()
 
 
-	val test_input_2 = """
+	val testInput_2 = """
 		#################
 		#...#...#...#..E#
 		#.#.#.#.#.#.#.#.#
@@ -48,16 +48,16 @@ class Task16Test {
 
 	@Test
 	fun a() {
-		assertEquals(7036, Task16(test_input).a())
-		assertEquals(11048, Task16(test_input_2).a())
+		assertEquals(7036, Task16(testInput).a())
+		assertEquals(11048, Task16(testInput_2).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_16.txt")
 		assertEquals(85396, Task16(input).a())
 	}
 
 	@Test
 	fun b() {
-		assertEquals(45, Task16(test_input).b())
-		assertEquals(64, Task16(test_input_2).b())
+		assertEquals(45, Task16(testInput).b())
+		assertEquals(64, Task16(testInput_2).b())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_16.txt")
 		assertEquals(428, Task16(input).b())
 	}

@@ -6,7 +6,7 @@ import utils.readInputAsListOfStrings
 
 class Task24Test {
 
-	val small_input = """
+	val smallInput = """
 		x00: 1
 		x01: 1
 		x02: 1
@@ -19,7 +19,7 @@ class Task24Test {
 		x02 OR y02 -> z02
 	""".trimIndent().lines()
 
-	val test_input = """
+	val testInput = """
 		x00: 1
 		x01: 0
 		x02: 1
@@ -69,7 +69,7 @@ class Task24Test {
 		tnw OR pbm -> gnj
 	""".trimIndent().lines()
 
-	val test_input_b = """
+	val testInput_b = """
 		x00: 0
 		x01: 1
 		x02: 0
@@ -93,8 +93,8 @@ class Task24Test {
 
 	@Test
 	fun a() {
-		assertEquals(4L, Task24(small_input).a())
-		assertEquals(2024L, Task24(test_input).a())
+		assertEquals(4L, Task24(smallInput).a())
+		assertEquals(2024L, Task24(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_24.txt")
 		assertEquals(49430469426918L, Task24(input).a())
 	}

@@ -1,20 +1,18 @@
 package y2024
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import utils.readInputAsListOfStrings
-import utils.readTestInputAsListOfStrings
 
 class Task13Test {
 
-	val small_input = """
+	val smallInput = """
 		Button A: X+94, Y+34
 		Button B: X+22, Y+67
 		Prize: X=8400, Y=5400
 	""".trimIndent().lines()
 
-	val test_input = """
+	val testInput = """
 		Button A: X+94, Y+34
 		Button B: X+22, Y+67
 		Prize: X=8400, Y=5400
@@ -34,8 +32,8 @@ class Task13Test {
 
 	@Test
 	fun a() {
-		assertEquals(280, Task13(small_input).a())
-		assertEquals(480, Task13(test_input).a())
+		assertEquals(280, Task13(smallInput).a())
+		assertEquals(480, Task13(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_13.txt")
 		assertEquals(39748L, Task13(input).a())
 	}

@@ -6,14 +6,14 @@ import kotlin.test.assertEquals
 
 class Task22Test {
 
-	val test_input = """
+	val testInput = """
 		1
         10
         100
         2024
     """.trimIndent().lines()
 
-	val test_input_b = """
+	val testInput_b = """
 		1
         2
         3
@@ -22,14 +22,14 @@ class Task22Test {
 
 	@Test
 	fun a() {
-		assertEquals(37327623, Task22(test_input).a())
+		assertEquals(37327623, Task22(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_22.txt")
 		assertEquals(14476723788L, Task22(input).a())
 	}
 
 	@Test
 	fun b() {
-		assertEquals(23L, Task22(test_input_b).b())
+		assertEquals(23L, Task22(testInput_b).b())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_22.txt")
 		assertEquals(1630L, Task22(input).b())
 	}

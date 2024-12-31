@@ -6,7 +6,7 @@ import utils.readInputAsListOfStrings
 
 class Task13Test {
 
-	val test_input = """
+	val testInput = """
 		Alice would gain 54 happiness units by sitting next to Bob.
 		Alice would lose 79 happiness units by sitting next to Carol.
 		Alice would lose 2 happiness units by sitting next to David.
@@ -23,7 +23,7 @@ class Task13Test {
 
 	@Test
 	fun a() {
-		assertEquals(330, Task13(test_input).a())
+		assertEquals(330, Task13(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2015/2015_13.txt")
 		assertEquals(709, Task13(input).a())
 	}

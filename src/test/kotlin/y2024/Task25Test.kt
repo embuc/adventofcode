@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 class Task25Test {
 
-	val small_input = """
+	val smallInput = """
 		#####
         .####
         .####
@@ -15,7 +15,7 @@ class Task25Test {
         .#...
         .....
 		""".trimIndent().lines()
-	val test_input = """
+	val testInput = """
 		#####
         .####
         .####
@@ -58,8 +58,8 @@ class Task25Test {
     """.trimIndent().lines()
 	@Test
 	fun a() {
-		assertEquals(0, Task25(small_input).a())
-		assertEquals(3, Task25(test_input).a())
+		assertEquals(0, Task25(smallInput).a())
+		assertEquals(3, Task25(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2024/2024_25.txt")
 		assertEquals(3619, Task25(input).a())
 	}
