@@ -58,5 +58,13 @@ fun solveLinearEquations2x2(
 	// If x or y is not a positive integer, return no solution
 	return null
 }
-
+fun getDivisors(n: Int): Set<Int> {
+	val divisors = mutableSetOf<Int>()
+	for (i in 1..n) {
+		if (n % i == 0) {
+			divisors.add(i)
+		}
+	}
+	return divisors
+}
 
