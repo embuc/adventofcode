@@ -20,7 +20,6 @@ class Task4(val input: String) : Task {
 				break
 			}
 		}
-		println("Lowest value needed: " + (i - 1))
 		return i - 1
 	}
 
@@ -39,7 +38,6 @@ class Task4(val input: String) : Task {
 					break
 			}
 		}
-		println("Lowest value needed: " + (i - 1))
 		return i - 1
 	}
 
