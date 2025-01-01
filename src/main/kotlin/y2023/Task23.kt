@@ -1,14 +1,12 @@
 package y2023
 
 import Task
-import utils.borrowed.Direction
 import utils.borrowed.Point
 
 // --- Day 23: A Long Walk ---
 // I had almost a solution for part one, but I kept getting one of the longest paths but not The longest path.
 // This solution is from user github.com/eagely. Here for me to study and learn from.
 // *** Needs more work ***.
-@OptIn(kotlin.ExperimentalStdlibApi::class)
 class Task23(private val input: List<String>) : Task {
 
 	private lateinit var grid: Array<Array<Char>>
@@ -22,25 +20,10 @@ class Task23(private val input: List<String>) : Task {
 	}
 
 	private fun getNextPointsA(point: Point): Collection<Point> {
-		val cur = grid[point.x][point.y]!!
+		val cur = grid[point.x][point.y]
 		return when (cur) {
-			'>' -> listOf(point + Direction.EAST.toPoint())
-			'v' -> listOf(point + Direction.SOUTH.toPoint())
-			else -> {
-				point.getCardinalNeighbors()
-					.filter { neighbor ->
-						neighbor.x in grid.indices && neighbor.y in grid[0].indices
-								&& grid[neighbor.x][neighbor.y] != '#'
-					}
-			}
-		}
-	}
-
-	private fun getNextPointsB(point: Point): Collection<Point> {
-		val cur = grid[point.x][point.y]!!
-		return when (cur) {
-			'x' -> listOf(point + Direction.EAST.toPoint())
-			'V' -> listOf(point + Direction.SOUTH.toPoint())
+			'>' -> listOf(point + Point.Direction.EAST.toPoint())
+			'v' -> listOf(point + Point.Direction.SOUTH.toPoint())
 			else -> {
 				point.getCardinalNeighbors()
 					.filter { neighbor ->
@@ -62,7 +45,7 @@ class Task23(private val input: List<String>) : Task {
 		val adjacencies = grid.indices.flatMap { x ->
 			grid[0].indices.mapNotNull { y ->
 				if (grid[x][y] != '#') {
-					Point(x, y) to Direction.entries.mapNotNull { (dx, dy) ->
+					Point(x, y) to Point.Direction.entries.mapNotNull { (dx, dy) ->
 						val nx = x + dx
 						val ny = y + dy
 						if (nx in grid.indices && ny in grid[0].indices && grid[nx][ny] != '#') Point(nx, ny) to 1 else null

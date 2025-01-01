@@ -5,7 +5,7 @@ import utils.borrowed.Grid
 import utils.borrowed.Point
 import utils.pm
 import utils.readInputAsListOfStrings
-import java.util.ArrayDeque
+import java.util.*
 
 // --- Day 21: Step Counter ---
 // This one was too hard for me to solve in the given time-frame, sort of got it right for part one, but it was way too
@@ -39,7 +39,6 @@ object Task21:Task {
 	}
 
 	fun solveB(input: List<String>, l: Long): Any {
-		val grid = Grid.of(input)
 		return solvePart2(input, l)
 	}
 
@@ -82,6 +81,5 @@ object Task21:Task {
 		}
 		return plots
 	}
-
 
 }

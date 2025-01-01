@@ -1,102 +1,106 @@
 package y2023
 
 import Task
-import utils.borrowed.Point2D
 import utils.readInputAsString
 import java.util.*
 
 // --- Day 17: Clumsy Crucible ---
-// This one was a bit tricky. It was clear that it was a shortest path problem, but the twist was that you could only
-// move a certain number of blocks in a given direction before you had to turn. This meant that you couldn't use a
-// simple BFS, but had to keep track of the number of blocks moved in the current direction. I spent a lot of time
-// on this one, but then I moved on to other problems and came back to this one later. This solution is not mine but
-// its from user: github.com/ClouddJR.
-// *** Needs more work ***.
 object Task17:Task {
 
 	override fun a(): Any {
-		val grid = readInputAsString("~/git/aoc-inputs/2023/2023_17.txt").lines().map { s -> s.map { it.digitToInt() }.toIntArray() }.toTypedArray()
-		return solvePart1(grid)
+		val grid = readInputAsString("~/git/aoc-inputs/2023/2023_17.txt").lines().map { s -> s.map { it.digitToInt() }.toList() }.toList()
+		return findMinHeatLoss(grid, minSteps = 0, maxSteps = 3)
 	}
 
 	override fun b(): Any {
-		val grid = readInputAsString("~/git/aoc-inputs/2023/2023_17.txt").lines().map { s -> s.map { it.digitToInt() }.toIntArray() }.toTypedArray()
-		return solvePart2(grid)
+		val grid = readInputAsString("~/git/aoc-inputs/2023/2023_17.txt").lines().map { s -> s.map { it.digitToInt() }.toList() }.toList()
+
+		return findMinHeatLoss(grid, minSteps = 4, maxSteps = 10)
 	}
 
-	fun solvePart1(grid: Array<IntArray>): Int {
-		return findMinHeatLoss(
-			grid,
-			initialStates = listOf(State(Point2D(0, 0), Point2D.EAST, 0)),
-			minBlocks = 0,
-			maxBlocks = 3
-		)
-	}
-	fun solvePart2(grid: Array<IntArray>): Int {
-		return findMinHeatLoss(
-			grid,
-			initialStates = listOf(State(Point2D(0, 0), Point2D.EAST, 0), State(Point2D(0, 0), Point2D.SOUTH, 0)),
-			minBlocks = 4,
-			maxBlocks = 10
-		)
-	}
+	// Direction represented as (row, col) changes
+	data class Direction(val row: Int, val col: Int) {
+		companion object {
+			val RIGHT = Direction(0, 1)
+			val DOWN = Direction(1, 0)
+			val LEFT = Direction(0, -1)
+			val UP = Direction(-1, 0)
 
-	private fun findMinHeatLoss(grid: Array<IntArray>, initialStates: List<State>, minBlocks: Int, maxBlocks: Int): Int {
-		val end = Point2D(grid.first().lastIndex, grid.lastIndex)
-
-		val costs = mutableMapOf<State, Int>().withDefault { Int.MAX_VALUE }
-		val toVisit = PriorityQueue<StateWithCost>()
-
-		for (state in initialStates) {
-			costs[state] = 0
-			toVisit.add(StateWithCost(state, 0))
+			val ALL = listOf(RIGHT, DOWN, LEFT, UP)
 		}
 
-		while (toVisit.isNotEmpty()) {
-			val current = toVisit.poll()
-			if (current.state.point == end) {
-				return current.cost
+		fun turnLeft(): Direction = ALL[(ALL.indexOf(this) + 1) % 4]
+		fun turnRight(): Direction = ALL[(ALL.indexOf(this) + 3) % 4]
+	}
+
+	// State for the priority queue
+	data class State(
+		val row: Int,
+		val col: Int,
+		val direction: Direction,
+		val steps: Int,
+		val heatLoss: Int
+	): Comparable<State> {
+		override fun compareTo(other: State): Int = heatLoss.compareTo(other.heatLoss)
+	}
+
+	fun findMinHeatLoss(grid: List<List<Int>>, minSteps: Int, maxSteps: Int): Int {
+		val rows = grid.size
+		val cols = grid[0].size
+
+		// Priority queue for Dijkstra's algorithm
+		val queue = PriorityQueue<State>().apply {
+			// Start by going right or down
+			add(State(0, 0, Direction.RIGHT, 0, 0))
+			add(State(0, 0, Direction.DOWN, 0, 0))
+		}
+
+		// Keep track of visited states
+		val seen = mutableSetOf<Triple<Pair<Int, Int>, Direction, Int>>()
+
+		while (queue.isNotEmpty()) {
+			val current = queue.poll()
+			val pos = current.row to current.col
+
+			// Create state identifier for seen check
+			val stateId = Triple(pos, current.direction, current.steps)
+			if (stateId in seen) continue
+			seen.add(stateId)
+
+			// Check if we've reached the end with minimum steps requirement
+			if (current.row == rows - 1 && current.col == cols - 1 && current.steps >= minSteps) {
+				return current.heatLoss
 			}
 
-			current.state.next(minBlocks, maxBlocks)
-				.filter { it.point.y in grid.indices && it.point.x in grid.first().indices }
-				.forEach { next ->
-					val newCost = current.cost + grid[next.point.y][next.point.x]
-					if (newCost < costs.getValue(next)) {
-						costs[next] = newCost
-						toVisit.add(StateWithCost(next, newCost))
-					}
+			// Determine possible next moves
+			val possibleMoves = mutableListOf<Direction>()
+
+			// Can continue straight if under max steps
+			if (current.steps < maxSteps) {
+				possibleMoves.add(current.direction)
+			}
+
+			// Can turn if we've met minimum steps or just starting
+			if (current.steps >= minSteps || (current.row == 0 && current.col == 0)) {
+				possibleMoves.add(current.direction.turnLeft())
+				possibleMoves.add(current.direction.turnRight())
+			}
+
+			// Try each possible move
+			for (newDir in possibleMoves) {
+				val newRow = current.row + newDir.row
+				val newCol = current.col + newDir.col
+
+				// Check if new position is valid
+				if (newRow in 0 until rows && newCol in 0 until cols) {
+					val newSteps = if (newDir == current.direction) current.steps + 1 else 1
+					val newHeat = current.heatLoss + grid[newRow][newCol]
+
+					queue.add(State(newRow, newCol, newDir, newSteps, newHeat))
 				}
+			}
 		}
 
 		error("No path found")
 	}
-
-	private data class State(val point: Point2D, val dir: Point2D, val blocks: Int) {
-		fun next(minBlocks: Int, maxBlocks: Int) = buildList {
-			when {
-				blocks < minBlocks -> add(copy(point = point + dir, dir = dir, blocks = blocks + 1))
-				else               -> {
-					val left = Point2D(dir.y, dir.x)
-					val right = Point2D(-dir.y, -dir.x)
-
-					add(copy(point = point + left, dir = left, blocks = 1))
-					add(copy(point = point + right, dir = right, blocks = 1))
-
-					if (blocks < maxBlocks) {
-						add(copy(point = point + dir, dir = dir, blocks = blocks + 1))
-					}
-				}
-			}
-		}
-	}
-
-	private data class StateWithCost(val state: State, val cost: Int) : Comparable<StateWithCost> {
-		override fun compareTo(other: StateWithCost): Int {
-			return cost compareTo other.cost
-		}
-	}
-
-
-
 }

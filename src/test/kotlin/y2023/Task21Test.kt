@@ -1,8 +1,7 @@
 package y2023
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 class Task21Test {
 
@@ -37,7 +36,4 @@ class Task21Test {
 		assertEquals(600090522932119, actual)
 	}
 
-	@Test
-	fun solveB() {
-	}
 }

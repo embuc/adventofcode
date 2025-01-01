@@ -1,7 +1,6 @@
 package y2023
 
 import Task
-import utils.borrowed.Point2D
 import utils.size
 
 //  --- Day 22: Sand Slabs ---
@@ -14,7 +13,7 @@ class Task22(input: List<String>):Task {
 	private val supported = mutableMapOf<Int, MutableSet<Int>>()
 
 	init {
-		val maxes = mutableMapOf<Point2D, Pair<Int, Int>>().withDefault { -1 to 0 }
+		val maxes = mutableMapOf<Point, Pair<Int, Int>>().withDefault { -1 to 0 }
 
 		for (brick in bricks) {
 			val points = brick.points2D()
@@ -57,7 +56,7 @@ class Task22(input: List<String>):Task {
 	}
 
 	private data class Brick(val id: Int, val xRange: IntRange, val yRange: IntRange, var zRange: IntRange) {
-		fun points2D() = xRange.flatMap { x -> yRange.map { y -> Point2D(x, y) } }
+		fun points2D() = xRange.flatMap { x -> yRange.map { y -> Point(x, y) } }
 
 		companion object {
 			fun from(index: Int, str: String): Brick {
@@ -68,4 +67,6 @@ class Task22(input: List<String>):Task {
 			}
 		}
 	}
+
+	private data class Point(val x: Int, val y: Int)
 }
