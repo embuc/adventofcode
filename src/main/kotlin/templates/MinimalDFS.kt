@@ -1,4 +1,4 @@
-package other
+package templates
 // generic minimal dfs
 fun dfs(graph: Map<String, List<String>>, start: String, visited: MutableSet<String> = mutableSetOf()) {
 	visited.add(start) // Mark the current node as visited

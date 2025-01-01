@@ -26,7 +26,7 @@ class Task7(val input: List<String>) : Task {
 	 * Evaluates combinations of terms and operators directly while generating them.
 	 * This avoids fully generating all combinations upfront (speeds up a bit).
 	 */
-	fun combineAndEvaluate(terms: List<String>, operators: List<String>, expectedResult: Long): Boolean {
+	private fun combineAndEvaluate(terms: List<String>, operators: List<String>, expectedResult: Long): Boolean {
 		val gaps = terms.size - 1
 
 		// Backtracking to generate and evaluate combinations
@@ -40,10 +40,7 @@ class Task7(val input: List<String>) : Task {
 					}
 				}
 				// Evaluate directly during combination generation
-				if (evaluateTokensLeftToRight(expectedResult, combined) == expectedResult) {
-					return true // Short-circuit if a match is found
-				}
-				return false
+				return evaluateTokensLeftToRight(expectedResult, combined) == expectedResult // Short-circuit if a match is found
 			}
 
 			for (op in operators) {
@@ -59,7 +56,7 @@ class Task7(val input: List<String>) : Task {
 		return generateCombinations(mutableListOf())
 	}
 
-	fun evaluateTokensLeftToRight(expectedResult: Long, tokens: List<String>): Long {
+	private fun evaluateTokensLeftToRight(expectedResult: Long, tokens: List<String>): Long {
 		var result = tokens[0].toLong()
 
 		for (i in 1 until tokens.size step 2) {

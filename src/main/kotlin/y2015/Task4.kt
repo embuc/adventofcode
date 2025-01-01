@@ -2,89 +2,40 @@ package y2015
 
 import Task
 import java.security.MessageDigest
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /*--- Day 4: The Ideal Stocking Stuffer ---*/
 class Task4(val input: String) : Task {
 
 	override fun a(): Any {
-		val md = MessageDigest.getInstance("MD5")
-		for (i in 0..1_000_000) {
-			val hash = md.digest("$input$i".toByteArray()).joinToString("") { "%02x".format(it) }
-			if (hash.startsWith("00000")) {
-				return i
-			}
-		}
-		return 0
+		return simpleAndClearA2()
 	}
 
-	override fun b(): Any {
-//		return simpleAndClearB();
-		return simpleAndClearB_2();
-//		return parallelB();
-	}
-
-	private fun parallelB(): Any {
-		val numThreads = Runtime.getRuntime().availableProcessors()
-		val chunkSize = 200_000
-		val result = AtomicInteger(-1)
-		val shouldStop = AtomicBoolean(false)
-		val threads = mutableListOf<Thread>()
-		// Split range into chunks for each thread
-		var continuing = true
-		while (continuing) {
-			for (startRange in 0..10_000_000 step (chunkSize * numThreads)) {
-				for (threadId in 0 until numThreads) {
-					val threadStart = startRange + (threadId * chunkSize)
-					val threadEnd = minOf(threadStart + chunkSize, 10_000_000 + 1)
-
-					val thread = Thread {
-						val md = MessageDigest.getInstance("MD5")
-						var hashCount = 0L
-
-						for (i in threadStart until threadEnd) {
-							if (shouldStop.get()) break
-
-							val hash = md.digest("$input$i".toByteArray())
-								.joinToString("") { "%02x".format(it) }
-							hashCount++
-
-							if (hash.startsWith("000000")) {
-								result.compareAndSet(-1, i)
-								shouldStop.set(true)
-//								println("Thread $threadId found result after $hashCount hashes")
-								break
-							}
-						}
-//						println("Thread $threadId processed $hashCount hashes")
-					}
-					threads.add(thread)
-					thread.start()
-				}
-
-				// Wait for current batch of threads to complete before starting next batch
-				threads.forEach { it.join() }
-				threads.clear()
-
-				// If we found a result, stop processing more chunks
-				if (shouldStop.get()) {
-					continuing = false
-					break
-				}
-			}
-		}
-		return if (result.get() == -1) 0 else result.get()
-	}
-
-	fun simpleAndClearB_2(): Any {
+	fun simpleAndClearA2(): Any {
 		val md = MessageDigest.getInstance("MD5")
 		var i = 0
 		var array: ByteArray
 		while (true) {
 			array = md.digest(("yzbqklnj" + (i++).toString()).toByteArray()) // Put input here
 			if (array[0].toInt() == 0 && array[1].toInt() == 0 && (array[2].toInt() shr 4 and 0xf) == 0) {
-				if (array[2].toInt() == 0)  // Comment out to do part 1.
+				break
+			}
+		}
+		println("Lowest value needed: " + (i - 1))
+		return i - 1
+	}
+
+	override fun b(): Any {
+		return simpleAndClearB2()
+	}
+
+	fun simpleAndClearB2(): Any {
+		val md = MessageDigest.getInstance("MD5")
+		var i = 0
+		var array: ByteArray
+		while (true) {
+			array = md.digest(("yzbqklnj" + (i++).toString()).toByteArray())
+			if (array[0].toInt() == 0 && array[1].toInt() == 0 && (array[2].toInt() shr 4 and 0xf) == 0) {
+				if (array[2].toInt() == 0)
 					break
 			}
 		}
@@ -92,6 +43,7 @@ class Task4(val input: String) : Task {
 		return i - 1
 	}
 
+	//reads better but 40x slower
 	private fun simpleAndClearB(): Any {
 		val md = MessageDigest.getInstance("MD5")
 		for (i in 0..10_000_000) {
@@ -103,4 +55,15 @@ class Task4(val input: String) : Task {
 		return 0
 	}
 
+	private fun simpleA() {
+		//this reads better but much slower
+		//		val md = MessageDigest.getInstance("MD5")
+		//		for (i in 0..1_000_000) {
+		//			val hash = md.digest("$input$i".toByteArray()).joinToString("") { "%02x".format(it) }
+		//			if (hash.startsWith("00000")) {
+		//				return i
+		//			}
+		//		}
+		//		return 0
+	}
 }

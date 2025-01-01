@@ -1,7 +1,7 @@
 package y2024
 
 import Task
-import other.MinimalBFS
+import templates.MinimalBFS
 
 /*--- Day 18: RAM Run ---*/
 class Task18(val input : List<String>, val fallen:Int):Task {

@@ -1,4 +1,4 @@
-package other
+package templates
 
 class MinimalDP {
 	/*

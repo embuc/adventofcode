@@ -1,8 +1,8 @@
 package y2015
 
 import Task
-import other.Connection
-import other.GraphWithCost
+import templates.Connection
+import templates.GraphWithCost
 
 //--- Day 9: All in a Single Night ---
 class Task9(val input: List<String>) : Task {

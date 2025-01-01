@@ -1,4 +1,4 @@
-package other
+package templates
 
 class MinimalBacktrack {
 //	Pseudo code for backtracking algorithm
@@ -22,6 +22,7 @@ class MinimalBacktrack {
 //	Example 1: Generate All Subsets of a Set
 //	Problem: Given a list [1, 2, 3], generate all its subsets.
 	fun generateSubsets(nums: List<Int>, index: Int = 0, current: MutableList<Int> = mutableListOf()) {
+		//	“If I’m out of items to consider, then check if my partial solution is valid, and if so, record it.”
 		if (index == nums.size) {
 			println(current) // Base case: print the current subset
 			return

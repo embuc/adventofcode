@@ -1,7 +1,11 @@
-package other;
+package templates;
 
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 /**
  * The {@code MinimalDijkstra} class provides a basic implementation of Dijkstra's

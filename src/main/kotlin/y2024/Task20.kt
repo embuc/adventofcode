@@ -1,7 +1,7 @@
 package y2024
 
 import Task
-import other.MinimalBFS.findChar
+import templates.MinimalBFS.findChar
 
 
 /*--- Day 20: Race Condition ---*/
