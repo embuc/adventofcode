@@ -113,7 +113,6 @@ class Task21(val input: List<String>):Task {
 			findCheapGear(attack, armor, rings, player, boss, bestGear, indexAttack, indexArmor, indexRings+1, pickedWeaponCount, pickedArmorCount, pickedRingsCount, current)
 			return
 		}
-
 	}
 
 	private fun playerBeatsBoss(player: Player, boss: Player, current: MutableList<Gear>): Boolean {
@@ -153,6 +152,76 @@ class Task21(val input: List<String>):Task {
 	}
 
 	override fun b(): Any {
-		TODO("Not yet implemented")
+		val boss = getBoss(input)
+		val player = Player("jeff",100, 0, 0)
+		val attack = getAttackGear()
+		val armor = getArmorGear()
+		val rings = getRingGear()
+		val worstGear = mutableListOf<Gear>()
+		val currentGear = mutableListOf<Gear>()
+		findWorstGear(attack, armor, rings, player, boss, worstGear, 0,0,0,0,0,0, currentGear)
+		return worstGear.sumOf { it.cost }
+	}
+
+	private fun findWorstGear(
+		attack: Set<Gear>,
+		armor: Set<Gear>,
+		rings: Set<Gear>,
+		player: Player,
+		boss: Player,
+		worstGear: MutableList<Gear>,
+		indexAttack: Int = 0, indexArmor: Int = 0, indexRings: Int = 0,
+		pickedWeaponCount: Int = 0, pickedArmorCount:Int = 0, pickedRingsCount: Int = 0,
+		current: MutableList<Gear> = mutableListOf()) {
+		// Base Case: if we passed the last item in all categories
+		if (indexAttack == attack.size && indexArmor == armor.size && indexRings == rings.size) {
+			// Check if exactly 1 weapon, <=1 armor, <=2 rings, and if boss is defeated
+			if (pickedWeaponCount == 1 && pickedArmorCount <= 1 && pickedRingsCount <= 2) {
+				if (!playerBeatsBoss(player, boss, current)) {
+					val cost = current.sumOf { it.cost }
+					if (worstGear.isEmpty() || cost > worstGear.sumOf { it.cost }) {
+						worstGear.clear()
+						worstGear.addAll(current)
+//						println("New worst gear: $worstGear with cost $cost")
+					}
+				}
+			}
+			return
+		}
+
+		if (indexAttack < attack.size) {
+			//include weapon only if no weapon is picked yet
+			if (pickedWeaponCount == 0) {
+				current.add(attack.elementAt(indexAttack))
+				findWorstGear(attack, armor, rings, player, boss, worstGear, indexAttack + 1, indexArmor, indexRings, pickedWeaponCount + 1, pickedArmorCount, pickedRingsCount, current)
+				current.removeAt(current.size - 1)
+			}
+			//try another if possible
+			findWorstGear(attack, armor, rings, player, boss, worstGear, indexAttack + 1, indexArmor, indexRings, pickedWeaponCount, pickedArmorCount, pickedRingsCount, current)
+			return
+		}
+		if(indexArmor < armor.size) {
+			//include 0-1 armor
+			if(pickedArmorCount == 0) {
+				current.add(armor.elementAt(indexArmor))
+				findWorstGear(attack, armor, rings, player, boss, worstGear, indexAttack, indexArmor + 1, indexRings, pickedWeaponCount, pickedArmorCount + 1, pickedRingsCount, current)
+				current.removeAt(current.size -1)
+			}
+			//try another if possible
+			findWorstGear(attack, armor, rings, player, boss, worstGear, indexAttack, indexArmor + 1, indexRings, pickedWeaponCount, pickedArmorCount, pickedRingsCount, current)
+			return
+		}
+
+		if(indexRings < rings.size) {
+			//include up to 2 rings
+			if(pickedRingsCount < 2) {
+				current.add(rings.elementAt(indexRings))
+				findWorstGear(attack, armor, rings, player, boss, worstGear, indexAttack, indexArmor, indexRings + 1, pickedWeaponCount, pickedArmorCount, pickedRingsCount + 1, current)
+				current.removeAt(current.size -1)
+			}
+			//try another if possible
+			findWorstGear(attack, armor, rings, player, boss, worstGear, indexAttack, indexArmor, indexRings+1, pickedWeaponCount, pickedArmorCount, pickedRingsCount, current)
+			return
+		}
 	}
 }

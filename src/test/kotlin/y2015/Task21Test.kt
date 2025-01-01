@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 
 class Task21Test {
 
-
 	@Test
 	fun a() {
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2015/2015_21.txt")
@@ -15,5 +14,7 @@ class Task21Test {
 
 	@Test
 	fun b() {
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2015/2015_21.txt")
+		assertEquals(201, Task21(input).b())
 	}
 }
