@@ -3,8 +3,8 @@ package y2015
 import Task
 
 //--- Day 22: Wizard Simulator 20XX ---
-// I liked this one as the previous one too - however, my apply effects needed to reverse when we decrese the timers for boss turn. I couldn't
-// read/understand that from the puzzle input - discovered by testing
+// I liked this one as the previous one too - however, my apply effects needed to reverse when we decrease the timers for boss turn.
+// I couldn't read/understand that from the puzzle input - discovered by testing
 class Task22(val input: List<String>):Task {
 
 	private data class Player(
