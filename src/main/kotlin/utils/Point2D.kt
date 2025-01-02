@@ -22,6 +22,9 @@ data class Point2D(var x: Int = 0, var y: Int = 0, var direction: Direction = Di
 			Turn.RIGHT -> Direction.values()[(direction.ordinal + 1) % 4]
 		}
 	}
+	fun face(direction: Direction) {
+		this.direction = direction
+	}
 
 	enum class Turn {
 		LEFT, RIGHT
@@ -39,6 +42,10 @@ data class Point2D(var x: Int = 0, var y: Int = 0, var direction: Direction = Di
 	fun manhattanDistance(other: Point2D) = abs(x - other.x) + abs(y - other.y)
 	fun toXY(): Point2D {
 		return Point2D(this.x, this.y)
+	}
+
+	fun isInside(verticalSize: Int, horizontalSize: Int): Boolean {
+		return x in 0 until verticalSize && y in 0 until horizontalSize
 	}
 
 	enum class Direction(val angle: Int) {
