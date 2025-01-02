@@ -32,3 +32,9 @@ class Line(val point: PointDouble, val velocity: PointDouble, val name:String, t
 		return "y = ${k}x + $n"
 	}
 }
+
+class PointDouble(val x: Double, val y: Double) {
+	override fun toString(): String {
+		return "($x, $y)"
+	}
+}
