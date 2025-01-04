@@ -17,14 +17,14 @@ class Task10Test {
 
 	@Test
 	fun a() {
-//		assertEquals("2", Task10(testInput,2,5).a())
+		assertEquals("2", Task10(testInput,2,5).a())
 		val input = readInputAsString("~/git/aoc-inputs/2016/2016_10.txt")
-		assertEquals(157, Task10(input.lines(), 17,61).a())
+		assertEquals("157", Task10(input.lines(), 17,61).a())
 	}
 
 	@Test
 	fun b() {
 		val input = readInputAsString("~/git/aoc-inputs/2016/2016_10.txt")
-		assertEquals(157, Task10(input.lines(), 17,61).b())
+		assertEquals(1085L, Task10(input.lines(), 17,61).b())
 	}
 }
