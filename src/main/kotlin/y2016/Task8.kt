@@ -6,8 +6,11 @@ import Task
 class Task8(val input: List<String>, val w: Int, val h: Int) : Task {
 
 	override fun a(): Any {
-		// create grid wxh, fill with '.'
 		val grid = Array(h) { CharArray(w) { '.' } }
+		return processInstructions(grid)
+	}
+
+	private fun processInstructions(grid: Array<CharArray>): Int {
 //		printGrid(grid)
 		for (line in input) {
 //			println("line: $line  result:")
@@ -36,7 +39,7 @@ class Task8(val input: List<String>, val w: Int, val h: Int) : Task {
 				}
 			}
 		}
-//			printGrid(grid)
+//		printGrid(grid)
 		return grid.sumOf { it -> it.count { it == '#' } }
 	}
 
@@ -44,4 +47,6 @@ class Task8(val input: List<String>, val w: Int, val h: Int) : Task {
 		//print a() to see the result
 		return "EOARGPHYAO"
 	}
+
 }
+
