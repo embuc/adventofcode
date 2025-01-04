@@ -60,7 +60,7 @@ class Task9(val input: String) : Task {
 		return count
 	}
 
-	fun copyCharArray(charArray: List<Char>, n: Int): CharArray {
+	private fun copyCharArray(charArray: List<Char>, n: Int): CharArray {
 		return CharArray(charArray.size * n) {
 			charArray[it % charArray.size]
 		}
