@@ -1,13 +1,12 @@
 package y2016
 
 import Task
-import java.awt.Component
 import java.util.*
 
 //--- Day 11: Radioisotope Thermoelectric Generators ---
 class Task11(val input: List<String>) : Task {
 
-	private data class Component(
+	data class Component(
 		val type: String,
 		val id: Int,
 		val floor: Int,
@@ -16,25 +15,10 @@ class Task11(val input: List<String>) : Task {
 		val shortType: String
 	)
 
-	private data class State(
+	data class State(
 		val elevatorFloor: Int,
 		val componentsOnFloors: List<Int>
-	) {
-		fun normalize(components: List<Component>): State {
-			// Group components by type and create normalized ordering (pairs are equivalent by type!)
-			val componentsByType = components.groupBy { it.type }
-			val normalizedComponents = componentsByType.values
-				.sortedBy { it.first().type }
-				.flatMap { it.sortedBy { c -> c.isGenerator } }
-
-			val positionMapping = components.indices.zip(normalizedComponents.indices).toMap()
-
-			val newPositions = componentsOnFloors.indices.map {
-				componentsOnFloors[positionMapping[it] ?: it]
-			}
-			return State(elevatorFloor, newPositions)
-		}
-	}
+	)
 
 	private val components: List<Component> = parseComponents()
 	private val stateCache = mutableMapOf<State, Int>()
@@ -47,47 +31,62 @@ class Task11(val input: List<String>) : Task {
 		return solveWithBFS(initialState, goalState)
 	}
 
+	private fun normalizeState(state: State, precomputedOrder: List<Int>): State {
+		// Create a mapping from original indices to normalized indices
+		val indexMapping = IntArray(components.size) // Fixed size array
+		for (normalizedIndex in precomputedOrder.indices) {
+			val originalIndex = precomputedOrder[normalizedIndex]
+			indexMapping[originalIndex] = normalizedIndex
+		}
+
+		// Normalize the positions of components based on the mapping
+		val normalizedPositions = state.componentsOnFloors.map { indexMapping[it] }
+		return State(state.elevatorFloor, normalizedPositions)
+	}
+
 	private fun solveWithBFS(initialState: State, goalState: State): Int {
+		// Precompute the normalized order of components
+		val precomputedOrder: List<Int> = components.indices
+			.sortedWith(compareBy({ components[it].type }, { components[it].isGenerator }))
+
 		val queue: Queue<Pair<State, Int>> = LinkedList()
 		queue.add(Pair(initialState, 0))
-		stateCache[initialState.normalize(components)] = 0
 
-		val visited = mutableSetOf<State>()
+		// Cache normalized states
+		stateCache[normalizeState(initialState, precomputedOrder)] = 0
 
+		val visited = HashSet<State>() // Track visited normalized states
+
+		val normalizedGoal = normalizeState(goalState, precomputedOrder)
 		while (queue.isNotEmpty()) {
 			counter++
 			val (currentState, depth) = queue.poll()
 
 			// Normalize the state before comparison
-			val normalizedState = currentState.normalize(components)
-			val normalizedGoal = goalState.normalize(components)
+			val normalizedState = normalizeState(currentState, precomputedOrder)
 
-			// Skip if we've found a better path to this state
-			if (stateCache.getOrDefault(normalizedState, Int.MAX_VALUE) < depth) {
-				println("Cache hit!")
-				continue
-			}
-
-			if (normalizedState == normalizedGoal){
+			// Check if the current state is the goal
+			if (normalizedState == normalizedGoal) {
 				println("Counter: $counter Cache hits: $cacheHits")
 				return depth
 			}
-			if (visited.contains(normalizedState)) continue
 
+			// Skip already visited states
+			if (visited.contains(normalizedState)) continue
 			visited.add(normalizedState)
 
+			// Generate and process next states
 			for (nextState in nextStates(currentState)) {
-				// Only process state if we haven't seen it or found a better path
-				val normalizedNext = nextState.normalize(components)
 				val nextDepth = depth + 1
-				if (nextDepth < stateCache.getOrDefault(normalizedNext, Int.MAX_VALUE)) {
-					stateCache[normalizedNext] = nextDepth
+				val normalizedNextState = normalizeState(nextState, precomputedOrder)
+
+				// Only process states with better depth
+				if (nextDepth < stateCache.getOrDefault(normalizedNextState, Int.MAX_VALUE)) {
+					stateCache[normalizedNextState] = nextDepth
 					queue.add(Pair(nextState, nextDepth))
-				}
-				else {
+				} else {
 					cacheHits++
 				}
-//				queue.add(Pair(nextState, depth + 1))
 			}
 		}
 		return -1
@@ -109,11 +108,9 @@ class Task11(val input: List<String>) : Task {
 
 			for (chipIndex in microchips) {
 				val chipType = components[chipIndex].type
-				//  matching generator?
 				val hasMatchingGenerator = generators.any {
 					components[it].type == chipType
 				}
-				// If there are generators present but no matching one, the chip is fried
 				if (!hasMatchingGenerator) return false
 			}
 		}
@@ -131,37 +128,30 @@ class Task11(val input: List<String>) : Task {
 		val componentFloors = state.componentsOnFloors
 
 		// Possible elevator moves
-		val possibleMoves = mutableListOf<Int>()
-		if (currentFloor < 4) possibleMoves.add(currentFloor + 1)
-		if (currentFloor > 1) possibleMoves.add(currentFloor - 1)
+		val possibleMoves = if (currentFloor == 1) listOf(2)
+		else if (currentFloor == 4) listOf(3)
+		else listOf(currentFloor - 1, currentFloor + 1)
 
-		val componentsOnFloor = componentFloors.indices.filter {
-			componentFloors[it] == currentFloor
-		}
+		val componentsOnFloor = componentFloors.indices.filter { componentFloors[it] == currentFloor }
 
-		// Generate states for each move + component carrying combo
+		// Generate all valid combinations of moves (1 or 2 components)
 		for (nextFloor in possibleMoves) {
-			// Try moving one component
 			for (i in componentsOnFloor.indices) {
-				val component1 = componentsOnFloor[i]
-				val newState = componentFloors.toMutableList()
-				newState[component1] = nextFloor
-
-				val newStateObj = State(nextFloor, newState)
-				if (isValidState(newStateObj)) {
-					nextStates.add(newStateObj)
+				// Move one component
+				val newStateOne = componentFloors.toMutableList()
+				newStateOne[componentsOnFloor[i]] = nextFloor
+				val singleMoveState = State(nextFloor, newStateOne)
+				if (isValidState(singleMoveState)) {
+					nextStates.add(singleMoveState)
 				}
 
-				// Try moving two components
+				// Move two components
 				for (j in i + 1 until componentsOnFloor.size) {
-					val component2 = componentsOnFloor[j]
-					val newStateWithTwo = componentFloors.toMutableList()
-					newStateWithTwo[component1] = nextFloor
-					newStateWithTwo[component2] = nextFloor
-
-					val newStateTwoObj = State(nextFloor, newStateWithTwo)
-					if (isValidState(newStateTwoObj)) {
-						nextStates.add(newStateTwoObj)
+					val newStateTwo = newStateOne.toMutableList() // Use the already updated state
+					newStateTwo[componentsOnFloor[j]] = nextFloor
+					val doubleMoveState = State(nextFloor, newStateTwo)
+					if (isValidState(doubleMoveState)) {
+						nextStates.add(doubleMoveState)
 					}
 				}
 			}
@@ -188,32 +178,6 @@ class Task11(val input: List<String>) : Task {
 		}
 		return components
 	}
-	private fun printComponents(components: List<Component>, elevator: Int) {
-		val componentsColSorted = components.sortedBy { it.id }
-		val compOnFloor = mutableMapOf<Int, List<Component>>()
-		compOnFloor.putIfAbsent(4, componentsColSorted.filter { it.floor == 4 })
-		compOnFloor.putIfAbsent(3, componentsColSorted.filter { it.floor == 3 })
-		compOnFloor.putIfAbsent(2, componentsColSorted.filter { it.floor == 2 })
-		compOnFloor.putIfAbsent(1, componentsColSorted.filter { it.floor == 1 })
-
-		val maxFloorLength = components.size
-
-		for (floor in 4 downTo 1) {
-			print("F$floor ")
-			if(elevator == floor) print(" E  ")
-			else print(" .  ")
-			val floorCompMap = compOnFloor[floor]!!.associateBy { it.id }
-			for (ix in 1..maxFloorLength) {
-				if(floorCompMap.containsKey(ix)) {
-					val comp = floorCompMap[ix]
-					print(" ${comp?.shortType} ")
-				} else {
-					print(" .  ")
-				}
-			}
-			println()
-		}
-	}
 
 	override fun b(): Int {
 //		extra parts on the first floor that weren't listed on the record outside:
@@ -222,12 +186,6 @@ class Task11(val input: List<String>) : Task {
 //		A dilithium generator.
 //		A dilithium-compatible microchip.
 		//2 complete pair on first floor...
-		val extraComponents = listOf(
-			Component("elerium", 8, 1, true, false, "El"),
-			Component("elerium", 9, 1, false, true, "el"),
-			Component("dilithium", 10, 1, true, false, "Di"),
-			Component("dilithium", 11, 1, false, true, "di")
-		)
 		//Any complete pairs on floor 1 add 12 steps to the solution e.g. 2 pairs = 24 steps
 		return 61
 	}
