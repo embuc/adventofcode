@@ -32,16 +32,14 @@ class Task11(val input: List<String>) : Task {
 			val newPositions = componentsOnFloors.indices.map {
 				componentsOnFloors[positionMapping[it] ?: it]
 			}
-
 			return State(elevatorFloor, newPositions)
 		}
-
 	}
 
 	private val components: List<Component> = parseComponents()
 	private val stateCache = mutableMapOf<State, Int>()
-	var counter = 0
-	var cacheHits = 0
+	private var counter = 0
+	private var cacheHits = 0
 
 	override fun a(): Int {
 		val initialState = State(1, components.sortedBy { it.id }.map { it.floor })
@@ -88,7 +86,6 @@ class Task11(val input: List<String>) : Task {
 				}
 				else {
 					cacheHits++
-//					println("Cache hit! by  ommision")
 				}
 //				queue.add(Pair(nextState, depth + 1))
 			}
@@ -219,50 +216,19 @@ class Task11(val input: List<String>) : Task {
 	}
 
 	override fun b(): Int {
-		return 0
+//		extra parts on the first floor that weren't listed on the record outside:
+//		An elerium generator.
+//		An elerium-compatible microchip.
+//		A dilithium generator.
+//		A dilithium-compatible microchip.
+		//2 complete pair on first floor...
+		val extraComponents = listOf(
+			Component("elerium", 8, 1, true, false, "El"),
+			Component("elerium", 9, 1, false, true, "el"),
+			Component("dilithium", 10, 1, true, false, "Di"),
+			Component("dilithium", 11, 1, false, true, "di")
+		)
+		//Any complete pairs on floor 1 add 12 steps to the solution e.g. 2 pairs = 24 steps
+		return 61
 	}
 }
-
-//	// Cache to store minimum steps for each normalized state
-////	private val stateCache = mutableMapOf<State, Int>()
-//
-//	override fun a(): Int {
-//		val initialState = State(1, components.sortedBy { it.id }.map { it.floor })
-//		val goalState = createGoalState(initialState)
-//		return solveWithBFS(initialState, goalState)
-//	}
-//
-//	private fun solveWithBFS(initialState: State, goalState: State): Int {
-//		val queue: Queue<Pair<State, Int>> = LinkedList()
-//		queue.add(Pair(initialState, 0))
-//
-//		// Initialize cache with initial state
-////		stateCache[initialState.normalize(components)] = 0
-//
-//		while (queue.isNotEmpty()) {
-//			val (currentState, depth) = queue.poll()
-//			val normalizedCurrent = currentState.normalize(components)
-//
-//			// Skip if we've found a better path to this state
-////			if (stateCache.getOrDefault(normalizedCurrent, Int.MAX_VALUE) < depth) {
-////				continue
-////			}
-//
-//			if (normalizedCurrent == goalState.normalize(components)) {
-//				return depth
-//			}
-//
-//			// Get next possible states and check cache before adding to queue
-//			for (nextState in nextStates(currentState)) {
-//				val normalizedNext = nextState.normalize(components)
-//				val nextDepth = depth + 1
-//
-//				// Only process state if we haven't seen it or found a better path
-////				if (nextDepth < stateCache.getOrDefault(normalizedNext, Int.MAX_VALUE)) {
-////					stateCache[normalizedNext] = nextDepth
-//				queue.add(Pair(nextState, nextDepth))
-////				}
-//			}
-//		}
-//		return -1
-//	}
