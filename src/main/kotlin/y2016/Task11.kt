@@ -67,7 +67,7 @@ class Task11(val input: List<String>) : Task {
 
 			// Check if the current state is the goal
 			if (normalizedState == normalizedGoal) {
-				println("Counter: $counter Cache hits: $cacheHits")
+//				println("Counter: $counter Cache hits: $cacheHits")
 				return depth
 			}
 
@@ -128,9 +128,11 @@ class Task11(val input: List<String>) : Task {
 		val componentFloors = state.componentsOnFloors
 
 		// Possible elevator moves
-		val possibleMoves = if (currentFloor == 1) listOf(2)
-		else if (currentFloor == 4) listOf(3)
-		else listOf(currentFloor - 1, currentFloor + 1)
+		val possibleMoves = when (currentFloor) {
+			1 -> listOf(2)
+			4 -> listOf(3)
+			else -> listOf(currentFloor - 1, currentFloor + 1)
+		}
 
 		val componentsOnFloor = componentFloors.indices.filter { componentFloors[it] == currentFloor }
 
