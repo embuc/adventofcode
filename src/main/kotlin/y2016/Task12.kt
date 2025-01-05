@@ -9,13 +9,15 @@ class Task12(val input: List<String>) : Task {
 
 	override fun a(): Any {
 		val registers = mutableMapOf("a" to 0, "b" to 0, "c" to 0, "d" to 0)
+		val instructions = toInstructions()
+		return processInstructions(instructions, registers)
+	}
+
+	private fun processInstructions(
+		instructions: MutableList<Instruction>,
+		registers: MutableMap<String, Int>
+	): Int {
 		var ix = 0
-		val instructions = mutableListOf<Instruction>()
-		for (i in input) {
-			println("line: $i")
-			val parts = i.split(" ")
-			instructions.add(Instruction(parts[0], parts[1], parts.getOrNull(2) ?: ""))
-		}
 		while (ix in instructions.indices) {
 			val instruction = instructions[ix]
 			when (instruction.command) {
@@ -23,6 +25,7 @@ class Task12(val input: List<String>) : Task {
 					val value = if (instruction.arg1.toIntOrNull() == null) registers[instruction.arg1]!! else instruction.arg1.toInt()
 					registers[instruction.arg2] = value
 				}
+
 				"inc" -> registers[instruction.arg1] = registers[instruction.arg1]!! + 1
 				"dec" -> registers[instruction.arg1] = registers[instruction.arg1]!! - 1
 				"jnz" -> {
@@ -37,7 +40,18 @@ class Task12(val input: List<String>) : Task {
 		return registers["a"]!!
 	}
 
-	override fun b(): String {
-		return ""
+	private fun toInstructions(): MutableList<Instruction> {
+		val instructions = mutableListOf<Instruction>()
+		for (i in input) {
+			val parts = i.split(" ")
+			instructions.add(Instruction(parts[0], parts[1], parts.getOrNull(2) ?: ""))
+		}
+		return instructions
+	}
+
+	override fun b(): Int {
+		val registers = mutableMapOf("a" to 0, "b" to 0, "c" to 1, "d" to 0)
+		val instructions = toInstructions()
+		return processInstructions(instructions, registers)
 	}
 }
