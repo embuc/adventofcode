@@ -16,8 +16,6 @@ class Task11(val input: List<String>) : Task {
 		val shortType: String
 	)
 
-	private val components: List<Component> = parseComponents()
-
 	private data class State(
 		val elevatorFloor: Int,
 		val componentsOnFloors: List<Int>
@@ -37,7 +35,13 @@ class Task11(val input: List<String>) : Task {
 
 			return State(elevatorFloor, newPositions)
 		}
+
 	}
+
+	private val components: List<Component> = parseComponents()
+	private val stateCache = mutableMapOf<State, Int>()
+	var counter = 0
+	var cacheHits = 0
 
 	override fun a(): Int {
 		val initialState = State(1, components.sortedBy { it.id }.map { it.floor })
@@ -48,24 +52,45 @@ class Task11(val input: List<String>) : Task {
 	private fun solveWithBFS(initialState: State, goalState: State): Int {
 		val queue: Queue<Pair<State, Int>> = LinkedList()
 		queue.add(Pair(initialState, 0))
+		stateCache[initialState.normalize(components)] = 0
+
 		val visited = mutableSetOf<State>()
-		var count = 0
 
 		while (queue.isNotEmpty()) {
-			count++
+			counter++
 			val (currentState, depth) = queue.poll()
 
 			// Normalize the state before comparison
 			val normalizedState = currentState.normalize(components)
 			val normalizedGoal = goalState.normalize(components)
 
-			if (normalizedState == normalizedGoal) return depth
+			// Skip if we've found a better path to this state
+			if (stateCache.getOrDefault(normalizedState, Int.MAX_VALUE) < depth) {
+				println("Cache hit!")
+				continue
+			}
+
+			if (normalizedState == normalizedGoal){
+				println("Counter: $counter Cache hits: $cacheHits")
+				return depth
+			}
 			if (visited.contains(normalizedState)) continue
 
 			visited.add(normalizedState)
 
 			for (nextState in nextStates(currentState)) {
-				queue.add(Pair(nextState, depth + 1))
+				// Only process state if we haven't seen it or found a better path
+				val normalizedNext = nextState.normalize(components)
+				val nextDepth = depth + 1
+				if (nextDepth < stateCache.getOrDefault(normalizedNext, Int.MAX_VALUE)) {
+					stateCache[normalizedNext] = nextDepth
+					queue.add(Pair(nextState, nextDepth))
+				}
+				else {
+					cacheHits++
+//					println("Cache hit! by  ommision")
+				}
+//				queue.add(Pair(nextState, depth + 1))
 			}
 		}
 		return -1
@@ -197,3 +222,47 @@ class Task11(val input: List<String>) : Task {
 		return 0
 	}
 }
+
+//	// Cache to store minimum steps for each normalized state
+////	private val stateCache = mutableMapOf<State, Int>()
+//
+//	override fun a(): Int {
+//		val initialState = State(1, components.sortedBy { it.id }.map { it.floor })
+//		val goalState = createGoalState(initialState)
+//		return solveWithBFS(initialState, goalState)
+//	}
+//
+//	private fun solveWithBFS(initialState: State, goalState: State): Int {
+//		val queue: Queue<Pair<State, Int>> = LinkedList()
+//		queue.add(Pair(initialState, 0))
+//
+//		// Initialize cache with initial state
+////		stateCache[initialState.normalize(components)] = 0
+//
+//		while (queue.isNotEmpty()) {
+//			val (currentState, depth) = queue.poll()
+//			val normalizedCurrent = currentState.normalize(components)
+//
+//			// Skip if we've found a better path to this state
+////			if (stateCache.getOrDefault(normalizedCurrent, Int.MAX_VALUE) < depth) {
+////				continue
+////			}
+//
+//			if (normalizedCurrent == goalState.normalize(components)) {
+//				return depth
+//			}
+//
+//			// Get next possible states and check cache before adding to queue
+//			for (nextState in nextStates(currentState)) {
+//				val normalizedNext = nextState.normalize(components)
+//				val nextDepth = depth + 1
+//
+//				// Only process state if we haven't seen it or found a better path
+////				if (nextDepth < stateCache.getOrDefault(normalizedNext, Int.MAX_VALUE)) {
+////					stateCache[normalizedNext] = nextDepth
+//				queue.add(Pair(nextState, nextDepth))
+////				}
+//			}
+//		}
+//		return -1
+//	}

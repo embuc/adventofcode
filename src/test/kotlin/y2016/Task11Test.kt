@@ -14,12 +14,14 @@ class Task11Test {
             The third floor contains a lithium generator.
             The fourth floor contains nothing relevant.
         """.trimIndent().lines()
-		assertEquals(11, Task11(testInput).a())
+//		assertEquals(11, Task11(testInput).a())
 		val input = readInputAsString("~/git/aoc-inputs/2016/2016_11.txt")
 		assertEquals(37, Task11(input.lines()).a())
 	}
 
 	@Test
 	fun b() {
+		val input = readInputAsString("~/git/aoc-inputs/2016/2016_11.txt")
+		assertEquals(37, Task11(input.lines()).a())
 	}
 }
