@@ -1,12 +1,16 @@
 package templates;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 /**
- * The {@code MinimalBFS} class provides a basic implementation of the Breadth-First Search (BFS) algorithm
- * to find the shortest path in a 2D grid. The grid is represented by a 2D char array,
- * where 'S' denotes the start, 'E' denotes the end, '#' denotes a wall, and '.' denotes a walkable cell.
+ * The {@code MinimalBFS} class provides a basic implementation of the Breadth-First Search (BFS) algorithm to find the shortest path in a 2D grid.
+ * The grid is represented by a 2D char array, where 'S' denotes the start, 'E' denotes the end, '#' denotes a wall, and '.' denotes a walkable cell.
  */
 public class MinimalBFS {
 //  Pseudocode:
@@ -29,15 +33,24 @@ public class MinimalBFS {
 //    return "Target Not Found"  // or appropriate failure message
 
 	// Node class to store x and y coordinates and path (via parent)
+	@EqualsAndHashCode
+	@AllArgsConstructor
 	public static class Node {
 		public int x;
 		public int y;
 		public Node parent;
+		public int depth;
+
+		public Node(int x, int y) {
+			this(x, y, null, 0);
+		}
 
 		public Node(int x, int y, Node parent) {
-			this.x = x;
-			this.y = y;
-			this.parent = parent;
+			this(x, y, parent, 0);
+		}
+
+		public Node(int x, int y, int depth) {
+			this(x, y, null, depth);
 		}
 	}
 
@@ -114,6 +127,85 @@ public class MinimalBFS {
 		}
 		return null; // Target not found
 	}
+
+	public static Set<Node> findReachableWithinSteps(int startX, int startY, int stepsLimit, char[][] grid) {
+		Set<Node> visited = new HashSet<>();
+		Queue<Node> queue = new LinkedList<>();
+
+		queue.add(new Node(startX, startY, 0));
+		visited.add(new Node(startX, startY));
+		Set<Node> reachablePoints = new HashSet<>();
+
+		int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Up, Down, Left, Right
+
+
+		while (!queue.isEmpty()) {
+			Node currentPoint = queue.poll();
+			int x = currentPoint.x;
+			int y = currentPoint.y;
+			int depth = currentPoint.depth;
+			reachablePoints.add(new Node(x, y));
+			// If our depth is too high, we don't visit neighbours
+			if (depth >= stepsLimit) {
+				continue;
+			}
+
+
+			// Check valid neighbour
+			for (int[] dir : directions) {
+				int newX = x + dir[0];
+				int newY = y + dir[1];
+
+				if (isValid(newX, newY, grid)) {
+					Node newPoint = new Node(newX, newY);
+					if (visited.add(newPoint)) {
+						queue.add(new Node(newX, newY, depth + 1));
+					}
+
+				}
+			}
+		}
+		return reachablePoints;
+	}
+
+	private static boolean isValid(int x, int y, char[][] grid) {
+		return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] != '#';
+	}
+//
+//	static class Point {
+//		int x;
+//		int y;
+//
+//		Point(int x, int y) {
+//			this.x = x;
+//			this.y = y;
+//		}
+//
+//		@Override
+//		public boolean equals(Object obj) {
+//			if (this == obj) {return true;}
+//			if (obj == null || getClass() != obj.getClass()) {return false;}
+//			Point point = (Point) obj;
+//			return x == point.x && y == point.y;
+//		}
+//
+//		@Override
+//		public int hashCode() {
+//			return Objects.hash(x, y);
+//		}
+//	}
+
+//	static class NodeWithLevel {
+//		int x;
+//		int y;
+//		int depth;
+//
+//		NodeWithLevel(int x, int y, int depth) {
+//			this.x = x;
+//			this.y = y;
+//			this.depth = depth;
+//		}
+//	}
 
 	public static void main(String[] args) {
 		char[][] grid = {
