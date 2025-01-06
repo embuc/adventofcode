@@ -2,9 +2,10 @@ package y2016
 
 import Task
 import java.security.MessageDigest
+import java.util.concurrent.ConcurrentHashMap
 
 //--- Day 14: One-Time Pad ---
-class Task14(val input:String):Task {
+class Task14(val input: String) : Task {
 
 	private data class Candidate(val index: Int, val triple: Char, var iteration: Int)
 
@@ -24,7 +25,8 @@ class Task14(val input:String):Task {
 	private fun findTripleInHexBuffer(): Char? {
 		for (i in 0..29) {  // 32 - 3
 			if (hexBuffer[i] == hexBuffer[i + 1] &&
-				hexBuffer[i] == hexBuffer[i + 2]) {
+				hexBuffer[i] == hexBuffer[i + 2]
+			) {
 				return hexBuffer[i]
 			}
 		}
@@ -36,7 +38,8 @@ class Task14(val input:String):Task {
 			if (hexBuffer[i] == hexBuffer[i + 1] &&
 				hexBuffer[i] == hexBuffer[i + 2] &&
 				hexBuffer[i] == hexBuffer[i + 3] &&
-				hexBuffer[i] == hexBuffer[i + 4]) {
+				hexBuffer[i] == hexBuffer[i + 4]
+			) {
 				return hexBuffer[i]
 			}
 		}
@@ -67,7 +70,8 @@ class Task14(val input:String):Task {
 				candidates.removeIf { candidate ->
 					if (candidate.triple == quintuple &&
 						candidate.iteration < 1000 &&
-						candidate.index < index) {
+						candidate.index < index
+					) {
 						keys.add(candidate.index)
 						true
 					} else {
@@ -83,33 +87,39 @@ class Task14(val input:String):Task {
 		return keys.sorted()[63]
 	}
 
+	private val hashCache = ConcurrentHashMap<ByteArray, ByteArray>()
 	override fun b(): Any {
-		val candidates = mutableListOf<CandidateB>()
+		val candidates = mutableListOf<Candidate>()
+
 		var index = 0
 		val keys = mutableListOf<Int>()
+		val saltArray = input.toByteArray()
 
-		while (keys.size < 64 && index < 100000) {  // Changed condition to find 64 keys
-			var hash = generateHash(md, input + index.toString())
+		while (keys.size < 64) {
+			val indexArray = index.toString().toByteArray()
+			val array = saltArray.plus(indexArray)
 
-			repeat(2016) {
-				hash = generateHash(md, hash)
-			}
+			val hashArray = getFinalHash(array)
+
+			bytesToHexChars(hashArray)
 
 			candidates.forEach { it.iteration++ }
 
-			val triple = hash.findTriple()
-			if (triple != null) {
-				candidates.add(CandidateB(index, hash, triple, 0))
+			findTripleInHexBuffer()?.let { triple ->
+				candidates.add(Candidate(index, triple, 0))
 			}
 
-			val quintuple = hash.findQuintuple()
-			if (quintuple != null) {
+			findQuintupleInHexBuffer()?.let { quintuple ->
 				candidates.removeIf { candidate ->
-					if (candidate.triple == quintuple && candidate.iteration < 1000 && candidate.index < index) {
+					if (candidate.triple == quintuple &&
+						candidate.iteration < 1000 &&
+						candidate.index < index
+					) {
 						keys.add(candidate.index)
-						return@removeIf true
+						true
+					} else {
+						false
 					}
-					false
 				}
 			}
 
@@ -117,39 +127,36 @@ class Task14(val input:String):Task {
 			index++
 		}
 
-		return keys.sorted()[63]  // Return the 64th key
+		return keys.sorted()[63]
 	}
 
-
-	private data class CandidateB(val index: Int, val hash: String, val triple: Char, var iteration: Int)
-
-
-
-	private fun generateHash(md: MessageDigest, input: String): String {
-		val bytes = md.digest(input.toByteArray())
-		return bytes.joinToString("") { "%02x".format(it) }
-	}
-private fun String.findQuintuple(): Char? {
-	for (i in 0..length - 5) {
-		if (this[i] == this[i + 1] &&
-			this[i] == this[i + 2] &&
-			this[i] == this[i + 3] &&
-			this[i] == this[i + 4]) {
-			return this[i]
+	private fun getFinalHash(input: ByteArray): ByteArray {
+		return hashCache.computeIfAbsent(input) {
+			var hashArray = md.digest(it)
+			val nextInput = ByteArray(hashArray.size * 2)
+			for (i in 0 until 2016) {
+				for (j in hashArray.indices) {
+					nextInput[j*2] = ((hashArray[j].toInt() shr 4 and 0x0F)).toByte()
+					nextInput[j*2+1] = (hashArray[j].toInt() and 0x0F).toByte()
+				}
+				hashArray = md.digest(toHexBytes(nextInput))
+			}
+			hashArray
 		}
 	}
-	return null
-}
+	private fun toHexBytes(bytes: ByteArray): ByteArray {
+		val result = ByteArray(bytes.size)
+		for(i in bytes.indices){
+			val value = (bytes[i].toInt() and 0xFF)
+			if (value < 10) {
+				result[i] = ('0'.code + value).toByte()
+			} else {
+				result[i] = ('a'.code + value - 10).toByte()
+			}
 
-private fun String.findTriple(): Char? {
-	for (i in 0..length - 3) {
-		if (this[i] == this[i + 1] && this[i] == this[i + 2]) {
-			return this[i]
 		}
+		return result
 	}
-	return null
-}
-
 
 }
 
