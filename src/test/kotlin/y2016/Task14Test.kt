@@ -15,6 +15,6 @@ class Task14Test {
 	fun b() {
 //		assertEquals(22551, Task14("abc").b())
 		assertEquals(20606, Task14("cuanljph").b())
-		//3 min 5sec for string version
+		//3 min 5sec for string version, 9 sec for bytearray with hex conversion, and 900ms with multithreading
 	}
 }

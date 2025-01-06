@@ -1,41 +1,151 @@
 package y2016
 
 import Task
+import jdk.internal.org.jline.reader.Candidate
 import java.security.MessageDigest
-import java.util.concurrent.ConcurrentHashMap
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
 
 //--- Day 14: One-Time Pad ---
 class Task14(val input: String) : Task {
 
+	private val threadLocalMD5: ThreadLocal<MessageDigest> = ThreadLocal.withInitial {
+		MessageDigest.getInstance("MD5")
+	}
+
 	private data class Candidate(val index: Int, val triple: Char, var iteration: Int)
 
-	// Lookup table for byte to hex chars conversion
 	private val hexChars = "0123456789abcdef".toCharArray()
-	private val hexBuffer = CharArray(32)  // Reusable buffer for hex conversion
-	private val md: MessageDigest = MessageDigest.getInstance("MD5")
 
-	private fun bytesToHexChars(bytes: ByteArray) {
-		var j = 0
-		for (byte in bytes) {
-			hexBuffer[j++] = hexChars[(byte.toInt() and 0xF0) ushr 4]
-			hexBuffer[j++] = hexChars[byte.toInt() and 0x0F]
+	override fun a(): Any {
+		val candidates = mutableListOf<Candidate>()
+		var index = 0
+		val keys = mutableListOf<Int>()
+		val saltArray = input.toByteArray()
+		val md = threadLocalMD5.get()
+		md.reset()
+
+		while (keys.size < 64) {
+			val indexArray = index.toString().toByteArray()
+			val array = saltArray.plus(indexArray)
+			val hashArray = md.digest(array)
+			val hexBuffer = bytesToHexChars(hashArray)
+
+			candidates.forEach { it.iteration++ }
+
+			findTripleInHexBuffer(hexBuffer)?.let { triple ->
+				candidates.add(Candidate(index, triple, 0))
+			}
+
+			findQuintupleInHexBuffer(hexBuffer)?.let { quintuple ->
+				candidates.removeIf { candidate ->
+					if (candidate.triple == quintuple &&
+						candidate.iteration < 1000 &&
+						candidate.index < index
+					) {
+						keys.add(candidate.index)
+						true
+					} else {
+						false
+					}
+				}
+			}
+
+			candidates.removeIf { it.iteration >= 1000 }
+			index++
+		}
+
+		return keys.sorted()[63]
+	}
+
+	override fun b(): Any {
+		val candidates = Collections.synchronizedList(mutableListOf<Candidate>())
+		val keys = Collections.synchronizedList(mutableListOf<Int>())
+		val saltArray = input.toByteArray()
+
+		// Use ConcurrentLinkedQueue instead of synchronized list for futures (it was a major bottleneck otherwise!)
+		val futures = ConcurrentLinkedQueue<Future<Pair<Int, CharArray>>>()
+
+		val executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())
+		var index = 0
+
+		while (keys.size < 64) {
+			val currentIndex = index
+			futures.add(executor.submit<Pair<Int, CharArray>> {
+				val indexArray = currentIndex.toString().toByteArray()
+				val array = saltArray.plus(indexArray)
+				val hashArray = getFinalHash(array)
+				Pair(currentIndex, bytesToHexChars(hashArray))
+			})
+			index++
+
+			if (futures.size > 100) {
+				processFutures(futures, candidates, keys)
+			}
+		}
+
+		while (futures.isNotEmpty()) {
+			processFutures(futures, candidates, keys)
+		}
+
+		executor.shutdown()
+		executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS)
+		return keys.sorted()[63]
+	}
+
+	private fun processFutures(
+		futures: Queue<Future<Pair<Int, CharArray>>>,
+		candidates: MutableList<Candidate>,
+		keys: MutableList<Int>
+	) {
+		while (true) {
+			val future = futures.poll() ?: break
+			val (currentIndex, hexBuffer) = future.get()
+
+			synchronized(candidates) {
+				candidates.forEach { it.iteration++ }
+
+				findTripleInHexBuffer(hexBuffer)?.let { triple ->
+					candidates.add(Candidate(currentIndex, triple, 0))
+				}
+
+				findQuintupleInHexBuffer(hexBuffer)?.let { quintuple ->
+					candidates.removeIf { candidate ->
+						if (candidate.triple == quintuple &&
+							candidate.iteration < 1000 &&
+							candidate.index < currentIndex
+						) {
+							synchronized(keys) {
+								keys.add(candidate.index)
+							}
+							true
+						} else {
+							false
+						}
+					}
+				}
+
+				candidates.removeIf { it.iteration >= 1000 }
+			}
 		}
 	}
 
-	private fun findTripleInHexBuffer(): Char? {
-		for (i in 0..29) {  // 32 - 3
-			if (hexBuffer[i] == hexBuffer[i + 1] &&
-				hexBuffer[i] == hexBuffer[i + 2]
-			) {
+	private fun findTripleInHexBuffer(hexBuffer: CharArray): Char? {
+		for (i in 0 until hexBuffer.size - 2) {
+			if (hexBuffer[i] == hexBuffer[i + 1] && hexBuffer[i] == hexBuffer[i + 2]) {
 				return hexBuffer[i]
 			}
 		}
 		return null
 	}
 
-	private fun findQuintupleInHexBuffer(): Char? {
-		for (i in 0..27) {  // 32 - 5
-			if (hexBuffer[i] == hexBuffer[i + 1] &&
+	private fun findQuintupleInHexBuffer(hexBuffer: CharArray): Char? {
+		for (i in 0 until hexBuffer.size - 4) {
+			if (
+				hexBuffer[i] == hexBuffer[i + 1] &&
 				hexBuffer[i] == hexBuffer[i + 2] &&
 				hexBuffer[i] == hexBuffer[i + 3] &&
 				hexBuffer[i] == hexBuffer[i + 4]
@@ -46,118 +156,43 @@ class Task14(val input: String) : Task {
 		return null
 	}
 
-	override fun a(): Any {
-		val candidates = mutableListOf<Candidate>()
-
-		var index = 0
-		val keys = mutableListOf<Int>()
-		val saltArray = input.toByteArray()
-
-		while (keys.size < 64) {
-			val indexArray = index.toString().toByteArray()
-			val array = saltArray.plus(indexArray)
-			val hashArray = md.digest(array)
-
-			bytesToHexChars(hashArray)
-
-			candidates.forEach { it.iteration++ }
-
-			findTripleInHexBuffer()?.let { triple ->
-				candidates.add(Candidate(index, triple, 0))
-			}
-
-			findQuintupleInHexBuffer()?.let { quintuple ->
-				candidates.removeIf { candidate ->
-					if (candidate.triple == quintuple &&
-						candidate.iteration < 1000 &&
-						candidate.index < index
-					) {
-						keys.add(candidate.index)
-						true
-					} else {
-						false
-					}
-				}
-			}
-
-			candidates.removeIf { it.iteration >= 1000 }
-			index++
+	private fun bytesToHexChars(bytes: ByteArray): CharArray {
+		val buffer = CharArray(bytes.size * 2)
+		for (i in bytes.indices) {
+			val v = bytes[i].toInt() and 0xFF
+			buffer[i * 2] = hexChars[v ushr 4]
+			buffer[i * 2 + 1] = hexChars[v and 0x0F]
 		}
-
-		return keys.sorted()[63]
+		return buffer
 	}
 
-	private val hashCache = ConcurrentHashMap<ByteArray, ByteArray>()
-	override fun b(): Any {
-		val candidates = mutableListOf<Candidate>()
-
-		var index = 0
-		val keys = mutableListOf<Int>()
-		val saltArray = input.toByteArray()
-
-		while (keys.size < 64) {
-			val indexArray = index.toString().toByteArray()
-			val array = saltArray.plus(indexArray)
-
-			val hashArray = getFinalHash(array)
-
-			bytesToHexChars(hashArray)
-
-			candidates.forEach { it.iteration++ }
-
-			findTripleInHexBuffer()?.let { triple ->
-				candidates.add(Candidate(index, triple, 0))
-			}
-
-			findQuintupleInHexBuffer()?.let { quintuple ->
-				candidates.removeIf { candidate ->
-					if (candidate.triple == quintuple &&
-						candidate.iteration < 1000 &&
-						candidate.index < index
-					) {
-						keys.add(candidate.index)
-						true
-					} else {
-						false
-					}
-				}
-			}
-
-			candidates.removeIf { it.iteration >= 1000 }
-			index++
-		}
-
-		return keys.sorted()[63]
-	}
-
-	private fun getFinalHash(input: ByteArray): ByteArray {
-		return hashCache.computeIfAbsent(input) {
-			var hashArray = md.digest(it)
-			val nextInput = ByteArray(hashArray.size * 2)
-			for (i in 0 until 2016) {
-				for (j in hashArray.indices) {
-					nextInput[j*2] = ((hashArray[j].toInt() shr 4 and 0x0F)).toByte()
-					nextInput[j*2+1] = (hashArray[j].toInt() and 0x0F).toByte()
-				}
-				hashArray = md.digest(toHexBytes(nextInput))
-			}
-			hashArray
-		}
-	}
 	private fun toHexBytes(bytes: ByteArray): ByteArray {
 		val result = ByteArray(bytes.size)
-		for(i in bytes.indices){
+		for (i in bytes.indices) {
 			val value = (bytes[i].toInt() and 0xFF)
 			if (value < 10) {
 				result[i] = ('0'.code + value).toByte()
 			} else {
 				result[i] = ('a'.code + value - 10).toByte()
 			}
-
 		}
 		return result
 	}
 
+	private fun getFinalHash(input: ByteArray): ByteArray {
+		val md = threadLocalMD5.get()
+		md.reset()
+		var hashArray = md.digest(input)
+		val nextInput = ByteArray(hashArray.size * 2)
+		for (i in 0 until 2016) {
+			for (j in hashArray.indices) {
+				nextInput[j * 2] = ((hashArray[j].toInt() shr 4 and 0x0F)).toByte()
+				nextInput[j * 2 + 1] = (hashArray[j].toInt() and 0x0F).toByte()
+			}
+			hashArray = md.digest(toHexBytes(nextInput))
+		}
+		return hashArray
+	}
 }
 
 
