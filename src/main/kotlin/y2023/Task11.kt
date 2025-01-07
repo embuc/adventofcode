@@ -2,8 +2,8 @@ package y2023
 
 import Task
 import utils.Tile
+import utils.manhattanDistanceLong
 import utils.readInputAsListOfStrings
-import kotlin.math.abs
 
 // --- Day 11: Cosmic Expansion ---
 // Solved this one first with DFS, but it was too slow, then I read discussion and everyone was using Manhattan distance
@@ -29,12 +29,6 @@ object Task11:Task  {
 		val grid = expandGrid(lines,1_000_000)
 		val galaxyPairs = findAllGalaxyPairs(grid)
 		return findSumOfPaths(galaxyPairs)
-	}
-
-	private fun manhattanDistanceLong(p1: Tile, p2: Tile): Long {
-		val deltaX = abs(p1.x - p2.x).toLong()
-		val deltaY = abs(p1.y - p2.y).toLong()
-		return deltaX + deltaY
 	}
 
 	fun expandGrid(lines: List<String>, times: Long): List<List<Tile>> {
@@ -73,7 +67,7 @@ object Task11:Task  {
 
 		// Expand rows
 		val expandedRows = mutableListOf<List<Tile>>()
-		var i = 0L;
+		var i = 0L
 		grid.forEachIndexed { index, row ->
 			row.forEach { tile -> tile.x += i*(times-1) }
 			expandedRows.add(row)
@@ -85,7 +79,7 @@ object Task11:Task  {
 		// Expand columns
 		val expandedGrid = expandedRows.map { row ->
 			val newRow = mutableListOf<Tile>()
-			i = 0;
+			i = 0
 			row.forEachIndexed { index, tile ->
 				tile.y += i*(times-1)
 				newRow.add(tile)

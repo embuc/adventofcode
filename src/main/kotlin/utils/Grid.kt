@@ -1,5 +1,7 @@
 package utils
 
+import kotlin.math.abs
+
 
 //my grid stuff
 fun toGrid(input: List<String>): Array<Array<Triple<Int, Int, Char>>> {
@@ -8,6 +10,10 @@ fun toGrid(input: List<String>): Array<Array<Triple<Int, Int, Char>>> {
 			Triple(i, j, input[i][j])
 		}
 	}
+}
+
+fun manhattanDistance(source: Pair<Int, Int>, target: Pair<Int, Int>): Int {
+	return abs(source.first - target.first) + abs(source.second - target.second)
 }
 
 fun printGrid(grid: Array<Array<Triple<Int, Int, Char>>>) {
