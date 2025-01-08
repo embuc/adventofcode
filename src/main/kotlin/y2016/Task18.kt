@@ -37,20 +37,19 @@ class Task18(val input: String, val rows: Int) : Task {
 
 	override fun b(): Any {
 		var count = 0L
-		val currRow = StringBuilder(input)
-		count += input.sumOf { if (it == '.') 1L else 0L }
-		val newRow = StringBuilder()
+		val currRow = input.toCharArray()
+		val newRow = CharArray(currRow.size)
+		count += currRow.count { it == '.' }
+
 		repeat(rows - 1) {
 			for (i in currRow.indices) {
 				val c1 = if (i == 0) '.' else currRow[i - 1]
 				val c2 = currRow[i]
-				val c3 = if (i == currRow.length - 1) '.' else currRow[i + 1]
-				newRow.append(getTrap(c1, c2, c3))
+				val c3 = if (i == currRow.size - 1) '.' else currRow[i + 1]
+				newRow[i] = getTrap(c1, c2, c3)
+				if (newRow[i] == '.') count++
 			}
-			currRow.clear()
-			currRow.append(newRow)
-			count += newRow.sumOf { if (it == '.') 1L else 0L }
-			newRow.clear()
+			System.arraycopy(newRow, 0, currRow, 0, newRow.size)
 		}
 		return count
 	}
