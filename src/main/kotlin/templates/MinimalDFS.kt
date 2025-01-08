@@ -1,5 +1,5 @@
 package templates
-// generic minimal dfs
+// generic minimal dfs (using graph represented as a map)
 fun dfs(graph: Map<String, List<String>>, start: String, visited: MutableSet<String> = mutableSetOf()) {
 	visited.add(start) // Mark the current node as visited
 	println(start) // Process the current node (e.g., print)
@@ -10,6 +10,22 @@ fun dfs(graph: Map<String, List<String>>, start: String, visited: MutableSet<Str
 		}
 	}
 }
+// generic minimal dfs using simple 2d grid, but use it as template for custom tasks related to conectivity and exploration in grid
+fun dfsRecursive(gridWidth: Int, gridHeight: Int, current: Pair<Int, Int>, target: Pair<Int,Int>, visited: MutableSet<Pair<Int, Int>>): Boolean {
+	visited.add(current) // set current as visited
+	if(current == target) {
+		return true // If target found then return true
+	}
+	for(neighbour in getNeighbors(gridWidth, gridHeight, current)) {
+		if (!visited.contains(neighbour)) { // If neighbour is not visited then try DFS on that neighbour
+			if(dfsRecursive(gridWidth, gridHeight, neighbour, target, visited)) {
+				return true // If neighbour can find the target then return true
+			}
+		}
+	}
+	return false // If no valid path found then return false
+}
+
 data class Connection(val to: String, val cost: Int)
 typealias GraphWithCost = MutableMap<String, MutableSet<Connection>>
 
