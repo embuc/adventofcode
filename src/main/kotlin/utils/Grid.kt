@@ -64,6 +64,16 @@ fun countChar(grid: Array<Array<Triple<Int, Int, Char>>>, condition: (Char) -> B
 	return count
 }
 
+fun countChar(grid: List<String>, char: Char): Int {
+	var count = 0
+	for (i in grid.indices) {
+		for (j in grid[i].indices) {
+			if (grid[i][j] == char) count++
+		}
+	}
+	return count
+}
+
 fun isInsideGrid(
 	grid: Array<Array<Triple<Int, Int, Char>>>,
 	x: Int,
