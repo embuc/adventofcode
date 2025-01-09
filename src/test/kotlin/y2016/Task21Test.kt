@@ -26,5 +26,9 @@ class Task21Test {
 
 	@Test
 	fun b() {
+		assertEquals("abcde", Task21(testInput.reversed(), "decab").b())
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2016/2016_21.txt").reversed()
+		assertEquals("abcdefgh", Task21(input, "ghfacdbe").b())
+		assertEquals("fhgcdaeb", Task21(input, "fbgdceah").b())
 	}
 }
