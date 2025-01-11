@@ -90,33 +90,9 @@ class Task24(val input: List<String>) : Task {
 		val nodes = mutableListOf<Node>()
 		nodes.addAll(getNodes(grid))
 		val edgesMap = getEdgesMap(grid, nodes)
-
-		// Debug: print all available edges
-		println("Available edges:")
-		edgesMap.forEach { (pair, weight) ->
-			println("${pair.first} -> ${pair.second}: $weight")
-		}
-		println("\nStarting backtracking:")
-
+		// TSP with backtracking
 		val bestPath = mutableListOf<Edge>()
 		backtrack(edgesMap, nodes, bestPath = bestPath)
-
-		println("\nFinal path:")
-		bestPath.forEach { edge ->
-			println("${edge.from} -> ${edge.to}: ${edge.weight}")
-		}
-
-		//debug prints, TODO remove
-//		println("0->1= ${edgesMap[Pair(nodes[0], nodes[1])]} 0->2= ${edgesMap[Pair(nodes[0], nodes[2])]} 0->3= ${edgesMap[Pair(nodes[0], nodes[3])]} 0->4= ${edgesMap[Pair(nodes[0], nodes[4])]} 0->5= ${edgesMap[Pair(nodes[0], nodes[5])]} 0->6= ${edgesMap[Pair(nodes[0], nodes[6])]} 0->7= ${edgesMap[Pair(nodes[0], nodes[7])]}")
-//		println("1->0= ${edgesMap[Pair(nodes[1], nodes[0])]} 1->2= ${edgesMap[Pair(nodes[1], nodes[2])]} 1->3= ${edgesMap[Pair(nodes[1], nodes[3])]} 1->4= ${edgesMap[Pair(nodes[1], nodes[4])]} 1->5= ${edgesMap[Pair(nodes[1], nodes[5])]} 1->6= ${edgesMap[Pair(nodes[1], nodes[6])]} 1->7= ${edgesMap[Pair(nodes[1], nodes[7])]}")
-//		println("2->0= ${edgesMap[Pair(nodes[2], nodes[0])]} 2->1= ${edgesMap[Pair(nodes[2], nodes[1])]} 2->3= ${edgesMap[Pair(nodes[2], nodes[3])]} 2->4= ${edgesMap[Pair(nodes[2], nodes[4])]} 2->5= ${edgesMap[Pair(nodes[2], nodes[5])]} 2->6= ${edgesMap[Pair(nodes[2], nodes[6])]} 2->7= ${edgesMap[Pair(nodes[2], nodes[7])]}")
-//		println("3->0= ${edgesMap[Pair(nodes[3], nodes[0])]} 3->1= ${edgesMap[Pair(nodes[3], nodes[1])]} 3->2= ${edgesMap[Pair(nodes[3], nodes[2])]} 3->4= ${edgesMap[Pair(nodes[3], nodes[4])]} 3->5= ${edgesMap[Pair(nodes[3], nodes[5])]} 3->6= ${edgesMap[Pair(nodes[3], nodes[6])]} 3->7= ${edgesMap[Pair(nodes[3], nodes[7])]}")
-//		println("4->0= ${edgesMap[Pair(nodes[4], nodes[0])]} 4->1= ${edgesMap[Pair(nodes[4], nodes[1])]} 4->2= ${edgesMap[Pair(nodes[4], nodes[2])]} 4->3= ${edgesMap[Pair(nodes[4], nodes[3])]} 4->5= ${edgesMap[Pair(nodes[4], nodes[5])]} 4->6= ${edgesMap[Pair(nodes[4], nodes[6])]} 4->7= ${edgesMap[Pair(nodes[4], nodes[7])]}")
-//		println("5->0= ${edgesMap[Pair(nodes[5], nodes[0])]} 5->1= ${edgesMap[Pair(nodes[5], nodes[1])]} 5->2= ${edgesMap[Pair(nodes[5], nodes[2])]} 5->3= ${edgesMap[Pair(nodes[5], nodes[3])]} 5->4= ${edgesMap[Pair(nodes[5], nodes[4])]} 5->6= ${edgesMap[Pair(nodes[5], nodes[6])]} 5->7= ${edgesMap[Pair(nodes[5], nodes[7])]}")
-//		println("6->0= ${edgesMap[Pair(nodes[6], nodes[0])]} 6->1= ${edgesMap[Pair(nodes[6], nodes[1])]} 6->2= ${edgesMap[Pair(nodes[6], nodes[2])]} 6->3= ${edgesMap[Pair(nodes[6], nodes[3])]} 6->4= ${edgesMap[Pair(nodes[6], nodes[4])]} 6->5= ${edgesMap[Pair(nodes[6], nodes[5])]} 6->7= ${edgesMap[Pair(nodes[6], nodes[7])]}")
-//		println("7->0= ${edgesMap[Pair(nodes[7], nodes[0])]} 7->1= ${edgesMap[Pair(nodes[7], nodes[1])]} 7->2= ${edgesMap[Pair(nodes[7], nodes[2])]} 7->3= ${edgesMap[Pair(nodes[7], nodes[3])]} 7->4= ${edgesMap[Pair(nodes[7], nodes[4])]} 7->5= ${edgesMap[Pair(nodes[7], nodes[5])]} 7->6= ${edgesMap[Pair(nodes[7], nodes[6])]}")
-		val shortestPathLength = MinimalBFS.findShortestPath(grid, Node(23, 179), Node(19,1)).size - 1
-		println("Shortest path from 23,179 to 19,1: $shortestPathLength")
 		return bestPath.sumOf { it.weight }
 	}
 
@@ -128,34 +104,25 @@ class Task24(val input: List<String>) : Task {
 		visitedNodes: MutableSet<Node> = mutableSetOf(),
 		depth: Int = 0
 	): List<Edge> {
-		// Debug indentation
-		val indent = "  ".repeat(depth)
 
 		// Initialize with node 0 if starting
 		if (currentPath.isEmpty()) {
 			visitedNodes.add(nodes[0])
-			println("${indent}Starting at node 0")
 		}
 
 		val currentNode = if (currentPath.isEmpty()) nodes[0] else currentPath.last().to
-		println("${indent}At node $currentNode")
-		println("${indent}Visited: ${visitedNodes.map { it.toString() }}")
 
 		// Base case
 		if (visitedNodes.size == nodes.size) {
 			val returnEdge = Edge(currentNode, nodes[0], dict[currentNode to nodes[0]]!!)
-			println("${indent}Found complete path, returning to start with cost ${returnEdge.weight}")
 
 			val currentCost = currentPath.sumOf { it.weight } + returnEdge.weight
 			val bestCost = if(bestPath.isEmpty()) Int.MAX_VALUE else bestPath.sumOf { it.weight }
-
-			println("${indent}Current total cost: $currentCost vs best cost: $bestCost")
 
 			if (currentCost < bestCost) {
 				bestPath.clear()
 				bestPath.addAll(currentPath)
 				bestPath.add(returnEdge)
-				println("${indent}New best path found!")
 			}
 			return bestPath
 		}
@@ -163,9 +130,6 @@ class Task24(val input: List<String>) : Task {
 		// Try all possible next moves
 		for (nextNode in nodes) {
 			if (nextNode !in visitedNodes) {
-				println("${indent}Trying move to $nextNode")
-				println("${indent}Cost would be: ${dict[currentNode to nextNode]}")
-
 				val edge = Edge(currentNode, nextNode, dict[currentNode to nextNode]!!)
 				currentPath.add(edge)
 				visitedNodes.add(nextNode)
