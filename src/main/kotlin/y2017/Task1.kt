@@ -16,22 +16,19 @@ class Task1(val input:String) : Task {
 			}
 			sameDigit = digit
 		}
-		println()
 		return sum
 	}
 
 	override fun b(): Any {
 		var sum = 0
-		for (i in 0..(input.length - 1)) {
-			val ix  = i % input.length
+		for (i in input.indices) {
 			val ix2  = (i + input.length/2) % input.length
-			val digit = input[ix % input.length]
+			val digit = input[i]
 			val otherDigit = input[ix2]
 			if(digit == otherDigit) {
 				sum += digit.code - '0'.code
 			}
 		}
-		println()
 		return sum
 	}
 }
