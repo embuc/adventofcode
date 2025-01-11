@@ -14,5 +14,7 @@ class Task24Test {
 
 	@Test
 	fun b() {
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2016/2016_24.txt")
+		assertEquals(700, Task24(input).b())
 	}
 }
