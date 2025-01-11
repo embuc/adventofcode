@@ -75,7 +75,7 @@ class Task24(val input: List<String>) : Task {
 				currentPath.add(edge)
 				visitedNodes.add(nextNode)
 
-				backtrack(dict, nodes, currentPath, bestPath, visitedNodes)
+				backtrackA(dict, nodes, currentPath, bestPath, visitedNodes)
 
 				currentPath.removeAt(currentPath.size - 1)
 				visitedNodes.remove(nextNode)
@@ -92,11 +92,11 @@ class Task24(val input: List<String>) : Task {
 		val edgesMap = getEdgesMap(grid, nodes)
 		// TSP with backtracking
 		val bestPath = mutableListOf<Edge>()
-		backtrack(edgesMap, nodes, bestPath = bestPath)
+		backtrackB(edgesMap, nodes, bestPath = bestPath)
 		return bestPath.sumOf { it.weight }
 	}
 
-	private fun backtrack(
+	private fun backtrackB(
 		dict: MutableMap<Pair<Node, Node>, Int>,
 		nodes: List<Node>,
 		currentPath: MutableList<Edge> = mutableListOf(),
@@ -134,7 +134,7 @@ class Task24(val input: List<String>) : Task {
 				currentPath.add(edge)
 				visitedNodes.add(nextNode)
 
-				backtrack(dict, nodes, currentPath, bestPath, visitedNodes, depth + 1)
+				backtrackB(dict, nodes, currentPath, bestPath, visitedNodes, depth + 1)
 
 				currentPath.removeAt(currentPath.size - 1)
 				visitedNodes.remove(nextNode)
