@@ -40,7 +40,7 @@ class Task12(val input: List<String>) : Task {
 				"jnz" -> {
 					val value = if (instruction.isArg1Int) instruction.arg1asInt else registers[instruction.arg1asIx]
 					if (value != 0) {
-						ix += if (instruction.isArg2Int) instruction.arg2asInt else registers[instruction.arg2asIx] - 1
+						ix += (if (instruction.isArg2Int) instruction.arg2asInt else registers[instruction.arg2asIx]) - 1
 //						ix += instruction.arg2asInt - 1
 					}
 				}
