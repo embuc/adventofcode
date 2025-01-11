@@ -2,9 +2,13 @@ package templates;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
+import utils.ConsoleColors;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -40,30 +44,55 @@ public class MinimalBFS {
 		public int y;
 		public Node parent;
 		public int depth;
+		public String name;
 
 		public Node(int x, int y) {
-			this(x, y, null, 0);
+			this(x, y, null, 0, null);
+		}
+
+		public Node(int x, int y, String name) {
+			this(x, y, null, 0, name);
 		}
 
 		public Node(int x, int y, Node parent) {
-			this(x, y, parent, 0);
+			this(x, y, parent, 0, null);
 		}
 
 		public Node(int x, int y, int depth) {
-			this(x, y, null, depth);
+			this(x, y, null, depth, null);
+		}
+
+		public String toString() {
+			return "Node{" +
+					"x=" + x +
+					", y=" + y +
+					'}';
 		}
 	}
 
-	public static int[][] findShortestPath(char[][] grid) {
-		int rows = grid.length;
-		int cols = grid[0].length;
+	/*
+	 * Find the shortest path in a 2D grid. Path includes S and E. '#' denotes a wall, '.' denotes a walkable cell.
+	 */
+	public static int[][] findShortestPath(@NotNull char[][] it, Node from, Node to) {
+		return findShortestPath(it, new int[]{from.x, from.y}, new int[]{to.x, to.y});
+	}
+
+	public static int[][] findShortestPath(@NotNull char[][] grid) {
 		int[] start = findChar(grid, 'S');
 		int[] end = findChar(grid, 'E');
+		return findShortestPath(grid, start, end);
+	}
+
+	public static int[][] findShortestPath(char[][] gridIncoming, int []start, int[] end) {
+		char[][] grid = new char[gridIncoming.length][gridIncoming[0].length];
+		System.arraycopy(gridIncoming, 0, grid, 0, gridIncoming.length);
+		int rows = grid.length;
+		int cols = grid[0].length;
 
 		// Queue for BFS
 		Queue<Node> queue = new LinkedList<>();
 		// Adding initial node to the queue
-		queue.add(new Node(start[0], start[1], null));
+		queue.add(new Node(start[0], start[1]));
 		// Map to check whether a location has already been visited or not
 		boolean[][] visited = new boolean[rows][cols];
 		visited[start[0]][start[1]] = true;
@@ -171,41 +200,6 @@ public class MinimalBFS {
 	private static boolean isValid(int x, int y, char[][] grid) {
 		return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] != '#';
 	}
-//
-//	static class Point {
-//		int x;
-//		int y;
-//
-//		Point(int x, int y) {
-//			this.x = x;
-//			this.y = y;
-//		}
-//
-//		@Override
-//		public boolean equals(Object obj) {
-//			if (this == obj) {return true;}
-//			if (obj == null || getClass() != obj.getClass()) {return false;}
-//			Point point = (Point) obj;
-//			return x == point.x && y == point.y;
-//		}
-//
-//		@Override
-//		public int hashCode() {
-//			return Objects.hash(x, y);
-//		}
-//	}
-
-//	static class NodeWithLevel {
-//		int x;
-//		int y;
-//		int depth;
-//
-//		NodeWithLevel(int x, int y, int depth) {
-//			this.x = x;
-//			this.y = y;
-//			this.depth = depth;
-//		}
-//	}
 
 	public static void main(String[] args) {
 		char[][] grid = {
@@ -221,41 +215,49 @@ public class MinimalBFS {
 		if (shortestPath != null) {
 			System.out.println("Shortest Path:");
 			printPath(grid, shortestPath);
-//			for(int[] coords : shortestPath) {
-//				System.out.println("x: " + coords[0] + ", y: " + coords[1]);
-//			}
 		} else {
 			System.out.println("No path found.");
 		}
 	}
 
 	public static void printPath(char[][] grid, int[][] shortestPath) {
+		List<int[][]> paths = new ArrayList<>();
+		paths.add(shortestPath);
 		int[] s = findChar(grid, 'S');
-		Node start = new Node(s[0], s[1], null);
+		Node start = new Node(s[0], s[1], "S");
 		int[] e = findChar(grid, 'E');
-		Node stop = new Node(e[0], e[1], null);
+		Node stop = new Node(e[0], e[1], "E");
+		List<Node> startEndNodes = new ArrayList<>();
+		startEndNodes.add(start);
+		startEndNodes.add(stop);
+		printPath(grid, paths, startEndNodes);
+	}
 
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[i].length; j++) {
-				if (i == start.x && j == start.y) {
-					System.out.print("S");
-				} else if (i == stop.x && j == stop.y) {
-					System.out.print("E");
+	public static void printPath(char[][] gridIncoming, List<int[][]> shortestPaths, List<Node> startEndNodes) {
+		char[][] grid = new char[gridIncoming.length][gridIncoming[0].length];
+		System.arraycopy(gridIncoming, 0, grid, 0, gridIncoming.length);
+		System.out.println("Printing Shortest Path(s). Grid size: x:" + grid.length + " y:" + grid[0].length);
+
+		for (int[][] shortestPath : shortestPaths) {
+			for (int[] coords : shortestPath) {
+				grid[coords[0]][coords[1]] = '*';
+			}
+		}
+		for (Node node : startEndNodes) {
+			grid[node.x][node.y] = node.name.charAt(0);
+		}
+
+		for (char[] chars : grid) {
+			for (char aChar : chars) {
+				if (aChar == '#') {
+					ConsoleColors.printGray("#");
+				} else if (aChar == '.') {
+					ConsoleColors.printLightGray(".");
+				} else if (aChar == '*') {
+					ConsoleColors.printGreen("*");
 				} else {
-					boolean isPath = false;
-					for (int[] coords : shortestPath) {
-						if (coords[0] == i && coords[1] == j) {
-							isPath = true;
-							break;
-						}
-					}
-					if (grid[i][j] == '#') {
-						System.out.print("#");
-					} else if (isPath) {
-						System.out.print("|");
-					} else {
-						System.out.print(grid[i][j] + ".");
-					}
+					//start/end
+					ConsoleColors.printMagenta("*");
 				}
 			}
 			System.out.println();

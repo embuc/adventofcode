@@ -12,6 +12,22 @@ fun toGrid(input: List<String>): Array<Array<Triple<Int, Int, Char>>> {
 	}
 }
 
+fun toTripleGrid(input: List<String>): Array<Array<Triple<Int, Int, Char>>> {
+	return Array(input.size) { i ->
+		Array(input[i].length) { j ->
+			Triple(i, j, input[i][j])
+		}
+	}
+}
+
+fun toCharGrid(input: List<String>): Array<CharArray> {
+	return Array(input.size) { i ->
+		CharArray(input[i].length) { j ->
+			input[i][j]
+		}
+	}
+}
+
 fun manhattanDistance(source: Pair<Int, Int>, target: Pair<Int, Int>): Int {
 	return abs(source.first - target.first) + abs(source.second - target.second)
 }
@@ -31,8 +47,28 @@ fun printGrid(grid: List<CharArray>) {
 	}
 }
 fun printGrid(grid: Array<CharArray>) {
+	println("Grid size x: ${grid.size} y: ${grid[0].size}")
 	grid.forEach {
 		println(it)
+	}
+}
+fun printGridColor(grid: Array<CharArray>) {
+	println("Grid size x: ${grid.size} y: ${grid[0].size}")
+	grid.forEach { it ->
+		it.forEach {
+			when (it) {
+				'#' -> {
+					ConsoleColors.printGray(it.toString())
+				}
+				'.' -> {
+					ConsoleColors.printLightGray(it.toString())
+				}
+				else -> {
+					ConsoleColors.printGreen(it.toString())
+				}
+			}
+		}
+		println()
 	}
 }
 
