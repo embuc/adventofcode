@@ -3,25 +3,41 @@ package utils
 import kotlin.math.abs
 
 data class Point2D(var x: Int = 0, var y: Int = 0, var direction: Direction = Direction.NORTH) {
-	val up: Point2D get() = Point2D(x - 1, y)
-	val right: Point2D get() = Point2D(x, y + 1)
-	val down: Point2D get() = Point2D(x + 1, y)
-	val left: Point2D get() = Point2D(x, y - 1)
+	private val up: Point2D get() = Point2D(x - 1, y)
+	private val right: Point2D get() = Point2D(x, y + 1)
+	private val down: Point2D get() = Point2D(x + 1, y)
+	private val left: Point2D get() = Point2D(x, y - 1)
+
+	private val upRight: Point2D get() = Point2D(x - 1, y + 1)
+	private val downRight: Point2D get() = Point2D(x + 1, y + 1)
+	private val downLeft: Point2D get() = Point2D(x + 1, y - 1)
+	private val upLeft: Point2D get() = Point2D(x - 1, y - 1)
 
 	fun getCardinalNeighbors(): Set<Point2D> {
 		return setOf(up, right, down, left)
 	}
 
-//	fun getAllNeighbors(): Set<Point2D> {
-//		return setOf(up, upright, right, downright, down, downleft, left, upleft)
-//	}
+	fun getAllNeighbors(): Set<Point2D> {
+		return setOf(up, right, down, left, upRight, downRight, downLeft, upLeft)
+	}
+
+	//get fun for relative directions considering current direction
+	fun getRelativeLeftNeighbor(): Point2D {
+		return when (direction) {
+			Direction.NORTH -> left
+			Direction.EAST -> up
+			Direction.SOUTH -> right
+			Direction.WEST -> down
+		}
+	}
 
 	fun turn(turn: Turn) {
 		direction = when (turn) {
-			Turn.LEFT -> Direction.values()[(direction.ordinal + 3) % 4]
-			Turn.RIGHT -> Direction.values()[(direction.ordinal + 1) % 4]
+			Turn.LEFT -> Direction.entries[(direction.ordinal + 3) % 4]
+			Turn.RIGHT -> Direction.entries[(direction.ordinal + 1) % 4]
 		}
 	}
+
 	fun face(direction: Direction) {
 		this.direction = direction
 	}
@@ -54,7 +70,7 @@ data class Point2D(var x: Int = 0, var y: Int = 0, var direction: Direction = Di
 		operator fun component1() = this.toPoint2D().x
 		operator fun component2() = this.toPoint2D().y
 
-		fun toPoint2D() = when (this) {
+		private fun toPoint2D() = when (this) {
 			NORTH -> Point2D(-1, 0)
 			EAST -> Point2D(0, 1)
 			SOUTH -> Point2D(1, 0)
