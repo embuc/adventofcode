@@ -8,14 +8,14 @@ class Task5Test {
 
 	@Test
 	fun a() {
-		val testInput = "0\n3\n0\n1\n-3"
-		assertEquals(5, Task5(testInput).a())
         val input = readInputAsString("~/git/aoc-inputs/2017/2017_5.txt")
-		assertEquals(325922, Task5(input).a())
+		assertEquals(325922, Task5(input.split("\n").map { it.toInt() }.toIntArray()).a())
 
 	}
 
 	@Test
 	fun b() {
+		val input = readInputAsString("~/git/aoc-inputs/2017/2017_5.txt")
+		assertEquals(24490906, Task5(input.split("\n").map { it.toInt() }.toIntArray()).b())
 	}
 }
