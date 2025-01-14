@@ -14,5 +14,7 @@ class Task8Test {
 
 	@Test
 	fun b() {
+		val input= readInputAsString("~/git/aoc-inputs/2017/2017_8.txt")
+		assertEquals(7184, Task8(input.split("\n")).b())
 	}
 }
