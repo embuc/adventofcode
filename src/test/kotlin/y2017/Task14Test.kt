@@ -13,5 +13,7 @@ class Task14Test {
 
 	@Test
 	fun b() {
+		val input = "stpzcrnm"
+		assertEquals(1113, Task14(input).b())
 	}
 }
