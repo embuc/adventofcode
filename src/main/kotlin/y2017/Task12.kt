@@ -27,11 +27,9 @@ class Task12(val input: List<String>) : Task {
 	private fun parseGraph(): MutableMap<Int, MutableList<Int>> {
 		val dict = mutableMapOf<Int, MutableList<Int>>()
 		for (line in input) {
-			println(line)
 			val parts = line.split("<->")
 			val node = parts[0].trim().toInt()
 			val nodes = parts[1].split(",").map { it.trim().toInt() }
-			println("node: $node nodes: $nodes")
 			dict.putIfAbsent(node, mutableListOf())
 			dict[node]!!.addAll(nodes)
 		}
