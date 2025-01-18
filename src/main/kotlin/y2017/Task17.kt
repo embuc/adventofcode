@@ -2,6 +2,7 @@ package y2017
 
 import Task
 
+//--- Day 17: Spinlock ---
 class Task17(val input:Int):Task{
 
 	override fun a(): Any {
