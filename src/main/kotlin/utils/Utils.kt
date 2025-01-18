@@ -59,4 +59,7 @@ fun solveLinearEquations2x2(
 	return null
 }
 
+fun String.isOnlyLetters(): Boolean = this.all { it.isLetter() }
+fun String.isOnlyDigits(): Boolean = this.all { it.isDigit() }
+
 
