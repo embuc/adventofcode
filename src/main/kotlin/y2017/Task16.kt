@@ -4,7 +4,7 @@ import Task
 
 //--- Day 16: Permutation Promenade ---
 class Task16(val input: String) : Task {
-	
+
 	override fun a(): Any {
 		var programs = ('a'..'p').toList()
 		val moves = input.split(",")
