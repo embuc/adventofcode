@@ -9,7 +9,7 @@ class Task21Test {
 	@Test
 	fun a() {
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2017/2017_21.txt")
-		assertEquals(0, Task21(input).a())
+		assertEquals(110, Task21(input).a())
 	}
 
 	@Test

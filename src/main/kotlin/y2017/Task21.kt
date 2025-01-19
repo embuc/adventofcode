@@ -8,8 +8,21 @@ class Task21(val input:List<String>) :Task {
 
 	override fun a(): Any {
 		val rules = input.map { it.split(" => ") }.map { it[0] to it[1] }.toMap()
+		val rotRules = prepareRotatedRules(rules)
+		val grid = enhance(rotRules, 5)
+		return countChar(grid, '#')
+	}
+
+	override fun b(): Any {
+		val rules = input.map { it.split(" => ") }.map { it[0] to it[1] }.toMap()
+		val rotRules = prepareRotatedRules(rules)
+		val grid = enhance(rotRules, 18)
+		return countChar(grid, '#')
+	}
+
+	private fun prepareRotatedRules(rules: Map<String, String>): MutableMap<String, String> {
 		val rotRules = mutableMapOf<String, String>()
-		for(rule in rules) {
+		for (rule in rules) {
 			var rotated = rule.key
 			rotRules.put(rotated, rule.value)
 			rotated = rotateGrid(rotated, 1)
@@ -19,7 +32,7 @@ class Task21(val input:List<String>) :Task {
 			rotated = rotateGrid(rotated, 1)
 			rotRules.put(rotated, rule.value)
 
-			var flipped = flipGrid(rule.key,1)
+			var flipped = flipGrid(rule.key, 1)
 			rotRules.put(flipped, rule.value)
 			flipped = rotateGrid(flipped, 1)
 			rotRules.put(flipped, rule.value)
@@ -28,11 +41,7 @@ class Task21(val input:List<String>) :Task {
 			flipped = rotateGrid(flipped, 3)
 			rotRules.put(flipped, rule.value)
 		}
-
-//		println("rules size: ${rules.size} rotatedRules size: ${rotRules.size}")
-////		println(rotRules.keys)
-		val grid = enhance(rotRules, 5)
-		return countChar(grid, '#')
+		return rotRules
 	}
 
 	fun rotateGrid(grid: String, times: Int): String {
@@ -56,14 +65,12 @@ class Task21(val input:List<String>) :Task {
 	private fun enhance(rotatedRules: Map<String, String>, iterations: Int): List<String> {
 		var grid = listOf(".#.", "..#", "###")
 		for (i in 0 until iterations) {
-			println("Iteration $i")
 			val size = if (grid.size % 2 == 0) 2 else 3
 			val newGrid = mutableListOf<String>()
 			for (j in 0 until grid.size step size) {
 				val row = mutableListOf<String>()
 				for (k in 0 until grid.size step size) {
 					val square = grid.subList(j, j + size).map { it.substring(k, k + size) }
-					println(square.joinToString("/"))
 					val enhanced = rotatedRules[square.joinToString("/")]
 					row.add(enhanced!!)
 				}
@@ -81,7 +88,4 @@ class Task21(val input:List<String>) :Task {
 		return grid
 	}
 
-	override fun b(): Any {
-		return 0
-	}
 }
