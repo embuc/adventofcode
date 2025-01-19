@@ -21,6 +21,16 @@ data class Point2D(var x: Int = 0, var y: Int = 0, var direction: Direction = Di
 		return setOf(up, right, down, left, upRight, downRight, downLeft, upLeft)
 	}
 
+	fun getRelativeDirection(point: Point2D): Direction {
+		return when (point) {
+			up -> Direction.NORTH
+			right -> Direction.EAST
+			down -> Direction.SOUTH
+			left -> Direction.WEST
+			else -> throw IllegalArgumentException("Point $point is not a neighbor of $this")
+		}
+	}
+
 	//get fun for relative directions considering current direction
 	fun getRelativeLeftNeighbor(): Point2D {
 		return when (direction) {
@@ -59,9 +69,21 @@ data class Point2D(var x: Int = 0, var y: Int = 0, var direction: Direction = Di
 	fun toXY(): Point2D {
 		return Point2D(this.x, this.y)
 	}
+	fun toPair(): Pair<Int, Int> {
+		return Pair(this.x, this.y)
+	}
 
 	fun isInside(verticalSize: Int, horizontalSize: Int): Boolean {
 		return x in 0 until verticalSize && y in 0 until horizontalSize
+	}
+ 	//get where we came from one tile before
+	fun getPreviousOpositeDirection(): Point2D {
+		return when (direction) {
+			Direction.NORTH -> down
+			Direction.EAST -> left
+			Direction.SOUTH -> up
+			Direction.WEST -> right
+		}
 	}
 
 	enum class Direction(val angle: Int) {

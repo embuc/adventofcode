@@ -41,6 +41,24 @@ fun printGrid(grid: Array<Array<Triple<Int, Int, Char>>>) {
 	}
 }
 
+fun printGridColor(grid: Array<Array<Triple<Int, Int, Char>>>, dimmed:List<Char> = listOf(), accent:List<Char> = listOf(), current: Pair<Int, Int> = Pair(-1, -1)) {
+	for (i in grid.indices) {
+		for (j in grid[i].indices) {
+			if (i == current.first && j == current.second) {
+				ConsoleColors.printRed('@'.toString())
+//				ConsoleColors.printYellowBold(grid[i][j].third.toString())
+			}else if (grid[i][j].third in dimmed) {
+				ConsoleColors.printGray(grid[i][j].third.toString())
+			} else if (grid[i][j].third in accent) {
+				ConsoleColors.printGreen(grid[i][j].third.toString())
+			} else {
+				print(grid[i][j].third)
+			}
+		}
+		println()
+	}
+}
+
 fun printGrid(grid: List<CharArray>) {
 	grid.forEach {
 		println(it)
