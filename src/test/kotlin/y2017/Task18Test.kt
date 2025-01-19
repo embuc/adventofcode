@@ -15,7 +15,6 @@ class Task18Test {
 	@Test
 	fun b() {
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2017/2017_18.txt")
-//		135 too low
 		assertEquals(7493, Task18(input).b())
 	}
 }
