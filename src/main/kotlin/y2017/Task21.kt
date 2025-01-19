@@ -7,14 +7,14 @@ import utils.countChar
 class Task21(val input:List<String>) :Task {
 
 	override fun a(): Any {
-		val rules = input.map { it.split(" => ") }.map { it[0] to it[1] }.toMap()
+		val rules = input.map { it.split(" => ") }.associate { it[0] to it[1] }
 		val rotRules = prepareRotatedRules(rules)
 		val grid = enhance(rotRules, 5)
 		return countChar(grid, '#')
 	}
 
 	override fun b(): Any {
-		val rules = input.map { it.split(" => ") }.map { it[0] to it[1] }.toMap()
+		val rules = input.map { it.split(" => ") }.associate { it[0] to it[1] }
 		val rotRules = prepareRotatedRules(rules)
 		val grid = enhance(rotRules, 18)
 		return countChar(grid, '#')
@@ -24,41 +24,37 @@ class Task21(val input:List<String>) :Task {
 		val rotRules = mutableMapOf<String, String>()
 		for (rule in rules) {
 			var rotated = rule.key
-			rotRules.put(rotated, rule.value)
+			rotRules[rotated] = rule.value
 			rotated = rotateGrid(rotated, 1)
-			rotRules.put(rotated, rule.value)
+			rotRules[rotated] = rule.value
 			rotated = rotateGrid(rotated, 1)
-			rotRules.put(rotated, rule.value)
+			rotRules[rotated] = rule.value
 			rotated = rotateGrid(rotated, 1)
-			rotRules.put(rotated, rule.value)
+			rotRules[rotated] = rule.value
 
-			var flipped = flipGrid(rule.key, 1)
-			rotRules.put(flipped, rule.value)
+			var flipped = flipGrid(rule.key)
+			rotRules[flipped] = rule.value
 			flipped = rotateGrid(flipped, 1)
-			rotRules.put(flipped, rule.value)
+			rotRules[flipped] = rule.value
 			flipped = rotateGrid(flipped, 3)
-			rotRules.put(flipped, rule.value)
+			rotRules[flipped] = rule.value
 			flipped = rotateGrid(flipped, 3)
-			rotRules.put(flipped, rule.value)
+			rotRules[flipped] = rule.value
 		}
 		return rotRules
 	}
 
-	fun rotateGrid(grid: String, times: Int): String {
+	private fun rotateGrid(grid: String, times: Int): String {
 		var result = grid.split("/").map { it.toCharArray() }
 		repeat(times) {
-			result = result.mapIndexed { i, _ -> result.map { it[i] }.reversed().toCharArray() }
+			result = List(result.size) { i -> result.map { it[i] }.reversed().toCharArray() }
 		}
 		return result.joinToString("/") { it.joinToString("") }
 	}
 
-	fun flipGrid(grid: String, times: Int): String {
+	private fun flipGrid(grid: String): String {
 		var result = grid.split("/").map { it.toCharArray() }
-		if (times == 1) {
-			result = result.reversed()
-		} else {
-			result = result.map { it.reversed().toCharArray() }
-		}
+		result = result.reversed()
 		return result.joinToString("/") { it.joinToString("") }
 	}
 
@@ -67,9 +63,9 @@ class Task21(val input:List<String>) :Task {
 		for (i in 0 until iterations) {
 			val size = if (grid.size % 2 == 0) 2 else 3
 			val newGrid = mutableListOf<String>()
-			for (j in 0 until grid.size step size) {
+			for (j in grid.indices step size) {
 				val row = mutableListOf<String>()
-				for (k in 0 until grid.size step size) {
+				for (k in grid.indices step size) {
 					val square = grid.subList(j, j + size).map { it.substring(k, k + size) }
 					val enhanced = rotatedRules[square.joinToString("/")]
 					row.add(enhanced!!)
