@@ -12,6 +12,6 @@ class Task17Test {
 
 	@Test
 	fun b() {
-		assertEquals(926, Task17(394).b())
+		assertEquals(10150888, Task17(394).b())
 	}
 }
