@@ -34,6 +34,38 @@ class Task22(val input: List<String>) : Task {
 	}
 
 	override fun b(): Any {
-		return 0
+		val grid = toGrid(input)
+		val center = Pair(grid.size / 2, grid[0].size / 2)
+		val point = Point2D(center.first, center.second, Point2D.Direction.NORTH)
+		val infected = mutableSetOf<Pair<Int, Int>>()
+		val weakened = mutableSetOf<Pair<Int, Int>>()
+		val flagged = mutableSetOf<Pair<Int, Int>>()
+		var countNewInfections = 0
+		grid.mapIndexed { x, row ->
+			row.mapIndexed { y, node ->
+				if (node.third == '#') {
+					infected.add(Pair(x, y))
+				}
+			}
+		}
+		repeat(10_000_000) {
+			if (point.toPair() in infected) {
+				point.turn(Point2D.Turn.RIGHT)
+				infected.remove(point.toPair())
+				flagged.add(point.toPair())
+			} else if (point.toPair() in weakened) {
+				weakened.remove(point.toPair())
+				infected.add(point.toPair())
+				countNewInfections++
+			} else if (point.toPair() in flagged) {
+				point.turn(Point2D.Turn.AROUND)
+				flagged.remove(point.toPair())
+			} else {
+				point.turn(Point2D.Turn.LEFT)
+				weakened.add(point.toPair())
+			}
+			point.move(1)
+		}
+		return countNewInfections
 	}
 }

@@ -45,6 +45,7 @@ data class Point2D(var x: Int = 0, var y: Int = 0, var direction: Direction = Di
 		direction = when (turn) {
 			Turn.LEFT -> Direction.entries[(direction.ordinal + 3) % 4]
 			Turn.RIGHT -> Direction.entries[(direction.ordinal + 1) % 4]
+			Turn.AROUND -> Direction.entries[(direction.ordinal + 2) % 4]
 		}
 	}
 
@@ -53,7 +54,7 @@ data class Point2D(var x: Int = 0, var y: Int = 0, var direction: Direction = Di
 	}
 
 	enum class Turn {
-		LEFT, RIGHT
+		LEFT, RIGHT, AROUND
 	}
 
 	fun move(steps: Int) {
