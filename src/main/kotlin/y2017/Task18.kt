@@ -5,21 +5,15 @@ import utils.isOnlyLetters
 
 //--- Day 18: Duet ---
 class Task18(val input: List<String>) : Task {
-	private data class Register(val name: String, var value: Long = 0)
-	private data class Instruction(val type: String, val x: String, val y: String)
+	data class Register(val name: String, var value: Long = 0)
+	data class Instruction(val type: String, val x: String, val y: String)
 
 	override fun a(): Any {
 		val registers = mutableMapOf<String, Register>()
 		val instructions = mutableListOf<Instruction>()
 		var lastSound = 0
 		for (line in input) {
-			val parts = line.split(" ")
-			val type = parts[0]
-			val x = parts[1]
-			val y = if (parts.size > 2) parts[2] else ""
-			if (x !in registers) registers[x] = Register(x)
-			if (y !in registers && y.isOnlyLetters()) registers[y] = Register(y)
-			instructions.add(Instruction(type, x, y))
+			instructions.add(toInstruction(line, registers))
 		}
 		var i = 0
 		while (i in instructions.indices) {
@@ -45,6 +39,16 @@ class Task18(val input: List<String>) : Task {
 		}
 
 		return 0
+	}
+
+	private fun toInstruction(line: String, registers: MutableMap<String,Register>): Instruction {
+		val parts = line.split(" ")
+		val type = parts[0]
+		val x = parts[1]
+		val y = if (parts.size > 2) parts[2] else ""
+		if (x !in registers) registers[x] = Register(x)
+		if (y !in registers && y.isOnlyLetters()) registers[y] = Register(y)
+		return Instruction(type, x, y)
 	}
 
 	private fun getValue(registers: Map<String, Register>, value: String): Long {
