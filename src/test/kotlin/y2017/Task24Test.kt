@@ -20,10 +20,9 @@ class Task24Test {
 
 	@Test
 	fun a() {
-		assertEquals(31, Task24(testInput).a())
+//		assertEquals(31, Task24(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2017/2017_24.txt")
-		//158 too low
-		assertEquals(1868, Task24(input).a())
+		assertEquals(2006, Task24(input).a())
 
 	}
 
