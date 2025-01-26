@@ -62,4 +62,7 @@ fun solveLinearEquations2x2(
 fun String.isOnlyLetters(): Boolean = this.all { it.isLetter() }
 fun String.isOnlyDigits(): Boolean = this.all { it.isDigit() }
 
+fun <A, B> Pair<A, B>.reversed(): Pair<B, A> {
+	return second to first
+}
 
