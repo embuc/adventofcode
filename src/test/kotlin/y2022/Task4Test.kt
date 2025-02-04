@@ -8,13 +8,13 @@ class Task4Test {
 	@Test
 	fun a() {
 		var input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_4.txt")
-		assertEquals(0, Task4(input).a())
+		assertEquals(305, Task4(input).a())
 	}
 
 	@Test
 	fun b() {
 		var input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_4.txt")
-		assertEquals(0, Task4(input).b())
+		assertEquals(811, Task4(input).b())
 	}
 
 }

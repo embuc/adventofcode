@@ -14,7 +14,7 @@ class Task4(val input: List<String>) : Task {
 			val maxAInt = maxA.toInt()
 			val minBInt = minB.toInt()
 			val maxBInt = maxB.toInt()
-			if((minAInt <= minBInt) && (maxAInt >= maxBInt) || (minAInt >= minBInt) && (maxAInt <= maxBInt)) {
+			if ((minAInt <= minBInt) && (maxAInt >= maxBInt) || (minAInt >= minBInt) && (maxAInt <= maxBInt)) {
 				count++
 			}
 		}
@@ -22,6 +22,17 @@ class Task4(val input: List<String>) : Task {
 	}
 
 	override fun b(): Int {
-		return 0
+		var count = 0
+		for (line in input) {
+			val (a, b) = line.split(",")
+			val (minA, maxA) = a.split("-")
+			val (minB, maxB) = b.split("-")
+			val rangeA = minA.toInt()..maxA.toInt()
+			val rangeB = minB.toInt()..maxB.toInt()
+			if (rangeA.contains(rangeB.first) || rangeA.contains(rangeB.last) || rangeB.contains(rangeA.first) || rangeB.contains(rangeA.last)) {
+				count++
+			}
+		}
+		return count
 	}
 }
