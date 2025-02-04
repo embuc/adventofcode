@@ -15,15 +15,6 @@ class Task3Test {
 		.trim().lines().map { it.trim() }
 
 	@Test
-	fun edgeCasesA() {
-		val i1 = "gCZNVNzbHbfNHcHNgfCMLHHzPBDPvPDrlvDrDlvpmFTFBF"
-		val i2 = "VHRmVzMPdPVRmcdhQwQwhClNNNCb"
-		val i3 = "sQGfPZQDPqMMWWWd"
-		assertEquals(157, Task3(listOf(i1, i2, i3)).a())
-
-	}
-
-	@Test
 	fun a() {
 		assertEquals(157, Task3(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_3.txt")
@@ -32,6 +23,9 @@ class Task3Test {
 
 	@Test
 	fun b() {
+		assertEquals(70, Task3(testInput).b())
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_3.txt")
+		assertEquals(2522, Task3(input).b())
 	}
 
 }

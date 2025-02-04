@@ -15,11 +15,6 @@ class Task3(val input: List<String>) : Task {
 //			println(common)
 			sum += getPriority(common)
 		}
-//		println('a'.code % 96)
-//		println('p'.code % 96)
-//		println('z'.code)
-//		println('A'.code % 64 + 26)
-//		println('Z'.code)
 		return sum
 	}
 
@@ -36,6 +31,18 @@ class Task3(val input: List<String>) : Task {
 	}
 
 	override fun b(): Any {
-		return 0
+		var sum = 0
+		for (index in input.indices step 3) {
+			val line1 = input[index].toSet()
+			val line2 = input[index + 1].toSet()
+			val line3 = input[index + 2].toSet()
+//			println(line)
+
+			val common = line1.intersect(line2).intersect(line3)
+//			println("line length: ${line.length} s1 length: ${s1.size} s2 length: ${s2.size} common length: ${common.size}")
+//			println(common)
+			sum += getPriority(common)
+		}
+		return sum
 	}
 }
