@@ -9,11 +9,13 @@ class Task5Test {
 	@Test
 	fun a() {
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_5.txt")
-		assertEquals("", Task5(input).a())
+		assertEquals("FCVRLMVQP", Task5(input).a())
 	}
 
 	@Test
 	fun b() {
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_5.txt")
+		assertEquals("RWLWGJGFD", Task5(input).b())
 	}
 
 }
