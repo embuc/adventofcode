@@ -8,10 +8,12 @@ class Task6Test {
 	@Test
 	fun a() {
 		val input = readInputAsString("~/git/aoc-inputs/2022/2022_6.txt")
-		assertEquals(1, Task6(input).a())
+		assertEquals(1892, Task6(input).a())
 	}
 
 	@Test
 	fun b() {
+		val input = readInputAsString("~/git/aoc-inputs/2022/2022_6.txt")
+		assertEquals(2313, Task6(input).b())
 	}
 }

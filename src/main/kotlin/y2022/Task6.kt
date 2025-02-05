@@ -20,6 +20,19 @@ class Task6(val input: String) : Task {
 	}
 
 	override fun b(): Any {
+		val input = input.toCharArray()
+		for (i in input.indices) {
+			if (i < 14) {
+				continue
+			}
+			val set = mutableSetOf<Char>()
+			for (j in 0..<14) {
+				set.add(input[i - j])
+			}
+			if (set.size == 14) {
+				return i + 1
+			}
+		}
 		return 1
 	}
 }
