@@ -23,6 +23,14 @@ class TreeNode<T>(
 		return null
 	}
 
+	fun getRoot(): TreeNode<T> {
+		var current = this
+		while (current.parent != null) {
+			current = current.parent!!
+		}
+		return current
+	}
+
 	// Get the height of the tree (distance to the deepest leaf)
 	fun height(): Int {
 		if (children.isEmpty()) return 1
@@ -122,6 +130,11 @@ class TreeNode<T>(
 		// Only include immediate children values in hash
 		result = 31 * result + children.map { it.value }.hashCode()
 		return result
+	}
+
+	fun traverseAndApply(action: (TreeNode<T>) -> Unit) {
+		action(this)
+		children.forEach { it.traverseAndApply(action) }
 	}
 
 	companion object {
