@@ -12,7 +12,6 @@ class Task7(val input: List<String>) : Task {
 		var i = 0
 		var node = TreeNode(File("/", mutableListOf(), 0), mutableListOf(), null)
 		while (i in input.indices) {
-			println(input[i])
 			val line = input[i]
 			val parts = line.split(" ")
 			if (parts[1] == "cd") {
@@ -31,20 +30,12 @@ class Task7(val input: List<String>) : Task {
 				val file = File(parts[1], mutableListOf(), parts[0].toInt())
 				node.value.children.add(file)
 			}
-//			else if(parts[1] == "ls"){
-				// do nothing, just ignore
-//			}
 			i++
 		}
-		node.getRoot().printTree()
 		val root = node.getRoot()
 		calculateDirectorySizes(root)  // calculate all sizes (whole tree)
 
 		val smallDirs = findDirectoriesUnderThreshold(root, 100_000)
-
-//		smallDirs.forEach { dir ->
-//			println("Directory ${dir.value.name} has size ${dir.value.size}")
-//		}
 
 		return smallDirs.sumOf { it.value.size }
 	}
@@ -62,8 +53,6 @@ class Task7(val input: List<String>) : Task {
 		val matches = mutableListOf<TreeNode<File>>()
 
 		root.traverseAndApply { node ->
-			// Only consider directories (nodes that have children or empty directories)
-			// and check their precalculated size
 			if (node.value.size <= threshold) {
 				matches.add(node)
 			}
@@ -76,8 +65,6 @@ class Task7(val input: List<String>) : Task {
 		val matches = mutableListOf<TreeNode<File>>()
 
 		root.traverseAndApply { node ->
-			// Only consider directories (nodes that have children or empty directories)
-			// and check their precalculated size
 			if (node.value.size >= threshold) {
 				matches.add(node)
 			}
@@ -92,7 +79,6 @@ class Task7(val input: List<String>) : Task {
 		var i = 0
 		var node = TreeNode(File("/", mutableListOf(), 0), mutableListOf(), null)
 		while (i in input.indices) {
-			println(input[i])
 			val line = input[i]
 			val parts = line.split(" ")
 			if (parts[1] == "cd") {
@@ -114,16 +100,11 @@ class Task7(val input: List<String>) : Task {
 			// if "ls" do nothing, just ignore e.g. skip to next line
 			i++
 		}
-		node.getRoot().printTree()
 		val root = node.getRoot()
 		calculateDirectorySizes(root)  // calculate all sizes (whole tree)
 
 		val threshold = node.getRoot().value.size - (totalSize - unusedMinSize)
 		val smallDirs = findDirectoriesOverThreshold(root, threshold)
-		node.getRoot().printTree()
-		println("Total size: ${node.getRoot().value.size}")
-		println("Unused size: $unusedMinSize")
-		println("Threshold: $threshold")
 
 		return smallDirs.minOf { it.value.size }
 	}
