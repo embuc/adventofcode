@@ -13,6 +13,8 @@ class Task8Test {
 
 	@Test
 	fun b() {
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_8.txt")
+		assertEquals(123, Task8(input).b())
 	}
 
 }
