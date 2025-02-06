@@ -5,107 +5,61 @@ import utils.TreeNode
 
 //--- Day 7: No Space Left On Device ---
 class Task7(val input: List<String>) : Task {
-
 	data class File(val name: String, val children: MutableList<File>, var size: Int)
 
-	override fun a(): Any {
-		var i = 0
-		var node = TreeNode(File("/", mutableListOf(), 0), mutableListOf(), null)
-		while (i in input.indices) {
-			val line = input[i]
+	private fun buildFileSystem(): TreeNode<File> {
+		var currentNode = TreeNode(File("/", mutableListOf(), 0), mutableListOf(), null)
+
+		input.forEach { line ->
 			val parts = line.split(" ")
-			if (parts[1] == "cd") {
-				if (parts[2] == "..") {
-					node = node.parent!!
-				} else if (parts[2] == "/") {
-					node = node.getRoot()
-				} else {
-					val dir = node.children.find { it.value.name == parts[2] }!!
-					node = dir
-				}
-			} else if (parts[0] == "dir") {
-				val dir = File(parts[1], mutableListOf(), 0)
-				node.addChild(dir)
-			} else if(parts[0].toIntOrNull() != null) {
-				val file = File(parts[1], mutableListOf(), parts[0].toInt())
-				node.value.children.add(file)
+			when {
+				parts[1] == "cd" -> currentNode = handleCdCommand(currentNode, parts[2])
+				parts[0] == "dir" -> currentNode.addChild(File(parts[1], mutableListOf(), 0))
+				parts[0].toIntOrNull() != null -> currentNode.value.children.add(
+					File(parts[1], mutableListOf(), parts[0].toInt())
+				)
 			}
-			i++
 		}
-		val root = node.getRoot()
-		calculateDirectorySizes(root)  // calculate all sizes (whole tree)
-
-		val smallDirs = findDirectoriesUnderThreshold(root, 100_000)
-
-		return smallDirs.sumOf { it.value.size }
+		return currentNode.getRoot()
 	}
 
-	fun calculateDirectorySizes(node: TreeNode<File>): Int {
-		val immediateFilesSize = node.value.children.sumOf { it.size }
-		val subdirectoriesSize = node.children.sumOf { calculateDirectorySizes(it) }
-		val totalSize = immediateFilesSize + subdirectoriesSize
-		// Update the current node's size
+	private fun handleCdCommand(currentNode: TreeNode<File>, destination: String): TreeNode<File> = when(destination) {
+		".." -> currentNode.parent!!
+		"/" -> currentNode.getRoot()
+		else -> currentNode.children.find { it.value.name == destination }!!
+	}
+
+	private fun calculateDirectorySizes(node: TreeNode<File>): Int {
+		val totalSize = node.value.children.sumOf { it.size } +
+				node.children.sumOf { calculateDirectorySizes(it) }
 		node.value.size = totalSize
 		return totalSize
 	}
 
-	fun findDirectoriesUnderThreshold(root: TreeNode<File>, threshold: Int): List<TreeNode<File>> {
+	private fun findDirectories(root: TreeNode<File>, predicate: (Int) -> Boolean): List<TreeNode<File>> {
 		val matches = mutableListOf<TreeNode<File>>()
-
 		root.traverseAndApply { node ->
-			if (node.value.size <= threshold) {
+			if (predicate(node.value.size)) {
 				matches.add(node)
 			}
 		}
-
 		return matches
 	}
 
-	fun findDirectoriesOverThreshold(root: TreeNode<File>, threshold: Int): List<TreeNode<File>> {
-		val matches = mutableListOf<TreeNode<File>>()
-
-		root.traverseAndApply { node ->
-			if (node.value.size >= threshold) {
-				matches.add(node)
-			}
-		}
-
-		return matches
+	override fun a(): Any {
+		val root = buildFileSystem()
+		calculateDirectorySizes(root)
+		return findDirectories(root) { it <= 100_000 }.sumOf { it.value.size }
 	}
 
 	override fun b(): Any {
-		val totalSize = 70000000
-		val unusedMinSize = 30000000
-		var i = 0
-		var node = TreeNode(File("/", mutableListOf(), 0), mutableListOf(), null)
-		while (i in input.indices) {
-			val line = input[i]
-			val parts = line.split(" ")
-			if (parts[1] == "cd") {
-				if (parts[2] == "..") {
-					node = node.parent!!
-				} else if (parts[2] == "/") {
-					node = node.getRoot()
-				} else {
-					val dir = node.children.find { it.value.name == parts[2] }!!
-					node = dir
-				}
-			} else if (parts[0] == "dir") {
-				val dir = File(parts[1], mutableListOf(), 0)
-				node.addChild(dir)
-			} else if(parts[0].toIntOrNull() != null) {
-				val file = File(parts[1], mutableListOf(), parts[0].toInt())
-				node.value.children.add(file)
-			}
-			// if "ls" do nothing, just ignore e.g. skip to next line
-			i++
-		}
-		val root = node.getRoot()
-		calculateDirectorySizes(root)  // calculate all sizes (whole tree)
+		val root = buildFileSystem()
+		calculateDirectorySizes(root)
 
-		val threshold = node.getRoot().value.size - (totalSize - unusedMinSize)
-		val smallDirs = findDirectoriesOverThreshold(root, threshold)
+		val unusedSpace = 70_000_000 - root.value.size
+		val requiredCleanup = 30_000_000 - unusedSpace
 
-		return smallDirs.minOf { it.value.size }
+		return findDirectories(root) { it >= requiredCleanup }
+			.minOf { it.value.size }
 	}
 }
