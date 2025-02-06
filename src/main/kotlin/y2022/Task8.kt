@@ -4,112 +4,75 @@ import Task
 
 //--- Day 8: Treetop Tree House ---
 class Task8(val input: List<String>) : Task {
-
 	private data class Tree(val height: Int, var visible: Boolean = false, var scenic: Int = 0)
 
 	override fun a(): Any {
 		val forest = populateForest()
-		//traverse left to right, right to left, up to down, down to up and mark visible trees
-		for (i in 0 until forest.size) {
-			var max = -1
-			for (j in 0 until forest[i].size) {
-				if (forest[i][j].height > max) {
-					forest[i][j].visible = true
-					max = forest[i][j].height
-				}
-			}
-		}
-		for (i in 0 until forest.size) {
-			var max = -1
-			for (j in forest[i].size - 1 downTo 0) {
-				if (forest[i][j].height > max) {
-					forest[i][j].visible = true
-					max = forest[i][j].height
-				}
-			}
-		}
-		for (j in 0 until forest[0].size) {
-			var max = -1
-			for (i in 0 until forest.size) {
-				if (forest[i][j].height > max) {
-					forest[i][j].visible = true
-					max = forest[i][j].height
-				}
-			}
-		}
-		for (j in 0 until forest[0].size) {
-			var max = -1
-			for (i in forest.size - 1 downTo 0) {
-				if (forest[i][j].height > max) {
-					forest[i][j].visible = true
-					max = forest[i][j].height
-				}
-			}
-		}
-		return forest.sumOf { it.count { it.visible } }
+		checkVisibilityFromAllSides(forest)
+		return forest.sumOf { row -> row.count { it.visible } }
 	}
 
-	private fun populateForest(): MutableList<MutableList<Tree>> {
-		val forest = MutableList<MutableList<Tree>>(input.size) { mutableListOf() }
-		for ((i, line) in input.withIndex()) {
-			println(line)
-			for (d in line) {
-				forest[i].add(Tree(d - '0'))
+	private fun checkVisibilityFromAllSides(forest: MutableList<MutableList<Tree>>) {
+		// Left to right
+		checkVisibilityInDirection(forest) { i, j -> i to j }
+		// Right to left
+		checkVisibilityInDirection(forest) { i, j -> i to (forest[0].size - 1 - j) }
+		// Top to bottom
+		checkVisibilityInDirection(forest) { i, j -> j to i }
+		// Bottom to top
+		checkVisibilityInDirection(forest) { i, j -> (forest.size - 1 - j) to i }
+	}
+
+	private fun checkVisibilityInDirection(forest: MutableList<MutableList<Tree>>, getPosition: (Int, Int) -> Pair<Int, Int>) {
+		for (i in forest.indices) {
+			var maxHeight = -1
+			for (j in forest[0].indices) {
+				val (row, col) = getPosition(i, j)
+				val currentTree = forest[row][col]
+				if (currentTree.height > maxHeight) {
+					currentTree.visible = true
+					maxHeight = currentTree.height
+				}
 			}
 		}
-		return forest
 	}
 
 	override fun b(): Any {
-		var forest = populateForest()
-		// traverse each tree and calculate scenic value
-		for (i in 0 until forest.size) {
-			for (j in 0 until forest[i].size) {
-				forest[i][j].scenic = calculateScenic(forest, i, j)
-			}
-		}
-		return forest.maxOf { it.maxOf { it.scenic } }
+		val forest = populateForest()
+		calculateAllScenicScores(forest)
+		return forest.maxOf { row -> row.maxOf { it.scenic } }
 	}
 
-	private fun calculateScenic(
-		lists: MutableList<MutableList<Tree>>,
-		i: Int,
-		j: Int
-	): Int {
-		// calculate scenic value for tree by going in all 4 cardinal directions until same height tree is found, then multiply 4 values
-		val height = lists[i][j].height
-		var left = 0
-		var right = 0
-		var up = 0
-		var down = 0
-		for (k in j - 1 downTo 0) {
-			if (lists[i][k].height >= height) {
-				left++//count even this one
-				break
+	private fun calculateAllScenicScores(forest: MutableList<MutableList<Tree>>) {
+		for (i in forest.indices) {
+			for (j in forest[i].indices) {
+				forest[i][j].scenic = calculateScenicScore(forest, i, j)
 			}
-			left++
 		}
-		for (k in j + 1 until lists[i].size) {
-			if (lists[i][k].height >= height) {
-				right++//count even this one
-				break
-			}
-			right++
+	}
+
+	private fun calculateScenicScore(forest: MutableList<MutableList<Tree>>, row: Int, col: Int): Int {
+		val height = forest[row][col].height
+		val leftCount = countVisibleTrees(height, (col - 1 downTo 0)) { i -> forest[row][i] }
+		val rightCount = countVisibleTrees(height, (col + 1 until forest[0].size)) { i -> forest[row][i] }
+		val upCount = countVisibleTrees(height, (row - 1 downTo 0)) { i -> forest[i][col] }
+		val downCount = countVisibleTrees(height, (row + 1 until forest.size)) { i -> forest[i][col] }
+
+		return leftCount * rightCount * upCount * downCount
+	}
+
+	private fun countVisibleTrees(height: Int, range: IntProgression, getTree: (Int) -> Tree): Int {
+		var count = 0
+		for (i in range) {
+			count++
+			if (getTree(i).height >= height) break
 		}
-		for (k in i - 1 downTo 0) {
-			if (lists[k][j].height >= height) {
-				up++//count even this one
-				break
-			}
-			up++
-		}
-		for (k in i + 1 until lists.size) {
-			if (lists[k][j].height >= height) {
-				down++//count even this one
-				break
-			}
-			down++
-		}
-		return left * right * up * down
+		return count
+	}
+
+	private fun populateForest(): MutableList<MutableList<Tree>> {
+		return input.map { line ->
+			line.map { char -> Tree(char - '0') }.toMutableList()
+		}.toMutableList()
 	}
 }
