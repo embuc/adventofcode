@@ -13,7 +13,6 @@ class Task9(val input: List<String>) : Task {
 		visited.add(tail)
 		for (line in input) {
 			val (direction, steps) = line.split(" ")
-			println("dir: $direction steps: $steps")
 			repeat(steps.toInt()) {
 				when (direction) {
 					"L" -> {
@@ -80,7 +79,6 @@ class Task9(val input: List<String>) : Task {
 		visited.add(tail9)
 		for (line in input) {
 			val (direction, steps) = line.split(" ")
-			println("dir: $direction steps: $steps")
 			repeat(steps.toInt()) {
 				when (direction) {
 					"L" -> {

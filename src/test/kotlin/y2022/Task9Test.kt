@@ -38,7 +38,7 @@ class Task9Test {
 	fun b() {
 		assertEquals(36, Task9(testInputB).b())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_9.txt")
-		assertEquals(6406, Task9(input).b())
+		assertEquals(2643, Task9(input).b())
 	}
 
 }
