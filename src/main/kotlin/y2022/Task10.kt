@@ -5,13 +5,14 @@ import Task
 //--- Day 10: Cathode-Ray Tube ---
 class Task10(val input: List<String>) : Task {
 
+	val debug = false
+
 	override fun a(): Any {
 		var cycles = 1
 		var x = 1
 		var sum = 0
 		for (line in input) {
 			if (cycles == 20 || cycles == 60 || cycles == 100 || cycles == 140 || cycles == 180 || cycles == 220) {
-				println("begin: x: $x cycles: $cycles ")
 				sum += x * cycles
 			}
 			if (line == "noop") {
@@ -21,7 +22,6 @@ class Task10(val input: List<String>) : Task {
 			val value = line.split(" ")[1].toInt()
 			cycles++
 			if (cycles == 20 || cycles == 60 || cycles == 100 || cycles == 140 || cycles == 180 || cycles == 220) {
-				println("mellan: x: $x cycles: $cycles ")
 				sum += x * cycles
 			}
 			x += value
@@ -35,13 +35,13 @@ class Task10(val input: List<String>) : Task {
 		var x = 1
 		for (line in input) {
 			// Draw for current cycle
-			if ((cycles - 1)%40 == x || (cycles - 1)%40 == (x + 1) || (cycles - 1)%40 == (x - 1)) {
-				print('#')
+			if ((cycles - 1) % 40 == x || (cycles - 1) % 40 == (x + 1) || (cycles - 1) % 40 == (x - 1)) {
+				if(debug) print('#')
 			} else {
-				print('.')
+				if(debug) print('.')
 			}
 			if (cycles % 40 == 0) {
-				println()
+				if(debug) println()
 			}
 			if (line == "noop") {
 				cycles++
@@ -51,13 +51,13 @@ class Task10(val input: List<String>) : Task {
 			val value = line.split(" ")[1].toInt()
 
 			// Draw for next cycle
-			if ((cycles - 1)%40 == x || (cycles - 1)%40 == (x + 1) || (cycles - 1)%40 == (x - 1)) {
-				print('#')
+			if ((cycles - 1) % 40 == x || (cycles - 1) % 40 == (x + 1) || (cycles - 1) % 40 == (x - 1)) {
+				if(debug) print('#')
 			} else {
-				print('.')
+				if(debug) print('.')
 			}
 			if (cycles % 40 == 0) {
-				println()
+				if(debug) println()
 			}
 			cycles++
 			x += value
