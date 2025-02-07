@@ -38,7 +38,6 @@ class Task9(val input: List<String>) : Task {
 				}
 				visited.add(tail)
 			}
-
 		}
 		return visited.size
 	}
@@ -67,6 +66,78 @@ class Task9(val input: List<String>) : Task {
 	}
 
 	override fun b(): Any {
-		return 0
+		var head: Pair<Int, Int> = Pair(0, 0)
+		var tail1: Pair<Int, Int> = Pair(0, 0)
+		var tail2: Pair<Int, Int> = Pair(0, 0)
+		var tail3: Pair<Int, Int> = Pair(0, 0)
+		var tail4: Pair<Int, Int> = Pair(0, 0)
+		var tail5: Pair<Int, Int> = Pair(0, 0)
+		var tail6: Pair<Int, Int> = Pair(0, 0)
+		var tail7: Pair<Int, Int> = Pair(0, 0)
+		var tail8: Pair<Int, Int> = Pair(0, 0)
+		var tail9: Pair<Int, Int> = Pair(0, 0)
+		val visited = mutableSetOf<Pair<Int, Int>>()
+		visited.add(tail9)
+		for (line in input) {
+			val (direction, steps) = line.split(" ")
+			println("dir: $direction steps: $steps")
+			repeat(steps.toInt()) {
+				when (direction) {
+					"L" -> {
+						head = Pair(head.first, head.second - 1)
+						tail1 = calculateTail(head, tail1)
+						tail2 = calculateTail(tail1, tail2)
+						tail3 = calculateTail(tail2, tail3)
+						tail4 = calculateTail(tail3, tail4)
+						tail5 = calculateTail(tail4, tail5)
+						tail6 = calculateTail(tail5, tail6)
+						tail7 = calculateTail(tail6, tail7)
+						tail8 = calculateTail(tail7, tail8)
+						tail9 = calculateTail(tail8, tail9)
+					}
+
+					"D" -> {
+						head = Pair(head.first + 1, head.second)
+						tail1 = calculateTail(head, tail1)
+						tail2 = calculateTail(tail1, tail2)
+						tail3 = calculateTail(tail2, tail3)
+						tail4 = calculateTail(tail3, tail4)
+						tail5 = calculateTail(tail4, tail5)
+						tail6 = calculateTail(tail5, tail6)
+						tail7 = calculateTail(tail6, tail7)
+						tail8 = calculateTail(tail7, tail8)
+						tail9 = calculateTail(tail8, tail9)
+					}
+
+					"R" -> {
+						head = Pair(head.first, head.second + 1)
+						tail1 = calculateTail(head, tail1)
+						tail2 = calculateTail(tail1, tail2)
+						tail3 = calculateTail(tail2, tail3)
+						tail4 = calculateTail(tail3, tail4)
+						tail5 = calculateTail(tail4, tail5)
+						tail6 = calculateTail(tail5, tail6)
+						tail7 = calculateTail(tail6, tail7)
+						tail8 = calculateTail(tail7, tail8)
+						tail9 = calculateTail(tail8, tail9)
+					}
+
+					"U" -> {
+						head = Pair(head.first - 1, head.second)
+						tail1 = calculateTail(head, tail1)
+						tail2 = calculateTail(tail1, tail2)
+						tail3 = calculateTail(tail2, tail3)
+						tail4 = calculateTail(tail3, tail4)
+						tail5 = calculateTail(tail4, tail5)
+						tail6 = calculateTail(tail5, tail6)
+						tail7 = calculateTail(tail6, tail7)
+						tail8 = calculateTail(tail7, tail8)
+						tail9 = calculateTail(tail8, tail9)
+					}
+				}
+				visited.add(tail9)
+			}
+		}
+		return visited.size
 	}
 }
