@@ -158,7 +158,7 @@ noop
 	fun a() {
 		assertEquals(13140, Task10(testInput).a())
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2022/2022_10.txt")
-		assertEquals(0, Task10(input).a())
+		assertEquals(13520, Task10(input).a())
 	}
 
 	@Test
