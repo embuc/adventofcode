@@ -22,12 +22,6 @@ class Task11(val input: List<String>) : Task {
 				continue
 			}
 			if (line.startsWith("Monkey")) {
-				println(line)
-				println(input[ix + 1])
-				println(input[ix + 2])
-				println(input[ix + 3])
-				println(input[ix + 4])
-				println(input[ix + 5])
 				val name = line.split(" ")[1].replace(":", "")
 				val items = mutableListOf<Int>()
 				input[ix + 1].split(" ").map { it.replace(",", "") }.filter { it.toIntOrNull() != null }.forEach { items.add(it.toInt()) }
@@ -44,7 +38,6 @@ class Task11(val input: List<String>) : Task {
 				val ifFalse = input[ix + 5].trim().split(" ")[5]
 				val monkey = Monkey(name, items, testDivisible, operation, ifTrue, ifFalse)
 				monkeys.add(monkey)
-				println(monkey)
 			}
 		}
 		//map monkeys to their names
@@ -53,7 +46,6 @@ class Task11(val input: List<String>) : Task {
 			for (monkey in monkeys) {
 				for (item in monkey.items) {
 					monkey.inspected++
-					println(item)
 					var newItem = monkey.operation(item)
 					newItem = newItem / 3
 					if (newItem % monkey.testDivisible == 0) {
@@ -66,9 +58,8 @@ class Task11(val input: List<String>) : Task {
 			}
 		}
 		monkeys.sortByDescending { it.inspected }
-		monkeys.forEach { println(it) }
-
 //		monkeys.forEach { println(it) }
+
 		return monkeys[0].inspected * monkeys[1].inspected
 	}
 
