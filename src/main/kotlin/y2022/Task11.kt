@@ -46,14 +46,7 @@ class Task11(val input: List<String>) : Task {
 				}
 				monkey.items.clear()
 			}
-			if((iteration+1) % 1000 == 0 || (iteration+1) == 1 || (iteration+1) == 20){
-				println("Round ${iteration+1}")
-				for(monkey in monkeys){
-					println("${monkey.name} ${monkey.inspected}")
-				}
-				println()
 			}
-		}
 		monkeys.sortByDescending { it.inspected }
 		return monkeys[0].inspected * monkeys[1].inspected
 	}
