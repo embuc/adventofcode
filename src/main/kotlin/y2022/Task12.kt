@@ -19,7 +19,11 @@ class Task12(val input: List<String>) : Task {
 	}
 
 	override fun b(): Any {
-		return 0
+		val grid = toCharGrid(input)
+		Array<CharArray>(input.size) { CharArray(input[0].length) }
+		val start = findChar(grid, 'E')
+		val path = findShortestPathToAnyEnd(grid, start, 'a')
+		return path.size - 1
 	}
 
 	fun findShortestPath(gridIncoming: Array<CharArray>, start: IntArray, end: IntArray): Array<IntArray> {
@@ -35,7 +39,6 @@ class Task12(val input: List<String>) : Task {
 		visited[start[0]][start[1]] = true
 		var endNode: MinimalBFS.Node? = null
 
-		// BFS loop
 		while (!queue.isEmpty()) {
 			val current = queue.poll()
 
@@ -95,5 +98,75 @@ class Task12(val input: List<String>) : Task {
 			return true
 		}
 		return newCh.code - ch.code == 1
+	}
+	private fun canMoveThereB(ch: Char, newCh: Char): Boolean {
+		if(ch == newCh) {
+			return true
+		}
+		if(ch == 'E'){
+			return newCh == 'z'
+		}
+		//allow going 'up' freely - not really as we are going backwards
+		if(ch.code < newCh.code) {
+			return true
+		}
+		return newCh.code - ch.code == -1
+	}
+
+	fun findShortestPathToAnyEnd(gridIncoming: Array<CharArray>, start: IntArray, endChar: Char): Array<IntArray> {
+		val grid = Array<CharArray>(gridIncoming.size) { CharArray(gridIncoming[0].size) }
+		System.arraycopy(gridIncoming, 0, grid, 0, gridIncoming.size)
+		val rows = grid.size
+		val cols = grid[0].size
+
+		val queue: Queue<MinimalBFS.Node> = LinkedList<MinimalBFS.Node>()
+		queue.add(MinimalBFS.Node(start[0], start[1]))
+		val visited = Array<BooleanArray>(rows) { BooleanArray(cols) }
+		visited[start[0]][start[1]] = true
+		var endNode: MinimalBFS.Node? = null
+
+		while (!queue.isEmpty()) {
+			val current = queue.poll()
+
+			// Goal Check: Check if current node is the endpoint character
+			if (grid[current.x][current.y] == endChar) {
+				endNode = current // We have reached one of the ends
+				break
+			}
+
+			// Explore neighbors (up, down, left, right)
+			val directions = arrayOf<IntArray>(intArrayOf(0, 1), intArrayOf(1, 0), intArrayOf(0, -1), intArrayOf(-1, 0))
+			for (direction in directions) {
+				val newX = current.x + direction[0]
+				val newY = current.y + direction[1]
+				// Check for valid positions and if we can move there
+				val insideBounds = newX >= 0 && newX < rows && newY >= 0 && newY < cols
+				val validNeighbor = insideBounds && canMoveThereB(grid[current.x][current.y], grid[newX][newY])
+				if (validNeighbor && !visited[newX][newY]) {
+					// Enqueue neighbor
+					queue.add(MinimalBFS.Node(newX, newY, current))
+					visited[newX][newY] = true
+				}
+			}
+		}
+
+		if (endNode == null) {
+			return emptyArray() // No path found to any end point
+		}
+
+		// Reconstruct path
+		val path = LinkedList<IntArray>()
+		var current: MinimalBFS.Node? = endNode
+		while (current != null) {
+			path.addFirst(intArrayOf(current.x, current.y)) // Add current to front
+			current = current.parent // Get its parent
+		}
+
+		val shortestPath = Array<IntArray>(path.size) { IntArray(2) }
+		for (i in path.indices) {
+			shortestPath[i] = path.get(i)
+		}
+
+		return shortestPath
 	}
 }
