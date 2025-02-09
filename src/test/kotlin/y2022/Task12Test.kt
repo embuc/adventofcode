@@ -22,6 +22,7 @@ class Task12Test {
 
 	@Test
 	fun b() {
+		assertEquals(29, Task12(testInput).b())
 	}
 
 }
