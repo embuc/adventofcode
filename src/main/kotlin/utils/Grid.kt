@@ -90,6 +90,21 @@ fun printGridColor(grid: Array<CharArray>) {
 	}
 }
 
+fun printPathInGridColor(grid: Array<CharArray>, path: Array<IntArray>) {
+	println("Grid size x: ${grid.size} y: ${grid[0].size}")
+	grid.forEachIndexed { x, row ->
+		row.forEachIndexed { y, char ->
+			val isInPath = path.any { it[0] == x && it[1] == y }
+			when {
+				isInPath -> ConsoleColors.printGreen(char.toString())
+				char == '#' -> ConsoleColors.printGray(char.toString())
+				else -> ConsoleColors.printLightGray(char.toString())
+			}
+		}
+		println()
+	}
+}
+
 fun resetGrid(grid: Array<Array<Triple<Int, Int, Char>>>) {
 	for (i in grid.indices) {
 		for (j in grid[i].indices) {
