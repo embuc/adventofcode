@@ -7,14 +7,18 @@ class Task14(val input: List<String>) : Task {
 
 	override fun a(): Any {
 		val grid = parseInput(input)
-		val gridMap = buildGrid(grid)
-		val sandCount = simulateSand(gridMap, gridMap.keys.maxOf { it.second })
-		visualizeGridCropped(gridMap)
+		val gridMap = buildGrid(grid, floor = false)
+		val sandCount = simulateSand(gridMap, gridMap.keys.maxOf { it.second }, floor = false)
+//		visualizeGridCropped(gridMap)
 		return sandCount
 	}
 
 	override fun b(): Any {
-		return 0
+		val grid = parseInput(input)
+		val gridMap = buildGrid(grid, floor = true)
+		val sandCount = simulateSand(gridMap, gridMap.keys.maxOf { it.second }, floor = true)
+//		visualizeGridCropped(gridMap)
+		return sandCount
 	}
 
 	fun parseInput(inputLines: List<String>): List<List<Pair<Int, Int>>> {
@@ -30,7 +34,7 @@ class Task14(val input: List<String>) : Task {
 		return paths
 	}
 
-	fun buildGrid(paths: List<List<Pair<Int, Int>>>): MutableMap<Pair<Int, Int>, Char> {
+	fun buildGrid(paths: List<List<Pair<Int, Int>>>, floor: Boolean): MutableMap<Pair<Int, Int>, Char> {
 		val grid = mutableMapOf<Pair<Int, Int>, Char>()
 		for (path in paths) {
 			for (i in 0 until path.size - 1) {
@@ -47,15 +51,24 @@ class Task14(val input: List<String>) : Task {
 				}
 			}
 		}
+		if (floor) {
+			val maxY = grid.keys.maxOf { it.second } + 2
+			val minX = grid.keys.minOf { it.first } - 20000
+			val maxX = grid.keys.maxOf { it.first } + 50000
+			for (x in minX..maxX) {
+				grid[x to maxY] = '#'
+			}
+		}
 		return grid
 	}
 
-	fun simulateSand(grid: MutableMap<Pair<Int, Int>, Char>, maxY: Int): Int {
+	fun simulateSand(grid: MutableMap<Pair<Int, Int>, Char>, maxY: Int, floor: Boolean): Int {
 		var sandCount = 0
+		var maxY = if(floor) maxY + 2 else maxY
 		while (true) {
 			var x = 500
 			var y = 0
-			while (y <= maxY) {
+			while (y <= maxY || grid[x to y+1] == 'o') {
 				if ((x to y + 1) !in grid) {
 					y += 1
 				} else if ((x - 1 to y + 1) !in grid) {
@@ -64,13 +77,19 @@ class Task14(val input: List<String>) : Task {
 				} else if ((x + 1 to y + 1) !in grid) {
 					x += 1
 					y += 1
-				} else {
+//				} else if(floor && y == (maxY-1)) {
+//					grid[x to y] = 'o'
+//					sandCount += 1
+//					break
+				}
+				else {
 					grid[x to y] = 'o'
 					sandCount += 1
 					break
 				}
 			}
-			if (y > maxY) {
+			if (y > maxY || grid[500 to 0] == 'o') {
+				println("Reached the top y: $y top: ${grid[500 to 0]} maxY: $maxY" )
 				break
 			}
 		}
