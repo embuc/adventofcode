@@ -19,8 +19,6 @@ class Task15(val input: List<String>, val targetRow: Int) : Task {
 			val beaconY = parts[9].replace("y=", "").toInt()
 			val r = manhattanDistance(x to y, beaconX to beaconY)
 			val sensor = Sensor(x, y, beaconX, beaconY, r)
-//			println(line)
-//			println(sensor)
 			sensors.add(sensor)
 		}
 
@@ -63,21 +61,6 @@ class Task15(val input: List<String>, val targetRow: Int) : Task {
 			mergedRanges.any { range -> x in range }
 		}
 
-//		var forbidden = mutableSetOf<Int>()
-//		for (i in sensors.indices) {
-//			val sensor1 = sensors[i]
-//			val vDistance = abs(sensor1.y - targetRow)
-//			if(sensor1.r >= vDistance) {
-//				val xMinus = sensor1.x - (sensor1.r - vDistance)
-//				val xPlus = sensor1.x + (sensor1.r - vDistance)
-//				for (x in xMinus..xPlus) {
-//					forbidden.add(x)
-//				}
-//			}
-//		}
-//		return forbidden.size - beaconsOnTargetRow.count { x ->
-//			mergedRanges.any { range -> x in range }
-//		}
 		return adjustedForbidden
 	}
 
