@@ -2,6 +2,7 @@ package y2022
 
 import Task
 import utils.manhattanDistance
+import utils.mergeRanges
 import kotlin.math.abs
 
 //--- Day 15: Beacon Exclusion Zone ---
@@ -10,17 +11,7 @@ class Task15(val input: List<String>, val targetRow: Int) : Task {
 	data class Sensor(val x: Int, val y: Int, val beaconX:Int, val beaconY:Int, val r: Int)
 
 	override fun a(): Any {
-		val sensors = mutableListOf<Sensor>()
-		for (line in input) {
-			val parts = line.split(" ")
-			val x = parts[2].replace("x=", "").replace(",","").toInt()
-			val y = parts[3].replace("y=", "").replace(":","").toInt()
-			val beaconX = parts[8].replace("x=", "").replace(",","").toInt()
-			val beaconY = parts[9].replace("y=", "").toInt()
-			val r = manhattanDistance(x to y, beaconX to beaconY)
-			val sensor = Sensor(x, y, beaconX, beaconY, r)
-			sensors.add(sensor)
-		}
+		val sensors = parseSensors()
 
 		val forbiddenRanges = mutableListOf<IntRange>()
 		for (sensor in sensors) {
@@ -30,23 +21,6 @@ class Task15(val input: List<String>, val targetRow: Int) : Task {
 				val xPlus = sensor.x + (sensor.r - vDistance)
 				forbiddenRanges.add(xMinus..xPlus)
 			}
-		}
-
-		fun mergeRanges(ranges: List<IntRange>): List<IntRange> {
-			val sortedRanges = ranges.sortedBy { it.first }
-			val merged = mutableListOf<IntRange>()
-			var currentRange = sortedRanges[0]
-			for (range in sortedRanges.drop(1)) {
-				if (range.first <= currentRange.last + 1) {
-					// Overlapping or adjacent ranges
-					currentRange = minOf(currentRange.first, range.first)..maxOf(currentRange.last, range.last)
-				} else {
-					merged.add(currentRange)
-					currentRange = range
-				}
-			}
-			merged.add(currentRange)
-			return merged
 		}
 
 		val mergedRanges = mergeRanges(forbiddenRanges)
@@ -83,7 +57,7 @@ class Task15(val input: List<String>, val targetRow: Int) : Task {
 				}
 			}
 		}
-		throw IllegalStateException("Distress beacon not found")
+		throw IllegalStateException("Bad luck :/")
 	}
 
 	fun isCovered(x: Int, y: Int, sensors: List<Sensor>): Boolean {
@@ -98,22 +72,26 @@ class Task15(val input: List<String>, val targetRow: Int) : Task {
 	fun computeTuningFrequency(x: Int, y: Int): Long {
 		return x * 4_000_000L + y
 	}
+
 	override fun b(): Any {
+		val sensors = parseSensors()
+		val distressBeacon = findDistressBeacon(sensors, 4_000_000)
+		val tuningFrequency = computeTuningFrequency(distressBeacon.first, distressBeacon.second)
+		return tuningFrequency
+	}
+
+	private fun parseSensors(): MutableList<Sensor> {
 		val sensors = mutableListOf<Sensor>()
 		for (line in input) {
 			val parts = line.split(" ")
-			val x = parts[2].replace("x=", "").replace(",","").toInt()
-			val y = parts[3].replace("y=", "").replace(":","").toInt()
-			val beaconX = parts[8].replace("x=", "").replace(",","").toInt()
+			val x = parts[2].replace("x=", "").replace(",", "").toInt()
+			val y = parts[3].replace("y=", "").replace(":", "").toInt()
+			val beaconX = parts[8].replace("x=", "").replace(",", "").toInt()
 			val beaconY = parts[9].replace("y=", "").toInt()
 			val r = manhattanDistance(x to y, beaconX to beaconY)
 			val sensor = Sensor(x, y, beaconX, beaconY, r)
 			sensors.add(sensor)
 		}
-
-		val distressBeacon = findDistressBeacon(sensors, 4_000_000)
-		val tuningFrequency = computeTuningFrequency(distressBeacon.first, distressBeacon.second)
-		println("Tuning Frequency: $tuningFrequency")
-		return tuningFrequency
+		return sensors
 	}
 }

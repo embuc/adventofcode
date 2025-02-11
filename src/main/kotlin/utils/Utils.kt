@@ -66,3 +66,20 @@ fun <A, B> Pair<A, B>.reversed(): Pair<B, A> {
 	return second to first
 }
 
+fun mergeRanges(ranges: List<IntRange>): List<IntRange> {
+	val sortedRanges = ranges.sortedBy { it.first }
+	val merged = mutableListOf<IntRange>()
+	var currentRange = sortedRanges[0]
+	for (range in sortedRanges.drop(1)) {
+		if (range.first <= currentRange.last + 1) {
+			// Overlapping or adjacent ranges
+			currentRange = minOf(currentRange.first, range.first)..maxOf(currentRange.last, range.last)
+		} else {
+			merged.add(currentRange)
+			currentRange = range
+		}
+	}
+	//dont forget to add the last range
+	merged.add(currentRange)
+	return merged
+}
