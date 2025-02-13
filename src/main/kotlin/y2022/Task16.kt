@@ -17,88 +17,180 @@ class Task16(val input: List<String>) : Task {
 		val valves = parseInput(input)
 		val distances = computeShortestPaths(valves)
 
-		// First, get all valves with positive flow rate
-		val valvesWithFlow = valves.filter { it.value.flowRate > 0 }.keys.toSet()
+		// Precompute maximum possible pressure for each valve at each time
+		val maxPotentialPressure = mutableMapOf<Pair<String, Int>, Int>()
+		val valvesWithFlow = valves.filter { it.value.flowRate > 0 }
 
-		// Try all possible ways to split the work between you and elephant
+		for (valve in valvesWithFlow.keys) {
+			for (time in 0..26) {
+				maxPotentialPressure[valve to time] = valves[valve]!!.flowRate * time
+			}
+		}
+
+		// Precompute best possible pressure for remaining time
+		val bestPossibleAtTime = IntArray(27)
+		for (time in 0..26) {
+			bestPossibleAtTime[time] = valvesWithFlow.values
+				.sortedByDescending { it.flowRate }
+				.take((time + 1) / 2) // We can at best open a valve every 2 minutes
+				.sumOf { it.flowRate * (time - 1) }
+		}
+
 		var maxPressure = 0
+		val valvesWithFlowList = valvesWithFlow.keys.toList()
+		val totalValves = valvesWithFlowList.size
 
-		// Generate all possible subsets of valves to try
-		for (i in 0..(1 shl valvesWithFlow.size)) {
-			val yourValves = mutableSetOf<String>()
-			val elephantValves = mutableSetOf<String>()
+		// Function to estimate upper bound for a path
+		fun estimateUpperBound(
+			valve: String,
+			timeLeft: Int,
+			opened: Set<String>,
+			allowedValves: Set<String>
+		): Int {
+			val remainingValves = allowedValves - opened
+			if (remainingValves.isEmpty() || timeLeft <= 1) return 0
 
-			// Distribute valves between you and elephant based on binary representation
-			valvesWithFlow.forEachIndexed { index, valve ->
-				if ((i and (1 shl index)) != 0) {
-					yourValves.add(valve)
-				} else {
-					elephantValves.add(valve)
-				}
+			// Sort remaining valves by potential pressure
+			val sorted = remainingValves.sortedByDescending { v ->
+				valves[v]!!.flowRate * maxOf(0, timeLeft - distances[valve]!![v]!! - 1)
 			}
 
-			// Calculate maximum pressure for both paths independently
-			val yourPressure = maxPressure(
-				"AA",
-				26,
-				emptySet(),
-				valves,
-				distances,
-				mutableMapOf(),
-				yourValves
-			)
+			var estimate = 0
+			var currentTime = timeLeft
+			var currentValve = valve
 
-			val elephantPressure = maxPressure(
-				"AA",
-				26,
-				emptySet(),
-				valves,
-				distances,
-				mutableMapOf(),
-				elephantValves
-			)
+			// Simulate best case scenario where we open highest flow valves first
+			for (nextValve in sorted) {
+				val distance = distances[currentValve]!![nextValve]!! + 1
+				if (currentTime <= distance) break
 
-			maxPressure = maxOf(maxPressure, yourPressure + elephantPressure)
+				currentTime -= distance
+				estimate += valves[nextValve]!!.flowRate * currentTime
+				currentValve = nextValve
+
+				if (currentTime <= 2) break // Not enough time to reach another valve
+			}
+
+			return estimate
+		}
+
+		// Modified maxPressure function with better pruning
+		fun maxPressureWithPruning(
+			currentValve: String,
+			timeRemaining: Int,
+			openedValves: Set<String>,
+			allowedValves: Set<String>,
+			memo: MutableMap<Triple<String, Int, Set<String>>, Int>
+		): Int {
+			val key = Triple(currentValve, timeRemaining, openedValves)
+			memo[key]?.let { return it }
+
+			// Early pruning using precomputed best possible pressure
+			if (timeRemaining <= 1) return 0
+
+			val upperBound = estimateUpperBound(currentValve, timeRemaining, openedValves, allowedValves)
+			if (upperBound == 0) return 0
+
+			var max = 0
+			val remainingValves = allowedValves - openedValves
+
+			// Sort valves by potential pressure/distance ratio
+			val sortedValves = remainingValves.sortedByDescending { valve ->
+				val timeAfterMove = timeRemaining - distances[currentValve]!![valve]!! - 1
+				if (timeAfterMove <= 0) 0.0 else
+					valves[valve]!!.flowRate.toDouble() / (distances[currentValve]!![valve]!! + 1)
+			}
+
+			for (nextValve in sortedValves) {
+				val distance = distances[currentValve]!![nextValve]!!
+				val newTime = timeRemaining - distance - 1
+
+				if (newTime <= 1) continue
+
+				// Pruning: if even with perfect play we can't beat max, skip this branch
+				val potential = valves[nextValve]!!.flowRate * newTime +
+						estimateUpperBound(nextValve, newTime, openedValves + nextValve, allowedValves)
+				if (potential <= max) continue
+
+				val pressure = valves[nextValve]!!.flowRate * newTime
+				val total = pressure + maxPressureWithPruning(
+					nextValve,
+					newTime,
+					openedValves + nextValve,
+					allowedValves,
+					memo
+				)
+				max = maxOf(max, total)
+			}
+
+			memo[key] = max
+			return max
+		}
+
+		// Try different valve distributions more intelligently
+		val sortedByFlow = valvesWithFlowList.sortedByDescending { valves[it]!!.flowRate }
+		val midFlow = valves[sortedByFlow[sortedByFlow.size / 2]]!!.flowRate
+
+		// Start with most promising distributions
+		for (yourCount in totalValves/2-1..totalValves/2+1) {
+			val indices = (0 until totalValves).toList()
+			for (yourIndices in generateCombinations(indices, yourCount)) {
+				val yourValves = yourIndices.map { valvesWithFlowList[it] }.toSet()
+				val elephantValves = valvesWithFlowList.toSet() - yourValves
+
+				// More aggressive pruning of distributions
+				val yourTotalFlow = yourValves.sumOf { valves[it]!!.flowRate }
+				val elephantTotalFlow = elephantValves.sumOf { valves[it]!!.flowRate }
+
+				// Skip if distribution is too unbalanced
+				if (yourTotalFlow < elephantTotalFlow * 0.4 ||
+					elephantTotalFlow < yourTotalFlow * 0.4) continue
+
+				val yourPressure = maxPressureWithPruning(
+					"AA",
+					26,
+					emptySet(),
+					yourValves,
+					mutableMapOf()
+				)
+
+				// Early exit if this path can't possibly beat the max
+				if (yourPressure * 2 < maxPressure) continue
+
+				val elephantPressure = maxPressureWithPruning(
+					"AA",
+					26,
+					emptySet(),
+					elephantValves,
+					mutableMapOf()
+				)
+
+				maxPressure = maxOf(maxPressure, yourPressure + elephantPressure)
+			}
 		}
 
 		return maxPressure
 	}
 
-	// Modified maxPressure function that only considers allowed valves
-	fun maxPressure(
-		currentValve: String,
-		timeRemaining: Int,
-		openedValves: Set<String>,
-		valves: Map<String, Valve>,
-		distances: Map<String, Map<String, Int>>,
-		memo: MutableMap<Triple<String, Int, Set<String>>, Int>,
-		allowedValves: Set<String>
-	): Int {
-		val key = Triple(currentValve, timeRemaining, openedValves)
-		if (key in memo) return memo[key]!!
+	// Optimized combination generator
+	fun generateCombinations(indices: List<Int>, k: Int): Sequence<List<Int>> = sequence {
+		val n = indices.size
+		if (k in 0..n) {
+			val result = MutableList(k) { it }
+			yield(result.toList())
 
-		var max = 0
-		for (nextValve in allowedValves) {
-			if (nextValve !in openedValves) {
-				val distance = distances[currentValve]!![nextValve]!!
-				val newTime = timeRemaining - distance - 1
-				if (newTime >= 0) {
-					val pressure = valves[nextValve]!!.flowRate * newTime
-					val total = pressure + maxPressure(
-						nextValve,
-						newTime,
-						openedValves + nextValve,
-						valves,
-						distances,
-						memo,
-						allowedValves
-					)
-					max = maxOf(max, total)
+			while (true) {
+				var i = k - 1
+				while (i >= 0 && result[i] == i + n - k) i--
+				if (i < 0) break
+
+				result[i]++
+				for (j in i + 1 until k) {
+					result[j] = result[j - 1] + 1
 				}
+				yield(result.toList())
 			}
 		}
-		memo[key] = max
-		return max
 	}
 
 	fun parseInput(input: List<String>): Map<String, Valve> {
