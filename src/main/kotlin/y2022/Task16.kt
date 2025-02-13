@@ -10,7 +10,6 @@ class Task16(val input: List<String>) : Task {
 		val valves = parseInput(input)
 		val distances = computeShortestPaths(valves)
 		val max = maxPressure("AA", 30, emptySet(), valves, distances)
-		println("Maximum pressure released: $max")
 		return max
 	}
 
@@ -30,6 +29,7 @@ class Task16(val input: List<String>) : Task {
 	}
 
 	fun computeShortestPaths(valves: Map<String, Valve>): Map<String, Map<String, Int>> {
+		// Floyd-Warshall algorithm
 		val distances = mutableMapOf<String, MutableMap<String, Int>>()
 		for (u in valves.keys) {
 			distances[u] = mutableMapOf()
@@ -39,7 +39,7 @@ class Task16(val input: List<String>) : Task {
 		}
 		for (u in valves.keys) {
 			for (v in valves[u]!!.tunnels) {
-				distances[u]!![v] = 1
+				distances[u]!![v] = 1 //set distance to 1 (we simulate weight 1 for all edges as it takes 1 minute to travel through a tunnel)
 			}
 		}
 		for (k in valves.keys) {
