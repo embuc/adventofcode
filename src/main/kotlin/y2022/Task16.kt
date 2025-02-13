@@ -14,7 +14,91 @@ class Task16(val input: List<String>) : Task {
 	}
 
 	override fun b(): Any {
-		return 0
+		val valves = parseInput(input)
+		val distances = computeShortestPaths(valves)
+
+		// First, get all valves with positive flow rate
+		val valvesWithFlow = valves.filter { it.value.flowRate > 0 }.keys.toSet()
+
+		// Try all possible ways to split the work between you and elephant
+		var maxPressure = 0
+
+		// Generate all possible subsets of valves to try
+		for (i in 0..(1 shl valvesWithFlow.size)) {
+			val yourValves = mutableSetOf<String>()
+			val elephantValves = mutableSetOf<String>()
+
+			// Distribute valves between you and elephant based on binary representation
+			valvesWithFlow.forEachIndexed { index, valve ->
+				if ((i and (1 shl index)) != 0) {
+					yourValves.add(valve)
+				} else {
+					elephantValves.add(valve)
+				}
+			}
+
+			// Calculate maximum pressure for both paths independently
+			val yourPressure = maxPressure(
+				"AA",
+				26,
+				emptySet(),
+				valves,
+				distances,
+				mutableMapOf(),
+				yourValves
+			)
+
+			val elephantPressure = maxPressure(
+				"AA",
+				26,
+				emptySet(),
+				valves,
+				distances,
+				mutableMapOf(),
+				elephantValves
+			)
+
+			maxPressure = maxOf(maxPressure, yourPressure + elephantPressure)
+		}
+
+		return maxPressure
+	}
+
+	// Modified maxPressure function that only considers allowed valves
+	fun maxPressure(
+		currentValve: String,
+		timeRemaining: Int,
+		openedValves: Set<String>,
+		valves: Map<String, Valve>,
+		distances: Map<String, Map<String, Int>>,
+		memo: MutableMap<Triple<String, Int, Set<String>>, Int>,
+		allowedValves: Set<String>
+	): Int {
+		val key = Triple(currentValve, timeRemaining, openedValves)
+		if (key in memo) return memo[key]!!
+
+		var max = 0
+		for (nextValve in allowedValves) {
+			if (nextValve !in openedValves) {
+				val distance = distances[currentValve]!![nextValve]!!
+				val newTime = timeRemaining - distance - 1
+				if (newTime >= 0) {
+					val pressure = valves[nextValve]!!.flowRate * newTime
+					val total = pressure + maxPressure(
+						nextValve,
+						newTime,
+						openedValves + nextValve,
+						valves,
+						distances,
+						memo,
+						allowedValves
+					)
+					max = maxOf(max, total)
+				}
+			}
+		}
+		memo[key] = max
+		return max
 	}
 
 	fun parseInput(input: List<String>): Map<String, Valve> {
