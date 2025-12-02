@@ -19,6 +19,10 @@ class Task1Test {
 	L82
 """.trimIndent().trim().lines()
 
+	val inputB: List<String> = """
+	L150
+""".trimIndent().trim().lines()
+
 	@Test
 	fun a_smallInput() {
 		assertEquals(3, Task1(input).a())
@@ -27,11 +31,23 @@ class Task1Test {
 	@Test
 	fun a() {
 		val input = readInputAsListOfStrings("~/git/aoc-inputs/2025/2025_1.txt")
-		assertEquals(3, Task1(input).a())
+		assertEquals(1066, Task1(input).a())
+	}
+
+	@Test
+	fun b_smallInput() {
+		assertEquals(6, Task1(input).b())
+	}
+
+	@Test
+	fun b_smallInput2() {
+		assertEquals(2, Task1(inputB).b())
 	}
 
 	@Test
 	fun b() {
+		val input = readInputAsListOfStrings("~/git/aoc-inputs/2025/2025_1.txt")
+		assertEquals(6223, Task1(input).b())
 	}
 
 }
